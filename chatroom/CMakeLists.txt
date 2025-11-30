@@ -40,12 +40,16 @@ else()
     if(ANDROID)
         add_library(chatroom SHARED
             ${PROJECT_SOURCES}
+            logindialog.hpp logindialog.cc logindialog.ui
+            registerdialog.hpp registerdialog.cc registerdialog.ui
         )
 # Define properties for Android with Qt 5 after find_package() calls as:
 #    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
     else()
         add_executable(chatroom
             ${PROJECT_SOURCES}
+            logindialog.hpp logindialog.cc logindialog.ui
+            registerdialog.hpp registerdialog.cc registerdialog.ui
         )
     endif()
 endif()
