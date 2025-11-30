@@ -41,6 +41,14 @@ cpack          # 会进行打包，包括 sh、tgz
 ./scripts/format.sh
 ```
 
+#### 工作流脚本
+
+可以使用工作流脚本在本地进行自测，包含格式检查、静态分析、单元测试等：
+
+```bash
+./scripts/workflow.sh
+```
+
 #### 静态分析代码
 
 也可以选择分析代码，此处我们集成了三种静态分析工具，可以自行选择，这里选择所有的，需要注意的是前两种也就是 AddressSanitizer 和 UndefinedBehaviorSanitizer 只是增加选项，在 ninja 时会自动启用，但是最后一个 cppcheck 需要手动运行：

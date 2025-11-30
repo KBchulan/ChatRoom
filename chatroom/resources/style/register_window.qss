@@ -1,0 +1,6 @@
+/* Register Window Style */
+
+/* Main Window and Dialog Background */
+QMainWindow, QDialog, QWidget {
+    background-color: #f8f6f1;
+}

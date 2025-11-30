@@ -1,0 +1,47 @@
+name: ChatRoom Client CI
+
+on:
+  push:
+    paths:
+      - "chatroom/**"
+    branches: ["main"]
+  pull_request:
+    paths:
+      - "chatroom/**"
+    branches: ["main"]
+
+defaults:
+  run:
+    working-directory: chatroom
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v3
+        with:
+          version: "5.15.2"
+          host: "linux"
+          cache: true
+
+      - name: Install System Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential libgl1-mesa-dev
+
+      - name: Configure CMake
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        run: cmake --build build --config Release --parallel
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ChatRoom-Linux-Binary
+          path: chatroom/build/chatroom
+          if-no-files-found: error
