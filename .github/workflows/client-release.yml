@@ -60,7 +60,7 @@ jobs:
             --appdir AppDir \
             --executable build/chatroom \
             --desktop-file chatroom.desktop \
-            --icon-file resources/head.ico \
+            --icon-file resources/head.png \
             --plugin qt \
             --output appimage
 

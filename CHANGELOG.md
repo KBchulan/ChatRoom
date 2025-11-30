@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### 🐛 Bug Fixes
 
+- **[build]** 更新ci以适应新图标文件
 - **[build]** 更新图标以适应打包需求
 - **[ci]** 更新发布打包ci，更新根目录README文档
 - **[git]** 更新hook以适应changelog
