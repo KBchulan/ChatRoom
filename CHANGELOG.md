@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### 🐛 Bug Fixes
 
+- **[build]** 再次c尝试build，更改文件名
 - **[build]** update png size
 - **[build]** 更新ci以适应新图标文件
 - **[build]** 更新图标以适应打包需求

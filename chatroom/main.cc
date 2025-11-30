@@ -7,7 +7,7 @@
 void loadResources(QApplication &app)
 {
   // 项目 icon
-  app.setWindowIcon(QIcon(":/head.png"));
+  app.setWindowIcon(QIcon(":/chatroom.png"));
 
   // 界面样式
   QString styleSheet;
