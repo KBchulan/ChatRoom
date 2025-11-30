@@ -48,14 +48,6 @@ cd ChatRoom
 - `test`: 测试
 - `chore`: 杂项
 
-**示例**:
-
-```bash
-git commit -m "feat: 添加用户登录功能"
-git commit -m "fix(client): 修复消息发送失败问题"
-git commit -m "docs: 更新 README"
-```
-
 > 不符合格式的 commit 会被 Git hook 拒绝
 
 ### 提交自测

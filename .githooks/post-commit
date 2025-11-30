@@ -1,19 +1,16 @@
 #!/usr/bin/env bash
 #
 # 自动更新 CHANGELOG
-# 在 commit 前将 commit message 追加到 CHANGELOG.md
+# 在 commit 后将 commit message 追加到 CHANGELOG.md 并 amend
 #
 
-COMMIT_MSG_FILE=$1
-COMMIT_SOURCE=$2
-
-# 只在正常 commit 时更新 CHANGELOG
-if [ "$COMMIT_SOURCE" = "message" ] || [ "$COMMIT_SOURCE" = "template" ] || [ "$COMMIT_SOURCE" = "merge" ]; then
+# 防止递归调用
+if [ -n "$SKIP_POST_COMMIT" ]; then
     exit 0
 fi
 
 CHANGELOG_FILE="CHANGELOG.md"
-COMMIT_MSG=$(cat "$COMMIT_MSG_FILE")
+COMMIT_MSG=$(git log -1 --pretty=%B)
 
 # 跳过 merge commit
 if echo "$COMMIT_MSG" | grep -qE "^Merge (branch|remote-tracking branch)"; then
@@ -25,13 +22,14 @@ if [ -z "$COMMIT_MSG" ]; then
     exit 0
 fi
 
-# 解析 commit message
-TYPE=$(echo "$COMMIT_MSG" | sed -E 's/^([a-z]+)(\(.+\))?: .*/\1/')
-SCOPE=$(echo "$COMMIT_MSG" | sed -nE 's/^[a-z]+\((.+)\): .*/\1/p')
-DESCRIPTION=$(echo "$COMMIT_MSG" | sed -E 's/^[a-z]+(\(.+\))?: (.*)/\2/')
+# 解析 commit message (只取第一行)
+FIRST_LINE=$(echo "$COMMIT_MSG" | head -n 1)
+TYPE=$(echo "$FIRST_LINE" | sed -E 's/^([a-z]+)(\(.+\))?: .*/\1/')
+SCOPE=$(echo "$FIRST_LINE" | sed -nE 's/^[a-z]+\((.+)\): .*/\1/p')
+DESCRIPTION=$(echo "$FIRST_LINE" | sed -E 's/^[a-z]+(\(.+\))?: (.*)/\2/')
 
 # 如果没有匹配到类型，说明格式不对，跳过
-if [ "$TYPE" = "$COMMIT_MSG" ]; then
+if [ "$TYPE" = "$FIRST_LINE" ]; then
     exit 0
 fi
 
@@ -53,7 +51,7 @@ fi
 # 准备插入的内容
 SCOPE_TEXT=""
 if [ -n "$SCOPE" ]; then
-    SCOPE_TEXT=" **[$SCOPE]**"
+    SCOPE_TEXT="**[$SCOPE]**"
 fi
 
 # 根据类型选择对应的章节标题
@@ -124,7 +122,7 @@ if grep -q "## \[$DATE\]" "$CHANGELOG_FILE"; then
         # 如果在对应的 section 内，在第一个条目前插入
         if (in_section == 1 && /^- /) {
             if (inserted == 0) {
-                print "- " scope " " desc
+                print "-" (scope != "" ? " " scope : "") " " desc
                 inserted = 1
             }
         }
@@ -132,7 +130,7 @@ if grep -q "## \[$DATE\]" "$CHANGELOG_FILE"; then
         # 遇到新的 section，退出当前 section
         if (in_section == 1 && /^### /) {
             if (inserted == 0) {
-                print "- " scope " " desc
+                print "-" (scope != "" ? " " scope : "") " " desc
                 inserted = 1
             }
             in_section = 0
@@ -158,7 +156,7 @@ if grep -q "## \[$DATE\]" "$CHANGELOG_FILE"; then
             print
             getline
             print section
-            print "- " scope " " desc
+            print "-" (scope != "" ? " " scope : "") " " desc
             print ""
             print
             next
@@ -177,22 +175,20 @@ else
         print "## [" date "]"
         print ""
         print section
-        print "- " scope " " desc
+        print "-" (scope != "" ? " " scope : "") " " desc
         print ""
         inserted = 1
     }
 
-    # 如果没有日期标题，在文件末尾插入
-    /^# Changelog/ {
-        print
-        getline
+    # 如果没有日期标题，在 changelog 头部之后插入
+    /^The format is based on/ && inserted == 0 {
         print
         getline
         print
         print "## [" date "]"
         print ""
         print section
-        print "- " scope " " desc
+        print "-" (scope != "" ? " " scope : "") " " desc
         print ""
         inserted = 1
         next
@@ -205,7 +201,8 @@ fi
 # 替换原文件
 mv "$TEMP_FILE" "$CHANGELOG_FILE"
 
-# 将 CHANGELOG.md 添加到暂存区
-git add "$CHANGELOG_FILE" 2>/dev/null || true
+# 将 CHANGELOG.md 添加到暂存区并 amend commit
+git add "$CHANGELOG_FILE"
+SKIP_POST_COMMIT=1 git commit --amend --no-edit --no-verify
 
 exit 0

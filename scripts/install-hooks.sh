@@ -45,7 +45,7 @@ ls -1 .githooks/ | sed 's/^/  - /'
 echo ""
 echo -e "${BLUE}提示:${NC}"
 echo "  - commit-msg: 检查 commit message 格式"
-echo "  - prepare-commit-msg: 自动更新 CHANGELOG.md"
+echo "  - post-commit: 自动更新 CHANGELOG.md 并 amend 到当前 commit"
 echo ""
 echo -e "${YELLOW}Commit message 格式要求:${NC}"
 echo "  <type>: <description>"
