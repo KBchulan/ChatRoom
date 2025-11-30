@@ -7,7 +7,7 @@
 void loadResources(QApplication &app)
 {
   // 项目 icon
-  app.setWindowIcon(QIcon(":/head.ico"));
+  app.setWindowIcon(QIcon(":/head.png"));
 
   // 界面样式
   QString styleSheet;

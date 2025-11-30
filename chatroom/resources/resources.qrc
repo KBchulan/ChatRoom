@@ -1,6 +1,7 @@
 <RCC>
     <qresource prefix="/">
         <file>head.ico</file>
+        <file>head.png</file>
         <file>avatar/avatar.ico</file>
         <file>style/login_window.qss</file>
         <file>style/register_window.qss</file>
