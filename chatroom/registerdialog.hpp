@@ -12,6 +12,7 @@
 #define REGISTERDIALOG_HPP
 
 #include <QDialog>
+#include <QString>
 
 namespace Ui
 {
@@ -25,6 +26,12 @@ class RegisterDialog : public QDialog
 public:
   explicit RegisterDialog(QWidget* parent = nullptr);
   ~RegisterDialog();
+
+private slots:
+  void on_verify_code_btn_clicked();
+
+private:
+  void show_tip(const QString& str, bool ok);
 
 private:
   Ui::RegisterDialog* ui;

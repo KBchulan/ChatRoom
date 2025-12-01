@@ -3,6 +3,7 @@
 #include "registerdialog.hpp"
 
 #include <memory>
+#include <QKeySequence>
 
 #include "./ui_mainwindow.h"
 
@@ -18,10 +19,17 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::MainWi
   // 连接信号槽
   connect(_login_dialog.get(), &LoginDialog::sig_switch_register, this, &MainWindow::SlotSwitchRegister);
 
+  // 绑定快捷键
+  action = std::make_unique<QAction>();
+
+  // ctrl + q 退出
+  action->setShortcut(QKeySequence::Quit);
+  connect(action.get(), &QAction::triggered, this, &QWidget::close);
+
+  addAction(action.get());
+
   // 设置中心窗口
   setCentralWidget(_login_dialog.get());
-
-  _login_dialog->show();
 }
 
 MainWindow::~MainWindow()
@@ -32,6 +40,4 @@ MainWindow::~MainWindow()
 void MainWindow::SlotSwitchRegister()
 {
   setCentralWidget(_register_dialog.get());
-  _login_dialog->hide();
-  _register_dialog->show();
 }

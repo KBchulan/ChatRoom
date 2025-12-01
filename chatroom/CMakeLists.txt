@@ -31,6 +31,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         ${PROJECT_SOURCES}
         logindialog.hpp logindialog.cc logindialog.ui
         registerdialog.hpp registerdialog.cc registerdialog.ui
+        global.hpp  global.cc
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET chatroom APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
@@ -42,6 +43,7 @@ else()
             ${PROJECT_SOURCES}
             logindialog.hpp logindialog.cc logindialog.ui
             registerdialog.hpp registerdialog.cc registerdialog.ui
+            global.hpp  global.cc
         )
 # Define properties for Android with Qt 5 after find_package() calls as:
 #    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
@@ -50,6 +52,7 @@ else()
             ${PROJECT_SOURCES}
             logindialog.hpp logindialog.cc logindialog.ui
             registerdialog.hpp registerdialog.cc registerdialog.ui
+            global.hpp  global.cc
         )
     endif()
 endif()

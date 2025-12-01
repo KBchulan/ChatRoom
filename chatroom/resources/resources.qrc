@@ -1,6 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>chatroom.ico</file>
         <file>chatroom.png</file>
         <file>avatar/avatar.ico</file>
         <file>style/login_window.qss</file>
