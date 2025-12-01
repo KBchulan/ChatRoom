@@ -2,7 +2,6 @@
 #include "logindialog.hpp"
 #include "registerdialog.hpp"
 
-#include <memory>
 #include <QKeySequence>
 
 #include "./ui_mainwindow.h"

@@ -16,4 +16,21 @@
 
 extern std::function<void(QWidget*)> repolish;
 
+enum class ReqID
+{
+  ID_GET_VERIFY_CODE = 1001,  // 获取验证码
+  ID_REGISTER = 1002,         // 注册
+};
+
+enum class Module
+{
+  REGISTER = 0,  // 注册模块
+};
+
+enum class ErrorCode
+{
+  SUCCESS = 0,           // 成功
+  NETWORK_ERROR = 1,     // 网络错误
+};
+
 #endif  // GLOBAL_HPP

@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [2025-12-01]
 
 ### ✨ Features
+- **[http]** 增加 Defer 定义，模仿 Go 语言的 defer 关键字，方便资源释放，增加 Global 的枚举定义，增加 HttpManager 类，封装 HTTP 的 POST 请求功能，增加注册页面回调处理函数，有一个 _handlers，暂未实现具体功能
 - **[ui]** 增加注册页面密码输入样式,增加快捷键绑定 ctrl + q 以调用 close，弥补 hyprland 下无法通过标题栏关闭窗口的问题,增加刷新样式函数，并为注册页面增加一个 error_msg_label 用于显示错误信息，封装 show_tip 函数用于显示错误信息,增加注册页面的获取验证码按钮槽函数，只检查邮箱格式
 
 ## [2025-11-30]
