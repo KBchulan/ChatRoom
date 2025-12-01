@@ -19,7 +19,6 @@ class [[nodiscard]] Defer
 public:
   constexpr explicit Defer(F _func) : func(std::move(_func))
   {
-
   }
 
   constexpr ~Defer()
@@ -27,8 +26,8 @@ public:
     func();
   }
 
-  Defer(const Defer &) = delete;
-  Defer &operator=(const Defer&) = delete;
+  Defer(const Defer&) = delete;
+  Defer& operator=(const Defer&) = delete;
 
 private:
   F func;
