@@ -27,6 +27,7 @@ target_include_directories(
 target_link_libraries(
   ${PROJECT_NAME} PRIVATE
   fmt::fmt
+  ${JSONCPP_LINK_TARGET}
 )
 
 # core库

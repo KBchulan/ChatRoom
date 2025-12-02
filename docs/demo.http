@@ -1,0 +1,3 @@
+@baseUrl = http://localhost:10001
+
+GET {{baseUrl}}/demo/get-test?name=chulan&age=18 HTTP/1.1

@@ -150,6 +150,25 @@ if(NOT fmt_FOUND)
   FetchContent_MakeAvailable(fmt)
 endif()
 
+# jsoncpp
+find_package(PkgConfig QUIET)
+if(PkgConfig_FOUND)
+  pkg_check_modules(JSONCPP jsoncpp)
+endif()
+
+if(NOT JSONCPP_FOUND)
+  include(FetchContent)
+  FetchContent_Declare(
+    jsoncpp
+    GIT_REPOSITORY https://github.com/open-source-parsers/jsoncpp.git
+    GIT_TAG 1.9.6
+  )
+  FetchContent_MakeAvailable(jsoncpp)
+  set(JSONCPP_LINK_TARGET jsoncpp_lib)
+else()
+  set(JSONCPP_LINK_TARGET ${JSONCPP_LIBRARIES})
+endif()
+
 # Google Test
 find_package(GTest QUIET)
 if(NOT GTest_FOUND)
