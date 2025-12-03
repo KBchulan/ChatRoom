@@ -1,11 +1,22 @@
 #include <QApplication>
 #include <QIcon>
 #include <QFile>
+#include <QSettings>
+#include <QCoreApplication>
 
+#include "global.hpp"
 #include "mainwindow.hpp"
 
 void loadResources(QApplication &app)
 {
+  // config.ini
+  QString configPath = QCoreApplication::applicationDirPath() + "/config.ini";
+  QSettings settings(configPath, QSettings::IniFormat);
+
+  QString host = settings.value("GateWay/host").toString();
+  int port = settings.value("GateWay/port").toInt();
+  GateWayUrl = QString("http://%1:%2").arg(host).arg(port);
+
   // 项目 icon
   app.setWindowIcon(QIcon(":/chatroom.png"));
 

@@ -34,6 +34,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         global.hpp  global.cc
         httpmanager.hpp httpmanager.cc
         Defer.hpp
+        config.ini
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET chatroom APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
@@ -48,6 +49,7 @@ else()
             global.hpp  global.cc
             httpmanager.hpp httpmanager.cc
             Defer.hpp
+            config.ini
         )
 # Define properties for Android with Qt 5 after find_package() calls as:
 #    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
@@ -59,6 +61,7 @@ else()
             global.hpp  global.cc
             httpmanager.hpp httpmanager.cc
             Defer.hpp
+            config.ini
         )
     endif()
 endif()
@@ -88,6 +91,10 @@ install(TARGETS chatroom
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
+
+# 复制配置文件到构建目录
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/config.ini
+     DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(chatroom)

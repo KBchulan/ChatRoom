@@ -1,5 +1,4 @@
 #include "registerdialog.hpp"
-#include "global.hpp"
 #include "httpmanager.hpp"
 
 #include <QLineEdit>
@@ -44,7 +43,12 @@ void RegisterDialog::on_verify_code_btn_clicked()
     return;
   }
 
-  // TODO: 格式匹配则发送验证码
+  // 格式匹配则发送验证码
+  QJsonObject dto;
+  dto["email"] = email;
+  dto["purpose"] = 1;
+
+  HttpManager::GetInstance().PostHttpReq(QUrl(GateWayUrl + "/user/send-code"), dto, ReqID::ID_GET_VERIFY_CODE, Module::REGISTER);
 }
 
 void RegisterDialog::slot_reg_mod_finish(QString str, ErrorCode err, ReqID id)
@@ -94,7 +98,13 @@ void RegisterDialog::init_handlers()
     auto code = obj["code"].toInt();
     auto message = obj["message"].toString();
 
-    // TODO: 处理验证码发送响应逻辑
+    if (code != 0)
+    {
+      show_tip(message, false);
+      return;
+    }
+
+    show_tip("验证码已发送至邮箱，请注意查收", true);
   });
 }
 

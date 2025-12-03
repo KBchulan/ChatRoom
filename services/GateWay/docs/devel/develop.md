@@ -18,3 +18,4 @@
 - 完善 democontroller，增加 POST、 PUT、 DELETE 三种请求方法的处理。
 - 修改 utils 目录结构，增加为 common(json, func, routes)
 - 更新 ci 配置，删除 jsoncpp 安装，确保统一配置。
+- 创建用户模块，初始化发送邮件功能。

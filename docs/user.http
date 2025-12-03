@@ -1,0 +1,10 @@
+@baseUrl = http://localhost:10001
+
+### 发送验证码
+POST {{baseUrl}}/user/send-code HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "2262317520@qq.com",
+  "purpose": 1
+}

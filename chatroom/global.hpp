@@ -11,10 +11,12 @@
 #ifndef GLOBAL_HPP
 #define GLOBAL_HPP
 
+#include <QString>
 #include <QWidget>
 #include <functional>
 
 extern std::function<void(QWidget*)> repolish;
+extern QString GateWayUrl;
 
 enum class ReqID
 {

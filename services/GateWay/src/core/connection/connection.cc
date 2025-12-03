@@ -12,6 +12,7 @@
 #include <utility>
 #include <utils/common/type.hpp>
 #include <utils/url/url.hpp>
+#include <tools/Defer.hpp>
 
 namespace core
 {
@@ -78,6 +79,8 @@ struct Connection::_impl
 
   void handle_request()
   {
+    defer(send_response());
+
     _response.version(_request.version());
     _response.keep_alive(false);
     _response.set(boost::beast::http::field::content_type, "application/json");
@@ -92,7 +95,6 @@ struct Connection::_impl
       tools::Logger::getInstance().warning("| {} | {} | {}", _request.method_string(), status_code, _request.target());
       _response.result(boost::beast::http::status::bad_request);
       boost::beast::ostream(_response.body()) << "Invalid URL";
-      send_response();
       return;
     }
 
@@ -132,8 +134,6 @@ struct Connection::_impl
       _response.result(boost::beast::http::status::bad_request);
       boost::beast::ostream(_response.body()) << result.error();
     }
-
-    send_response();
   }
 
   void send_response()

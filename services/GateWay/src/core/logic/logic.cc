@@ -1,7 +1,9 @@
 #include "logic.hpp"
 
 #include <core/controller/demo/demo_controller.hpp>
+#include <core/controller/user/user_controller.hpp>
 #include <core/domain/dto/demo/demo_dto.hpp>
+#include <core/domain/dto/user/user_dto.hpp>
 #include <core/domain/query/demo/demo_query.hpp>
 #include <core/domain/vo/common_vo.hpp>
 #include <tools/Logger.hpp>
@@ -86,6 +88,7 @@ struct Logic::_impl
   _impl()
   {
     routes_demo();
+    routes_user();
   }
 
   ~_impl() = default;
@@ -132,6 +135,24 @@ struct Logic::_impl
     {
       auto query = DeleteTestQuery::FromParsedUrl(url);
       DemoController::GetInstance().HandleDemoDeleteRequest(query, common_vo);
+    };
+  }
+
+  void routes_user()
+  {
+    _post_handlers[utils::USER_SEND_CODE_ROUTE] =
+        [](const utils::ParsedUrl&, const std::string& body, core::CommonVO& common_vo)
+    {
+      auto dto = UserSendCodeDTO::FromJsonString(body);
+      if (!dto.has_value())
+      {
+        common_vo.code = utils::JSON_PARSE_ERROR;
+        common_vo.message = "JSON parse error";
+        common_vo.data = "";
+        return;
+      }
+
+      UserController::GetInstance().HandleSendCodeRequest(dto.value(), common_vo);
     };
   }
 };
