@@ -14,7 +14,7 @@
 #include <core/CoreExport.hpp>
 #include <memory>
 #include <string>
-#include <utils/type.hpp>
+#include <utils/common/type.hpp>
 
 namespace core
 {
@@ -27,10 +27,10 @@ public:
 
   static Logic& GetInstance();
 
-  RequestHandleResult HandleGetRequest(const std::string& target);
-  // RequestHandleResult HandlePostRequest(const std::string& target, const std::string& body);
-  // RequestHandleResult HandlePutRequest(const std::string& target, const std::string& body);
-  // RequestHandleResult HandleDeleteRequest(const std::string& target);
+  RequestHandleResult HandleGetRequest(const utils::ParsedUrl& url);
+  RequestHandleResult HandlePostRequest(const utils::ParsedUrl& url, const std::string& body);
+  RequestHandleResult HandlePutRequest(const utils::ParsedUrl& url, const std::string& body);
+  RequestHandleResult HandleDeleteRequest(const utils::ParsedUrl& url);
 
   Logic(const Logic&) = delete;
   Logic& operator=(const Logic&) = delete;

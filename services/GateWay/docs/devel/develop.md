@@ -11,3 +11,9 @@
 - 创建 democontroller，注册一个 GET 请求，配套的有 query。
 - 设置 common_vo 作为所有请求的返回载体，包含 code、message、data 三个字段。
 - code 状态码枚举，query_parser 工具解析 query 参数，type 自定义类型。
+
+### [2025-12-03] 功能完善
+
+- 增加 boost url 依赖，用于解析 URL，提取 query 路径和参数。
+- 完善 democontroller，增加 POST、 PUT、 DELETE 三种请求方法的处理。
+- 修改 utils 目录结构，增加为 common(json, func, routes)

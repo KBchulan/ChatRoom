@@ -11,49 +11,37 @@
 #ifndef DEMO_QUERY_HPP
 #define DEMO_QUERY_HPP
 
+#include <charconv>
+#include <core/CoreExport.hpp>
 #include <string>
+#include <utils/url/url.hpp>
 
 namespace core
 {
 
-struct GetTestQuery
+struct CORE_EXPORT GetTestQuery
 {
   std::string name;
   int age{0};
 
-  static GetTestQuery FromQueryString(const std::string& query_string)
+  static GetTestQuery FromParsedUrl(const utils::ParsedUrl& url)
   {
-    GetTestQuery query{};
-    std::string_view str_view = query_string;
-
-    while (!str_view.empty())
+    int age = 0;
+    if (auto age_str = url.Get("age"))
     {
-      auto amp_pos = str_view.find('&');
-      auto pair = str_view.substr(0, amp_pos);
-
-      if (auto eq_pos = pair.find('='); eq_pos != std::string_view::npos)
-      {
-        auto key = pair.substr(0, eq_pos);
-        auto value = pair.substr(eq_pos + 1);
-
-        if (key == "name")
-        {
-          query.name = value;
-        }
-        else if (key == "age")
-        {
-          query.age = std::stoi(std::string(value));
-        }
-      }
-
-      if (amp_pos == std::string_view::npos)
-      {
-        break;
-      }
-      str_view = str_view.substr(amp_pos + 1);
+      std::from_chars(age_str->data(), age_str->data() + age_str->size(), age);
     }
+    return GetTestQuery{.name = url.GetOr("name", ""), .age = age};
+  }
+};
 
-    return query;
+struct CORE_EXPORT DeleteTestQuery
+{
+  std::string id;
+
+  static DeleteTestQuery FromParsedUrl(const utils::ParsedUrl& url)
+  {
+    return DeleteTestQuery{.id = url.GetOr("id", "")};
   }
 };
 

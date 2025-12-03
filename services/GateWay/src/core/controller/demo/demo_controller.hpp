@@ -12,9 +12,10 @@
 #define DEMO_CONTROLLER_HPP
 
 #include <core/CoreExport.hpp>
+#include <core/domain/dto/demo/demo_dto.hpp>
 #include <core/domain/query/demo/demo_query.hpp>
 #include <memory>
-#include <utils/type.hpp>
+#include <utils/common/type.hpp>
 
 namespace core
 {
@@ -28,6 +29,9 @@ public:
   static DemoController& GetInstance();
 
   void HandleDemoGetRequest(const GetTestQuery& query, core::CommonVO& common_vo) const;
+  void HandleDemoPostRequest(const PostTestDTO& dto, core::CommonVO& common_vo) const;
+  void HandleDemoPutRequest(const PutTestDTO& dto, core::CommonVO& common_vo) const;
+  void HandleDemoDeleteRequest(const DeleteTestQuery& query, core::CommonVO& common_vo) const;
 
   DemoController(const DemoController&) = delete;
   DemoController& operator=(const DemoController&) = delete;

@@ -10,7 +10,8 @@
 #include <string>
 #include <tools/Logger.hpp>
 #include <utility>
-#include <utils/type.hpp>
+#include <utils/common/type.hpp>
+#include <utils/url/url.hpp>
 
 namespace core
 {
@@ -75,7 +76,6 @@ struct Connection::_impl
     _deadline.async_wait(std::move(_deadline_handler));
   }
 
-  // TODO: 实现更多的 HTTP 方法处理
   void handle_request()
   {
     _response.version(_request.version());
@@ -83,27 +83,41 @@ struct Connection::_impl
     _response.set(boost::beast::http::field::content_type, "application/json");
     _response.set(boost::beast::http::field::server, "ChatRoom-GateWay");
 
-    // std::string body_str;
+    int status_code = 0;
+
+    auto url = utils::ParseUrl(_request.target());
+    if (!url.has_value())
+    {
+      status_code = static_cast<int>(boost::beast::http::status::bad_request);
+      tools::Logger::getInstance().warning("| {} | {} | {}", _request.method_string(), status_code, _request.target());
+      _response.result(boost::beast::http::status::bad_request);
+      boost::beast::ostream(_response.body()) << "Invalid URL";
+      send_response();
+      return;
+    }
+
+    // TODO: 增加 JWT 等校验机制
+
+    std::string body_str;
     auto result = [&]() -> RequestHandleResult
     {
       switch (_request.method())
       {
         case boost::beast::http::verb::get:
-          return Logic::GetInstance().HandleGetRequest(_request.target());
-        // case boost::beast::http::verb::post:
-        //   body_str = boost::beast::buffers_to_string(_request.body().data());
-        //   return Logic::GetInstance().HandlePostRequest(_request.target(), body_str);
-        // case boost::beast::http::verb::put:
-        //   body_str = boost::beast::buffers_to_string(_request.body().data());
-        //   return Logic::GetInstance().HandlePutRequest(_request.target(), body_str);
-        // case boost::beast::http::verb::delete_:
-        //   return Logic::GetInstance().HandleDeleteRequest(_request.target());
+          return Logic::GetInstance().HandleGetRequest(url.value());
+        case boost::beast::http::verb::post:
+          body_str = boost::beast::buffers_to_string(_request.body().data());
+          return Logic::GetInstance().HandlePostRequest(url.value(), body_str);
+        case boost::beast::http::verb::put:
+          body_str = boost::beast::buffers_to_string(_request.body().data());
+          return Logic::GetInstance().HandlePutRequest(url.value(), body_str);
+        case boost::beast::http::verb::delete_:
+          return Logic::GetInstance().HandleDeleteRequest(url.value());
         default:
           return std::unexpected("Unsupported HTTP method");
       }
     }();
 
-    int status_code = 0;
     if (result.has_value())
     {
       status_code = static_cast<int>(boost::beast::http::status::ok);

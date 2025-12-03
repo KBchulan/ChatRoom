@@ -150,6 +150,15 @@ if(NOT fmt_FOUND)
   FetchContent_MakeAvailable(fmt)
 endif()
 
+# boost url
+find_package(Boost 1.81 CONFIG REQUIRED COMPONENTS url)
+if(NOT Boost_FOUND)
+  message(FATAL_ERROR
+    "Boost >= 1.81 is required for Boost.URL.\n"
+    "Please install: sudo pacman -S boost"
+  )
+endif()
+
 # jsoncpp
 find_package(PkgConfig QUIET)
 if(PkgConfig_FOUND)
