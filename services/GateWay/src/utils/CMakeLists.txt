@@ -70,6 +70,7 @@ target_include_directories(
 target_link_libraries(
   utils PUBLIC
   Boost::url
+  ${JSONCPP_LINK_TARGET}
 )
 
 # 安装库文件和头文件
