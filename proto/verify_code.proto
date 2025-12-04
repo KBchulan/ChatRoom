@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package KBchulan.ChatRoom.VerifyCode;
+
+message VerifyCodeRequest
+{
+  string email = 1;
+}
+
+message VerifyCodeResponse
+{
+  int32 code = 1;
+  string message = 2;
+  map<string, string> data = 3;
+}
+
+service VerifyCodeService
+{
+  rpc VerifyCode(VerifyCodeRequest) returns (VerifyCodeResponse);
+}

@@ -19,3 +19,10 @@
 - 修改 utils 目录结构，增加为 common(json, func, routes)
 - 更新 ci 配置，删除 jsoncpp 安装，确保统一配置。
 - 创建用户模块，初始化发送邮件功能。
+
+### [2025-12-04] RPC 框架集成 MariaDB 封装
+
+- 配置邮件 rpc 服务器参数和 mysql 参数，并在主函数中初始化。
+- 集成 RPC 框架，封装连接池子和客户端同步调用接口。
+- 封装 mysql 连接池，以及 增删查改 的优雅接口。
+- 完善 service -> repository 架构，则加验证码接口。

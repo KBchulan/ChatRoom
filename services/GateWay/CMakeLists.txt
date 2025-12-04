@@ -178,6 +178,34 @@ else()
   set(JSONCPP_LINK_TARGET ${JSONCPP_LIBRARIES})
 endif()
 
+# gRPC
+find_package(gRPC CONFIG QUIET)
+if(NOT gRPC_FOUND)
+  message(FATAL_ERROR
+    "gRPC is required.\n"
+    "Please install: sudo pacman -S grpc"
+  )
+endif()
+
+# protobuf
+find_package(Protobuf CONFIG QUIET)
+if(NOT Protobuf_FOUND)
+  message(FATAL_ERROR
+    "Protobuf is required.\n"
+    "Please install: sudo pacman -S protobuf"
+  )
+endif()
+
+# MariaDB
+if(PkgConfig_FOUND)
+  pkg_check_modules(MARIADB REQUIRED IMPORTED_TARGET libmariadb)
+else()
+  message(FATAL_ERROR
+    "MariaDB is required.\n"
+    "Please install: sudo pacman -S mariadb-libs"
+  )
+endif()
+
 # Google Test
 find_package(GTest QUIET)
 if(NOT GTest_FOUND)
@@ -264,6 +292,7 @@ if(ENABLE_CPPCHECK)
       --suppress='*:*/_deps/*'
       --suppress='*:*/build/_deps/*'
       --suppress='*:*/build/*/_deps/*'
+      --suppress='*:*/grpc/verify_code/*.pb.*'
       --suppress=missingIncludeSystem
       --suppress='constParameterCallback:*/benchmark/*'
       --project=${CMAKE_BINARY_DIR}/compile_commands.json

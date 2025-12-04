@@ -4,6 +4,12 @@ include(GenerateExportHeader)
 # 获取所有utils文件
 file(GLOB_RECURSE SRC_UTILS_FILES ${CMAKE_CURRENT_SOURCE_DIR}/*.cc)
 
+set_source_files_properties(
+  ${CMAKE_CURRENT_SOURCE_DIR}/grpc/verify_code/verify_code.pb.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/grpc/verify_code/verify_code.grpc.pb.cc
+  PROPERTIES COMPILE_OPTIONS "-w"
+)
+
 # 生成库
 add_library(
   utils
@@ -71,6 +77,9 @@ target_link_libraries(
   utils PUBLIC
   Boost::url
   ${JSONCPP_LINK_TARGET}
+  gRPC::grpc++
+  protobuf::libprotobuf
+  PkgConfig::MARIADB
 )
 
 # 安装库文件和头文件

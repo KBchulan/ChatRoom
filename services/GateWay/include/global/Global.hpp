@@ -46,6 +46,18 @@ namespace server
 {
 constexpr unsigned short DEFAULT_SERVER_PORT = 10001;  // 默认服务器端口
 constexpr std::uint16_t MAX_FLATBUFFER_SIZE = 8192;    // 最大扁平化缓冲区大小 8KB
+
+constexpr const char* RPC_SERVER_HOST = "127.0.0.1";              // RPC 服务器地址
+constexpr std::uint16_t RPC_SERVER_PORT = 10002;                  // RPC 服务器端口
+constexpr std::size_t RPC_CONNECTION_POOL_SIZE = 8;               // RPC 连接池大小
+constexpr std::int32_t RPC_MAX_SEND_RECV_SIZE = 4 * 1024 * 1024;  // RPC 最大发送和接收消息大小 4MB
+
+constexpr const char* DB_HOST = "127.0.0.1";  // 数据库主机地址
+constexpr std::uint16_t DB_PORT = 3306;       // 数据库端口
+constexpr const char* DB_USER = "root";       // 数据库用户名
+constexpr const char* DB_PASSWORD = "whx";    // 数据库密码
+constexpr const char* DB_NAME = "chatroom";   // 数据库名称
+constexpr std::size_t DB_MAX_POOL_SIZE = 16;  // 数据库最大连接池大小
 }  // namespace server
 
 }  // namespace global

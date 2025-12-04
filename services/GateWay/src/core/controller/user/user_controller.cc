@@ -5,6 +5,7 @@
 #include <regex>
 #pragma GCC diagnostic pop
 
+#include <core/service/user/user_service.hpp>
 #include <utils/common/code.hpp>
 
 namespace core
@@ -12,6 +13,8 @@ namespace core
 
 struct UserController::_impl
 {
+  UserService& user_service = UserService::GetInstance();
+
   [[nodiscard]] static bool is_valid_email(const std::string& email)
   {
     // 基本的邮箱正则表达式
@@ -21,8 +24,6 @@ struct UserController::_impl
 
   void handle_send_code_request(const UserSendCodeDTO& dto, core::CommonVO& common_vo) const
   {
-    void(this);
-
     // 校验参数
     if (dto.email.empty() || (dto.purpose != 1 && dto.purpose != 2 && dto.purpose != 3))
     {
@@ -40,7 +41,12 @@ struct UserController::_impl
       return;
     }
 
-    // TODO: 调用 service 层发送验证码
+    // 调用 service 层发送验证码
+    user_service.HandleSendCodeRequest(dto, common_vo);
+    if (common_vo.code != utils::SUCCESS)
+    {
+      return;
+    }
 
     common_vo.code = utils::SUCCESS;
     common_vo.message = "Verification code sent successfully";

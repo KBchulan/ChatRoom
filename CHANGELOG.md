@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [2025-12-04]
+
+### ✨ Features
+- **[framework]** 配置邮件 rpc 服务器参数和 mysql 参数，并在主函数中初始化。集成 RPC 框架，封装连接池子和客户端同步调用接口。封装 mysql 连接池，以及 增删查改 的优雅接口。完善 service -> repository 架构，则加验证码接口。
+
 ## [2025-12-03]
 
 ### ✨ Features
