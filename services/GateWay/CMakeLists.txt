@@ -181,6 +181,15 @@ endif()
 # gRPC
 find_package(gRPC CONFIG QUIET)
 if(NOT gRPC_FOUND)
+  if(PkgConfig_FOUND)
+    pkg_check_modules(GRPC QUIET IMPORTED_TARGET grpc++ grpc)
+    if(GRPC_FOUND)
+      set(gRPC_FOUND TRUE)
+      add_library(gRPC::grpc++ ALIAS PkgConfig::GRPC)
+    endif()
+  endif()
+endif()
+if(NOT gRPC_FOUND)
   message(FATAL_ERROR
     "gRPC is required.\n"
     "Please install: sudo pacman -S grpc"
@@ -190,11 +199,18 @@ endif()
 # protobuf
 find_package(Protobuf CONFIG QUIET)
 if(NOT Protobuf_FOUND)
+  find_package(Protobuf QUIET)
+endif()
+if(NOT Protobuf_FOUND)
   message(FATAL_ERROR
     "Protobuf is required.\n"
     "Please install: sudo pacman -S protobuf"
   )
 endif()
+
+# 查找 protoc 和 grpc_cpp_plugin
+find_program(PROTOC protoc REQUIRED)
+find_program(GRPC_CPP_PLUGIN grpc_cpp_plugin REQUIRED)
 
 # MariaDB
 if(PkgConfig_FOUND)
@@ -280,6 +296,22 @@ endif()
 if(ENABLE_CPPCHECK)
   find_program(CPPCHECK cppcheck)
   if(CPPCHECK)
+    # 设置 PROTOBUF_VERSION_NUM 变量
+    string(REPLACE "." ";" PB_VERSION_LIST ${Protobuf_VERSION})
+    list(GET PB_VERSION_LIST 0 PB_MAJOR)
+    list(GET PB_VERSION_LIST 1 PB_MINOR)
+    list(LENGTH PB_VERSION_LIST PB_VERSION_LEN)
+    if(PB_VERSION_LEN GREATER 2)
+      list(GET PB_VERSION_LIST 2 PB_PATCH)
+    else()
+      set(PB_PATCH 0)
+    endif()
+    if(PB_MAJOR LESS 5)
+      math(EXPR PROTOBUF_VERSION_NUM "${PB_MAJOR} * 1000000 + ${PB_MINOR} * 1000 + ${PB_PATCH}")
+    else()
+      math(EXPR PROTOBUF_VERSION_NUM "6 * 1000000 + ${PB_MAJOR} * 1000 + ${PB_MINOR}")
+    endif()
+
     set(CPPCHECK_COMMAND ${CPPCHECK}
       --enable=all
       --check-level=exhaustive
@@ -292,9 +324,10 @@ if(ENABLE_CPPCHECK)
       --suppress='*:*/_deps/*'
       --suppress='*:*/build/_deps/*'
       --suppress='*:*/build/*/_deps/*'
-      --suppress='*:*/grpc/verify_code/*.pb.*'
+      --suppress='*:*/src/utils/grpc/verify_code/*.pb.*'
       --suppress=missingIncludeSystem
       --suppress='constParameterCallback:*/benchmark/*'
+      -DPROTOBUF_VERSION=${PROTOBUF_VERSION_NUM}
       --project=${CMAKE_BINARY_DIR}/compile_commands.json
     )
     add_custom_target(

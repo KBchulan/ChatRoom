@@ -6,6 +6,7 @@
 set -e
 
 SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
+EXCLUDE_PATTERNS=(-not -name "*.pb.cc" -not -name "*.pb.h")
 PROJECT_ROOT="$SCRIPT_DIR/.."
 
 SOURCE_DIRS=(
@@ -39,10 +40,10 @@ fi
 
 if [ "$CHECK_MODE" = true ]; then
     echo "正在检查指定的源代码目录格式: src/, include/, tests/, benchmark/"
-    find "${SOURCE_DIRS[@]}" -type f \( "${FILE_PATTERNS[@]}" \) -print0 | xargs -0 clang-format --dry-run -Werror
+    find "${SOURCE_DIRS[@]}" -type f \( "${FILE_PATTERNS[@]}" \) "${EXCLUDE_PATTERNS[@]}" -print0 | xargs -0 clang-format --dry-run -Werror
     echo "格式检查完成"
 else
     echo "正在格式化指定的源代码目录: src/, include/, tests/, benchmark/"
-    find "${SOURCE_DIRS[@]}" -type f \( "${FILE_PATTERNS[@]}" \) -print0 | xargs -0 clang-format -i
+    find "${SOURCE_DIRS[@]}" -type f \( "${FILE_PATTERNS[@]}" \) "${EXCLUDE_PATTERNS[@]}" -print0 | xargs -0 clang-format -i
     echo "格式化完成"
 fi

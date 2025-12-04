@@ -26,7 +26,7 @@ public:
 
   static UserRepository& GetInstance();
 
-  bool InsertVerifyCode(const UserVerifyCodeDO& user_verify_code_do);
+  [[nodiscard]] bool InsertVerifyCode(const UserVerifyCodeDO& user_verify_code_do) const;
 
   UserRepository(const UserRepository&) = delete;
   UserRepository& operator=(const UserRepository&) = delete;

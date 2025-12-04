@@ -13,6 +13,7 @@
 
 #include <mysql/mysql.h>
 
+#include <algorithm>
 #include <array>
 #include <atomic>
 #include <cstddef>
@@ -20,13 +21,14 @@
 #include <cstring>
 #include <global/Global.hpp>
 #include <string>
+#include <utils/UtilsExport.hpp>
 #include <utils/pool/db_params.hpp>
 #include <vector>
 
 namespace utils
 {
 
-struct DBConfig
+struct UTILS_EXPORT DBConfig
 {
   std::string host;
   std::uint16_t port;
@@ -37,7 +39,7 @@ struct DBConfig
 };
 
 class DBPool;
-class PooledConnection
+class UTILS_EXPORT PooledConnection
 {
 public:
   PooledConnection(MYSQL* conn, DBPool* pool, std::size_t slot) : _conn(conn), _pool(pool), _slot(slot)
@@ -52,7 +54,7 @@ public:
   }
 
   // 执行 SQL 语句 (INSERT/UPDATE/DELETE)
-  bool Execute(const char* sql, std::vector<ParamHolder>& params)
+  bool Execute(const char* sql, const std::vector<ParamHolder>& params)
   {
     MYSQL_STMT* stmt = mysql_stmt_init(_conn);
     if (stmt == nullptr)
@@ -69,12 +71,8 @@ public:
     // 提取 MYSQL_BIND 数组
     if (!params.empty())
     {
-      std::vector<MYSQL_BIND> binds;
-      binds.reserve(params.size());
-      for (auto& holder : params)
-      {
-        binds.push_back(holder.bind);
-      }
+      std::vector<MYSQL_BIND> binds(params.size());
+      std::ranges::transform(params, binds.begin(), [](const ParamHolder& holder) { return holder.bind; });
 
       if (mysql_stmt_bind_param(stmt, binds.data()) != 0)
       {
@@ -89,7 +87,8 @@ public:
   }
 
   // 查询单行 (SELECT ... LIMIT 1)，成功返回 true
-  bool QueryOne(const char* sql, std::vector<ParamHolder>& params, std::vector<ResultHolder>& results)
+  // cppcheck-suppress unusedFunction
+  bool QueryOne(const char* sql, const std::vector<ParamHolder>& params, const std::vector<ResultHolder>& results)
   {
     MYSQL_STMT* stmt = mysql_stmt_init(_conn);
     if (stmt == nullptr)
@@ -106,12 +105,8 @@ public:
     // 绑定输入参数
     if (!params.empty())
     {
-      std::vector<MYSQL_BIND> binds;
-      binds.reserve(params.size());
-      for (auto& holder : params)
-      {
-        binds.push_back(holder.bind);
-      }
+      std::vector<MYSQL_BIND> binds(params.size());
+      std::ranges::transform(params, binds.begin(), [](const ParamHolder& holder) { return holder.bind; });
 
       if (mysql_stmt_bind_param(stmt, binds.data()) != 0)
       {
@@ -129,12 +124,8 @@ public:
     // 绑定输出结果
     if (!results.empty())
     {
-      std::vector<MYSQL_BIND> binds;
-      binds.reserve(results.size());
-      for (auto& holder : results)
-      {
-        binds.push_back(holder.bind);
-      }
+      std::vector<MYSQL_BIND> binds(results.size());
+      std::ranges::transform(results, binds.begin(), [](const ResultHolder& holder) { return holder.bind; });
 
       if (mysql_stmt_bind_result(stmt, binds.data()) != 0)
       {
@@ -150,8 +141,9 @@ public:
 
   // 查询多行，返回行数
   template <typename Callback>
-  std::size_t QueryMany(const char* sql, std::vector<ParamHolder>& params, std::vector<ResultHolder>& results,
-                        Callback callback)
+  // cppcheck-suppress unusedFunction
+  std::size_t QueryMany(const char* sql, const std::vector<ParamHolder>& params,
+                        const std::vector<ResultHolder>& results, Callback callback)
   {
     MYSQL_STMT* stmt = mysql_stmt_init(_conn);
     if (stmt == nullptr)
@@ -168,12 +160,8 @@ public:
     // 绑定输入参数
     if (!params.empty())
     {
-      std::vector<MYSQL_BIND> binds;
-      binds.reserve(params.size());
-      for (auto& holder : params)
-      {
-        binds.push_back(holder.bind);
-      }
+      std::vector<MYSQL_BIND> binds(params.size());
+      std::ranges::transform(params, binds.begin(), [](const ParamHolder& holder) { return holder.bind; });
 
       if (mysql_stmt_bind_param(stmt, binds.data()) != 0)
       {
@@ -191,12 +179,8 @@ public:
     // 绑定输出结果
     if (!results.empty())
     {
-      std::vector<MYSQL_BIND> binds;
-      binds.reserve(results.size());
-      for (auto& holder : results)
-      {
-        binds.push_back(holder.bind);
-      }
+      std::vector<MYSQL_BIND> binds(results.size());
+      std::ranges::transform(results, binds.begin(), [](const ResultHolder& holder) { return holder.bind; });
 
       if (mysql_stmt_bind_result(stmt, binds.data()) != 0)
       {
@@ -231,7 +215,7 @@ private:
   std::size_t _slot;
 };
 
-class DBPool
+class UTILS_EXPORT DBPool
 {
   static constexpr std::size_t MAX_POOL_SIZE = global::server::DB_MAX_POOL_SIZE;
 
@@ -332,7 +316,7 @@ private:
     return conn;
   }
 
-  DBConfig _config;
+  DBConfig _config{};
   std::size_t _pool_size{0};
   std::array<Slot, MAX_POOL_SIZE> _slots;
   std::atomic<std::size_t> _available{0};

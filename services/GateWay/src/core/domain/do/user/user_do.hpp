@@ -12,13 +12,14 @@
 #define USER_DO_HPP
 
 #include <chrono>
+#include <core/CoreExport.hpp>
 #include <cstdint>
 #include <string>
 
 namespace core
 {
 
-struct UserVerifyCodeDO
+struct CORE_EXPORT UserVerifyCodeDO
 {
   std::int64_t id;
   std::string email;

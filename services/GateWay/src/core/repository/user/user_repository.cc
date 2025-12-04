@@ -1,9 +1,8 @@
 #include "user_repository.hpp"
 
+#include <core/domain/do/user/user_do.hpp>
 #include <utils/pool/db_params.hpp>
 #include <utils/pool/db_pool.hpp>
-
-#include "core/domain/do/user/user_do.hpp"
 
 namespace core
 {
@@ -22,7 +21,7 @@ struct UserRepository::_impl
     return conn.Execute(sql, params);
   }
 
-  // 下面两个用于演示
+  // // 下面两个用于演示
   // [[nodiscard]] std::optional<UserVerifyCodeDO> find_by_email_and_purpose(const std::string& email,
   //                                                                         std::int8_t purpose) const
   // {
@@ -102,7 +101,7 @@ UserRepository& UserRepository::GetInstance()
   return instance;
 }
 
-bool UserRepository::InsertVerifyCode(const UserVerifyCodeDO& user_verify_code_do)
+bool UserRepository::InsertVerifyCode(const UserVerifyCodeDO& user_verify_code_do) const
 {
   return _pimpl->insert_verify_code(user_verify_code_do);
 }

@@ -1,19 +1,52 @@
 # 引入module
 include(GenerateExportHeader)
 
+# Proto 代码生成
+set(PROTO_DIR ${PROJECT_SOURCE_DIR}/../../proto)
+set(PROTO_OUT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/grpc/verify_code)
+
+# 确保输出目录存在
+file(MAKE_DIRECTORY ${PROTO_OUT_DIR})
+
+# 定义生成的文件
+set(PROTO_SRCS
+  ${PROTO_OUT_DIR}/verify_code.pb.cc
+  ${PROTO_OUT_DIR}/verify_code.grpc.pb.cc
+)
+set(PROTO_HDRS
+  ${PROTO_OUT_DIR}/verify_code.pb.h
+  ${PROTO_OUT_DIR}/verify_code.grpc.pb.h
+)
+
+# 添加自定义命令生成 protobuf/grpc 代码
+add_custom_command(
+  OUTPUT ${PROTO_SRCS} ${PROTO_HDRS}
+  COMMAND ${PROTOC}
+    --proto_path=${PROTO_DIR}
+    --cpp_out=${PROTO_OUT_DIR}
+    --grpc_out=${PROTO_OUT_DIR}
+    --plugin=protoc-gen-grpc=${GRPC_CPP_PLUGIN}
+    ${PROTO_DIR}/verify_code.proto
+  DEPENDS ${PROTO_DIR}/verify_code.proto
+  COMMENT "Generating protobuf/grpc code for verify_code.proto"
+)
+
+# 为生成的 proto 文件禁用警告
+set_source_files_properties(
+  ${PROTO_SRCS}
+  PROPERTIES
+  COMPILE_OPTIONS "-Wno-conversion;-Wno-shadow"
+)
+
 # 获取所有utils文件
 file(GLOB_RECURSE SRC_UTILS_FILES ${CMAKE_CURRENT_SOURCE_DIR}/*.cc)
-
-set_source_files_properties(
-  ${CMAKE_CURRENT_SOURCE_DIR}/grpc/verify_code/verify_code.pb.cc
-  ${CMAKE_CURRENT_SOURCE_DIR}/grpc/verify_code/verify_code.grpc.pb.cc
-  PROPERTIES COMPILE_OPTIONS "-w"
-)
+list(FILTER SRC_UTILS_FILES EXCLUDE REGEX ".*\\.pb\\.cc$")
 
 # 生成库
 add_library(
   utils
   ${SRC_UTILS_FILES}
+  ${PROTO_SRCS}
 )
 
 # 设置警告标志
