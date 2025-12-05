@@ -30,7 +30,7 @@ namespace utils
 
 using namespace KBchulan::ChatRoom::VerifyCode;
 
-struct GrpcError
+struct UTILS_EXPORT GrpcError
 {
   grpc::StatusCode code;
   std::string message;

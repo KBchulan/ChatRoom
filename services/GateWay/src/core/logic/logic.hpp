@@ -12,9 +12,8 @@
 #define LOGIC_HPP
 
 #include <core/CoreExport.hpp>
-#include <memory>
-#include <string>
 #include <utils/common/type.hpp>
+#include <utils/context/context.hpp>
 
 namespace core
 {
@@ -27,10 +26,10 @@ public:
 
   static Logic& GetInstance();
 
-  RequestHandleResult HandleGetRequest(const utils::ParsedUrl& url);
-  RequestHandleResult HandlePostRequest(const utils::ParsedUrl& url, const std::string& body);
-  RequestHandleResult HandlePutRequest(const utils::ParsedUrl& url, const std::string& body);
-  RequestHandleResult HandleDeleteRequest(const utils::ParsedUrl& url);
+  RequestHandleResult HandleGetRequest(const utils::Context& ctx);
+  RequestHandleResult HandlePostRequest(const utils::Context& ctx);
+  RequestHandleResult HandlePutRequest(const utils::Context& ctx);
+  RequestHandleResult HandleDeleteRequest(const utils::Context& ctx);
 
   Logic(const Logic&) = delete;
   Logic& operator=(const Logic&) = delete;

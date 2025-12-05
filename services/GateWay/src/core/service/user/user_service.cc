@@ -2,7 +2,7 @@
 
 #include <core/domain/do/user/user_do.hpp>
 #include <core/repository/user/user_repository.hpp>
-#include <memory>
+#include <tools/Logger.hpp>
 #include <utils/common/code.hpp>
 #include <utils/grpc/client/verify_code_client.hpp>
 
@@ -13,15 +13,19 @@ struct UserService::_impl
 {
   UserRepository& _user_repository = UserRepository::GetInstance();
   utils::VerifyCodeClient& _verify_code_client = utils::VerifyCodeClient::GetInstance();
+  tools::Logger& logger = tools::Logger::getInstance();
 
-  void handle_send_code_request(const UserSendCodeDTO& dto, core::CommonVO& common_vo) const
+  void handle_send_code_request(const utils::Context& ctx, const UserSendCodeDTO& dto, core::CommonVO& common_vo) const
   {
+    auto request_id = std::any_cast<std::string>(ctx.Get("request_id"));
+
     // 发送验证码
     auto result = _verify_code_client.SendVerifyCode(dto.email);
 
     // 发送失败
     if (!result)
     {
+      logger.error("{}: Failed to send verification code: {}", request_id, result.error().message);
       common_vo.code = utils::SEND_EMAIL_CODE_FAILED;
       common_vo.message = "Failed to send verification code: " + result.error().message;
       common_vo.data = "";
@@ -36,6 +40,7 @@ struct UserService::_impl
 
     if (!_user_repository.InsertVerifyCode(user_verify_code_do))
     {
+      logger.error("{}: Failed to insert verification code into database.", request_id);
       common_vo.code = utils::DATABASE_ERROR;
       common_vo.message = "Failed to insert verification code into database.";
       common_vo.data = "";
@@ -59,9 +64,10 @@ UserService& UserService::GetInstance()
   return instance;
 }
 
-void UserService::HandleSendCodeRequest(const UserSendCodeDTO& dto, core::CommonVO& common_vo) const
+void UserService::HandleSendCodeRequest(const utils::Context& ctx, const UserSendCodeDTO& dto,
+                                        core::CommonVO& common_vo) const
 {
-  _pimpl->handle_send_code_request(dto, common_vo);
+  _pimpl->handle_send_code_request(ctx, dto, common_vo);
 }
 
 }  // namespace core

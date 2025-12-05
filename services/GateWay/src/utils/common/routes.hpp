@@ -15,14 +15,6 @@ namespace utils
 {
 
 // ================
-// demo 模块路由
-// ================
-constexpr const char* DEMO_GET_TEST_ROUTE = "/demo/get-test";
-constexpr const char* DEMO_POST_TEST_ROUTE = "/demo/post-test";
-constexpr const char* DEMO_PUT_TEST_ROUTE = "/demo/put-test";
-constexpr const char* DEMO_DELETE_TEST_ROUTE = "/demo/delete-test";
-
-// ================
 // user 模块路由
 // ================
 constexpr const char* USER_SEND_CODE_ROUTE = "/user/send-code";

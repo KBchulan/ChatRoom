@@ -17,6 +17,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <string>
+#include <utils/UtilsExport.hpp>
 #include <vector>
 
 namespace utils
@@ -26,7 +27,7 @@ namespace utils
 // 参数绑定 (用于 INSERT/UPDATE/DELETE 的输入参数)
 // ============================================================================
 
-struct ParamHolder
+struct UTILS_EXPORT ParamHolder
 {
   MYSQL_BIND bind{};
   unsigned long length{0};
@@ -151,7 +152,7 @@ std::vector<ParamHolder> MakeParams(Args&... args)
 
 // 固定大小的字符串 buffer
 template <std::size_t N>
-struct StringBuffer
+struct UTILS_EXPORT StringBuffer
 {
   std::array<char, N> data{};
   unsigned long length{0};
@@ -163,7 +164,7 @@ struct StringBuffer
   }
 };
 
-struct ResultHolder
+struct UTILS_EXPORT ResultHolder
 {
   MYSQL_BIND bind{};
 };

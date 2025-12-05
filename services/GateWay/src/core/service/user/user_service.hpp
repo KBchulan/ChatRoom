@@ -14,7 +14,7 @@
 #include <core/CoreExport.hpp>
 #include <core/domain/dto/user/user_dto.hpp>
 #include <core/domain/vo/common_vo.hpp>
-#include <memory>
+#include <utils/context/context.hpp>
 
 namespace core
 {
@@ -27,7 +27,7 @@ public:
 
   static UserService& GetInstance();
 
-  void HandleSendCodeRequest(const UserSendCodeDTO& dto, core::CommonVO& common_vo) const;
+  void HandleSendCodeRequest(const utils::Context& ctx, const UserSendCodeDTO& dto, core::CommonVO& common_vo) const;
 
   UserService(const UserService&) = delete;
   UserService& operator=(const UserService&) = delete;

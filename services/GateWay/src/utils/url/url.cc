@@ -12,6 +12,7 @@ std::optional<std::string> ParsedUrl::Get(std::string_view key) const
   return std::nullopt;
 }
 
+// cppcheck-suppress unusedFunction
 std::string ParsedUrl::GetOr(std::string_view key, std::string_view default_value) const
 {
   return Get(key).value_or(std::string(default_value));

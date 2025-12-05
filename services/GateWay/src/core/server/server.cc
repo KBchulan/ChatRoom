@@ -5,7 +5,6 @@
 #include <boost/system/detail/error_code.hpp>
 #include <core/connection/connection.hpp>
 #include <functional>
-#include <memory>
 #include <tools/Defer.hpp>
 #include <tools/Logger.hpp>
 

@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [2025-12-05]
+
+### ✨ Features
+- **[refactor]** 移除 demo 模块相关代码，移除重复包含。更新 context 模块，用于上下文存储，目前有 request_id。
+
 ## [2025-12-04]
 
 ### ✨ Features

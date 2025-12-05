@@ -3,16 +3,13 @@
 #include <boost/asio/steady_timer.hpp>
 #include <boost/beast/core.hpp>
 #include <boost/beast/http.hpp>
-#include <chrono>
 #include <core/logic/logic.hpp>
-#include <functional>
 #include <global/Global.hpp>
-#include <string>
 #include <tools/Defer.hpp>
+#include <tools/Id.hpp>
 #include <tools/Logger.hpp>
-#include <utility>
 #include <utils/common/type.hpp>
-#include <utils/url/url.hpp>
+#include <utils/context/context.hpp>
 
 namespace core
 {
@@ -88,6 +85,7 @@ struct Connection::_impl
 
     int status_code = 0;
 
+    // 解析 URL
     auto url = utils::ParseUrl(_request.target());
     if (!url.has_value())
     {
@@ -98,23 +96,40 @@ struct Connection::_impl
       return;
     }
 
-    // TODO: 增加 JWT 等校验机制
+    // 构造请求上下文
+    std::string body = boost::beast::buffers_to_string(_request.body().data());
+    utils::Context ctx(url.value(), body);
 
-    std::string body_str;
+    // 增加 request id 方便追踪日志
+    auto request_id = tools::UuidGenerator::generateShortUuid();
+    if (!request_id.has_value())
+    {
+      status_code = static_cast<int>(boost::beast::http::status::bad_request);
+      tools::Logger::getInstance().warning("| {} | {} | {}", _request.method_string(), status_code, _request.target());
+      _response.result(boost::beast::http::status::bad_request);
+      boost::beast::ostream(_response.body()) << "Generate request ID failed";
+      return;
+    }
+
+    ctx.Set("request_id", request_id.value());
+    _response.set("X-Request-ID", request_id.value());
+
+    // TODO: 增加重复请求检测机制/幂等性
+
+    // TODO: 增加 JWT 校验机制
+
     auto result = [&]() -> RequestHandleResult
     {
       switch (_request.method())
       {
         case boost::beast::http::verb::get:
-          return Logic::GetInstance().HandleGetRequest(url.value());
+          return Logic::GetInstance().HandleGetRequest(ctx);
         case boost::beast::http::verb::post:
-          body_str = boost::beast::buffers_to_string(_request.body().data());
-          return Logic::GetInstance().HandlePostRequest(url.value(), body_str);
+          return Logic::GetInstance().HandlePostRequest(ctx);
         case boost::beast::http::verb::put:
-          body_str = boost::beast::buffers_to_string(_request.body().data());
-          return Logic::GetInstance().HandlePutRequest(url.value(), body_str);
+          return Logic::GetInstance().HandlePutRequest(ctx);
         case boost::beast::http::verb::delete_:
-          return Logic::GetInstance().HandleDeleteRequest(url.value());
+          return Logic::GetInstance().HandleDeleteRequest(ctx);
         default:
           return std::unexpected("Unsupported HTTP method");
       }
@@ -123,14 +138,16 @@ struct Connection::_impl
     if (result.has_value())
     {
       status_code = static_cast<int>(boost::beast::http::status::ok);
-      tools::Logger::getInstance().info("| {} | {} | {}", _request.method_string(), status_code, _request.target());
+      tools::Logger::getInstance().info("| {} | {} | {} | {}", request_id.value(), _request.method_string(),
+                                        status_code, _request.target());
       _response.result(boost::beast::http::status::ok);
       boost::beast::ostream(_response.body()) << result.value();
     }
     else
     {
       status_code = static_cast<int>(boost::beast::http::status::bad_request);
-      tools::Logger::getInstance().warning("| {} | {} | {}", _request.method_string(), status_code, _request.target());
+      tools::Logger::getInstance().warning("| {} | {} | {} | {}", request_id.value(), _request.method_string(),
+                                           status_code, _request.target());
       _response.result(boost::beast::http::status::bad_request);
       boost::beast::ostream(_response.body()) << result.error();
     }

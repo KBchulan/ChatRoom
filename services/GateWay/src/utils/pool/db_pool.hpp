@@ -11,19 +11,11 @@
 #ifndef DB_POOL_HPP
 #define DB_POOL_HPP
 
-#include <mysql/mysql.h>
-
 #include <algorithm>
-#include <array>
 #include <atomic>
-#include <cstddef>
-#include <cstdint>
 #include <cstring>
 #include <global/Global.hpp>
-#include <string>
-#include <utils/UtilsExport.hpp>
 #include <utils/pool/db_params.hpp>
-#include <vector>
 
 namespace utils
 {

@@ -6,6 +6,7 @@
 #pragma GCC diagnostic pop
 
 #include <core/service/user/user_service.hpp>
+#include <tools/Logger.hpp>
 #include <utils/common/code.hpp>
 
 namespace core
@@ -14,6 +15,7 @@ namespace core
 struct UserController::_impl
 {
   UserService& user_service = UserService::GetInstance();
+  tools::Logger& logger = tools::Logger::getInstance();
 
   [[nodiscard]] static bool is_valid_email(const std::string& email)
   {
@@ -22,11 +24,14 @@ struct UserController::_impl
     return std::regex_match(email, pattern);
   }
 
-  void handle_send_code_request(const UserSendCodeDTO& dto, core::CommonVO& common_vo) const
+  void handle_send_code_request(const utils::Context& ctx, const UserSendCodeDTO& dto, core::CommonVO& common_vo) const
   {
+    auto request_id = std::any_cast<std::string>(ctx.Get("request_id"));
+
     // 校验参数
     if (dto.email.empty() || (dto.purpose != 1 && dto.purpose != 2 && dto.purpose != 3))
     {
+      logger.error("{}: Invalid parameters", request_id);
       common_vo.code = utils::INVALID_PARAMETERS;
       common_vo.message = "Invalid parameters";
       common_vo.data = "";
@@ -35,6 +40,7 @@ struct UserController::_impl
 
     if (!is_valid_email(dto.email))
     {
+      logger.error("{}: Invalid email format", request_id);
       common_vo.code = utils::INVALID_EMAIL_FORMAT;
       common_vo.message = "Invalid email format";
       common_vo.data = "";
@@ -42,7 +48,7 @@ struct UserController::_impl
     }
 
     // 调用 service 层发送验证码
-    user_service.HandleSendCodeRequest(dto, common_vo);
+    user_service.HandleSendCodeRequest(ctx, dto, common_vo);
     if (common_vo.code != utils::SUCCESS)
     {
       return;
@@ -66,9 +72,10 @@ UserController& UserController::GetInstance()
   return instance;
 }
 
-void UserController::HandleSendCodeRequest(const UserSendCodeDTO& dto, core::CommonVO& common_vo) const
+void UserController::HandleSendCodeRequest(const utils::Context& ctx, const UserSendCodeDTO& dto,
+                                           core::CommonVO& common_vo) const
 {
-  _pimpl->handle_send_code_request(dto, common_vo);
+  _pimpl->handle_send_code_request(ctx, dto, common_vo);
 }
 
 }  // namespace core
