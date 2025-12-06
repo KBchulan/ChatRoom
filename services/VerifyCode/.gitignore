@@ -1,0 +1,11 @@
+.cache
+build
+
+CoreExport.hpp
+UtilsExport.hpp
+Config.hpp
+compile_commands.json
+
+
+*.pb.cc
+*.pb.h

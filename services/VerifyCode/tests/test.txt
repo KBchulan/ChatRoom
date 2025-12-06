@@ -1,0 +1,5 @@
+From: Test <2262317520@qq.com>
+To: 2262317520@qq.com
+Subject: 测试邮件
+
+这是一封使用curl发送的测试邮件。
