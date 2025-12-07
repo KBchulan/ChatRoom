@@ -21,9 +21,6 @@ namespace core
 class CORE_EXPORT UserRepository
 {
 public:
-  UserRepository();
-  ~UserRepository();
-
   static UserRepository& GetInstance();
 
   [[nodiscard]] bool InsertVerifyCode(const UserVerifyCodeDO& user_verify_code_do) const;
@@ -34,6 +31,9 @@ public:
   UserRepository& operator=(UserRepository&&) = delete;
 
 private:
+  UserRepository();
+  ~UserRepository();
+
   struct _impl;
   std::unique_ptr<_impl> _pimpl;
 };

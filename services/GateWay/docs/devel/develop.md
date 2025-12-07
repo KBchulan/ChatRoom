@@ -31,3 +31,12 @@
 
 - 更新 context 模块，用于上下文存储，目前有 request_id。
 - 移除 demo 模块相关代码，移除重复包含。
+
+### [2025-12-07] 服务架构调整
+
+- 增加 Global 配置，引入网络层池子和逻辑层池子大小配置。
+- 实现 Bussiness，存储一个线程池，用于逻辑处理投递，默认为 8 个线程。
+- 实现 io 池子，启动 8 个线程，每个线程跑一个 ioc，并配套一个 work_guard 来维持生命，建立连接时不再绑定到主线程的 ioc，而是采用 round-bing 来分配 ioc。
+- 调整 connection 逻辑，把处理后的请求直接投递到 bussiness 的池子里处理，随后再返回 io 线程发送回包。
+- 修复 UserController/Logic/UserRepository/UserService 的单例实现。
+- 为 context 增加移动相关操作。

@@ -45,6 +45,8 @@ constexpr std::chrono::microseconds FLUSH_INTERVAL{100};  // 刷新等待间隔
 namespace server
 {
 constexpr unsigned short DEFAULT_SERVER_PORT = 10001;  // 默认服务器端口
+constexpr std::int8_t IO_CONTEXT_POOL_SIZE = 8;        // io_context 池子大小
+constexpr std::int8_t BUSINESS_POOL_SIZE = 8;          // 业务池子大小
 constexpr std::uint16_t MAX_FLATBUFFER_SIZE = 8192;    // 最大扁平化缓冲区大小 8KB
 
 constexpr const char* RPC_SERVER_HOST = "127.0.0.1";              // RPC 服务器地址

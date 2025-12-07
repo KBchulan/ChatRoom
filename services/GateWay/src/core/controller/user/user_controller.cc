@@ -1,9 +1,19 @@
 #include "user_controller.hpp"
 
+#if defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunknown-warning-option"
+#pragma clang diagnostic ignored "-Wunknown-pragmas"
+#endif
+
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
 #include <regex>
 #pragma GCC diagnostic pop
+
+#if defined(__clang__)
+#pragma clang diagnostic pop
+#endif
 
 #include <core/service/user/user_service.hpp>
 #include <tools/Logger.hpp>

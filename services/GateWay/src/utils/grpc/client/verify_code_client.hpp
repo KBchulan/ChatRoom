@@ -23,7 +23,7 @@
 #include <expected>
 #include <memory>
 #include <utils/UtilsExport.hpp>
-#include <utils/pool/channel_pool.hpp>
+#include <utils/pool/channel/channel_pool.hpp>
 
 namespace utils
 {
@@ -41,35 +41,11 @@ using VerifyCodeResult = std::expected<VerifyCodeResponse, GrpcError>;
 class UTILS_EXPORT VerifyCodeClient
 {
 public:
-  static VerifyCodeClient& GetInstance()
-  {
-    static VerifyCodeClient instance;
-    return instance;
-  }
+  static VerifyCodeClient& GetInstance();
 
-  void Init(const std::string& server_address, std::size_t pool_size)
-  {
-    _pool = std::make_unique<ChannelPool>(server_address, pool_size);
-  }
+  void Init(const std::string& server_address, std::size_t pool_size);
 
-  [[nodiscard]] VerifyCodeResult SendVerifyCode(std::string_view email)
-  {
-    auto stub = create_stub();
-
-    VerifyCodeRequest request;
-    request.set_email(std::string(email));
-
-    VerifyCodeResponse response;
-    grpc::ClientContext context;
-
-    auto status = stub->VerifyCode(&context, request, &response);
-
-    if (status.ok())
-    {
-      return response;
-    }
-    return std::unexpected(GrpcError{.code = status.error_code(), .message = status.error_message()});
-  }
+  [[nodiscard]] VerifyCodeResult SendVerifyCode(std::string_view email);
 
   VerifyCodeClient(const VerifyCodeClient&) = delete;
   VerifyCodeClient& operator=(const VerifyCodeClient&) = delete;
@@ -80,10 +56,7 @@ private:
   VerifyCodeClient() = default;
   ~VerifyCodeClient() = default;
 
-  [[nodiscard]] std::unique_ptr<VerifyCodeService::Stub> create_stub()
-  {
-    return VerifyCodeService::NewStub(_pool->GetChannel());
-  }
+  [[nodiscard]] std::unique_ptr<VerifyCodeService::Stub> create_stub();
 
   std::unique_ptr<ChannelPool> _pool;
 };

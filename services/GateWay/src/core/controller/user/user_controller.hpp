@@ -22,9 +22,6 @@ namespace core
 class CORE_EXPORT UserController
 {
 public:
-  UserController();
-  ~UserController();
-
   static UserController& GetInstance();
 
   void HandleSendCodeRequest(const utils::Context& ctx, const UserSendCodeDTO& dto, core::CommonVO& common_vo) const;
@@ -35,6 +32,9 @@ public:
   UserController& operator=(UserController&&) = delete;
 
 private:
+  UserController();
+  ~UserController();
+
   struct _impl;
   std::unique_ptr<_impl> _pimpl;
 };

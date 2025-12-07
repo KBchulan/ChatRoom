@@ -30,28 +30,11 @@ namespace utils
 class UTILS_EXPORT ChannelPool
 {
 public:
-  ChannelPool(const std::string& target, std::size_t pool_size)
-  {
-    _channels.reserve(pool_size);
+  ChannelPool(const std::string& target, std::size_t pool_size);
 
-    for (std::size_t i = 0; i < pool_size; ++i)
-    {
-      // 设置发送和接收消息的最大大小都为 4MB
-      grpc::ChannelArguments args;
-      args.SetMaxReceiveMessageSize(global::server::RPC_MAX_SEND_RECV_SIZE);
-      args.SetMaxSendMessageSize(global::server::RPC_MAX_SEND_RECV_SIZE);
+  ~ChannelPool();
 
-      _channels.emplace_back(grpc::CreateCustomChannel(target, grpc::InsecureChannelCredentials(), args));
-    }
-  }
-
-  ~ChannelPool() = default;
-
-  [[nodiscard]] std::shared_ptr<grpc::Channel> GetChannel()
-  {
-    std::size_t index = _counter.fetch_add(1, std::memory_order_relaxed) % _channels.size();
-    return _channels[index];
-  }
+  [[nodiscard]] std::shared_ptr<grpc::Channel> GetChannel();
 
 private:
   std::vector<std::shared_ptr<grpc::Channel>> _channels;

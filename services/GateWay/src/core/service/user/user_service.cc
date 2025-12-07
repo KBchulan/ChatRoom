@@ -11,9 +11,9 @@ namespace core
 
 struct UserService::_impl
 {
+  tools::Logger& logger = tools::Logger::getInstance();
   UserRepository& _user_repository = UserRepository::GetInstance();
   utils::VerifyCodeClient& _verify_code_client = utils::VerifyCodeClient::GetInstance();
-  tools::Logger& logger = tools::Logger::getInstance();
 
   void handle_send_code_request(const utils::Context& ctx, const UserSendCodeDTO& dto, core::CommonVO& common_vo) const
   {

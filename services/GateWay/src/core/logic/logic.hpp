@@ -21,9 +21,6 @@ namespace core
 class CORE_EXPORT Logic
 {
 public:
-  Logic();
-  ~Logic();
-
   static Logic& GetInstance();
 
   RequestHandleResult HandleGetRequest(const utils::Context& ctx);
@@ -37,6 +34,9 @@ public:
   Logic& operator=(Logic&&) = delete;
 
 private:
+  Logic();
+  ~Logic();
+
   struct _impl;
   std::unique_ptr<_impl> _pimpl;
 };

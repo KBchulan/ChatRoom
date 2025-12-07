@@ -22,9 +22,6 @@ namespace core
 class CORE_EXPORT UserService
 {
 public:
-  UserService();
-  ~UserService();
-
   static UserService& GetInstance();
 
   void HandleSendCodeRequest(const utils::Context& ctx, const UserSendCodeDTO& dto, core::CommonVO& common_vo) const;
@@ -35,6 +32,9 @@ public:
   UserService& operator=(UserService&&) = delete;
 
 private:
+  UserService();
+  ~UserService();
+
   struct _impl;
   std::unique_ptr<_impl> _pimpl;
 };

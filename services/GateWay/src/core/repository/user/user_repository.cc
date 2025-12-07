@@ -1,8 +1,7 @@
 #include "user_repository.hpp"
 
 #include <core/domain/do/user/user_do.hpp>
-#include <utils/pool/db_params.hpp>
-#include <utils/pool/db_pool.hpp>
+#include <utils/pool/mariadb/db_pool.hpp>
 
 namespace core
 {

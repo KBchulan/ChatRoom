@@ -4,6 +4,7 @@
 #include <boost/asio/ip/tcp.hpp>
 #include <boost/system/detail/error_code.hpp>
 #include <core/connection/connection.hpp>
+#include <core/io/io.hpp>
 #include <functional>
 #include <tools/Defer.hpp>
 #include <tools/Logger.hpp>
@@ -34,8 +35,10 @@ struct Server::_impl
 
     _accept_handler = [this](const boost::system::error_code& errc) -> void
     {
-      defer(start_accept());
-      defer(_socket = boost::asio::ip::tcp::socket(_io_context));
+      defer({
+        _socket = boost::asio::ip::tcp::socket(IO::GetInstance().GetIOContext());
+        start_accept();
+      });
 
       if (errc)
       {
@@ -50,6 +53,11 @@ struct Server::_impl
 
     // 首次开始监听连接
     start_accept();
+  }
+
+  ~_impl()
+  {
+    tools::Logger::getInstance().info("Gateway stopped");
   }
 };
 

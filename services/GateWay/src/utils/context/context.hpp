@@ -33,12 +33,12 @@ public:
 
   Context(const Context&) = delete;
   Context& operator=(const Context&) = delete;
-  Context(Context&&) = delete;
-  Context& operator=(Context&&) = delete;
+  Context(Context&&) noexcept;
+  Context& operator=(Context&&) noexcept;
 
 private:
   struct _impl;
-  std::unique_ptr<_impl> pimpl;
+  std::unique_ptr<_impl> _pimpl;
 };
 
 }  // namespace utils

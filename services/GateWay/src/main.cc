@@ -1,15 +1,19 @@
 #include <boost/asio/signal_set.hpp>
+#include <core/business/business.hpp>
+#include <core/io/io.hpp>
 #include <core/server/server.hpp>
 #include <global/Global.hpp>
 #include <tools/Logger.hpp>
 #include <utils/grpc/client/verify_code_client.hpp>
-#include <utils/pool/db_pool.hpp>
+#include <utils/pool/mariadb/db_pool.hpp>
 
 using namespace global::server;
 
 // 初始化连接池
 void init_connection_pool()
 {
+  tools::Logger::getInstance();
+
   utils::VerifyCodeClient::GetInstance().Init(std::string(RPC_SERVER_HOST) + ":" + std::to_string(RPC_SERVER_PORT),
                                               RPC_CONNECTION_POOL_SIZE);
 
@@ -21,6 +25,9 @@ void init_connection_pool()
                          .pool_size = DB_MAX_POOL_SIZE};
 
   utils::DBPool::GetInstance().Init(config);
+
+  core::Business::GetInstance();
+  core::IO::GetInstance();
 }
 
 int main()
@@ -37,6 +44,7 @@ int main()
     {
       if (!err)
       {
+        std::cout << '\n';
         logger.info("Received signal {}, stopping gateway", signal);
         ioc.stop();
       }
