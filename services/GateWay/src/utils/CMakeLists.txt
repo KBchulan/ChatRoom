@@ -113,6 +113,7 @@ target_link_libraries(
   gRPC::grpc++
   protobuf::libprotobuf
   PkgConfig::MARIADB
+  hiredis::hiredis
 )
 
 # 安装库文件和头文件

@@ -16,8 +16,10 @@
 #endif
 
 #include <core/service/user/user_service.hpp>
+#include <global/Global.hpp>
 #include <tools/Logger.hpp>
 #include <utils/common/code.hpp>
+#include <utils/pool/redis/redis_pool.hpp>
 
 namespace core
 {
@@ -26,6 +28,7 @@ struct UserController::_impl
 {
   UserService& user_service = UserService::GetInstance();
   tools::Logger& logger = tools::Logger::getInstance();
+  utils::RedisPool& redis_pool = utils::RedisPool::GetInstance();
 
   [[nodiscard]] static bool is_valid_email(const std::string& email)
   {
@@ -53,6 +56,30 @@ struct UserController::_impl
       logger.error("{}: Invalid email format", request_id);
       common_vo.code = utils::INVALID_EMAIL_FORMAT;
       common_vo.message = "Invalid email format";
+      common_vo.data = "";
+      return;
+    }
+
+    // 检查是否已经发送
+    std::string email_key = global::server::VERIFY_CODE_PREFIX + dto.email;
+    auto conn = redis_pool.GetConnection();
+    auto reply = conn.Exists(email_key);
+
+    if (!reply.IsValid() || reply.IsError())
+    {
+      logger.error("{}: Redis error checking verify code", request_id);
+      common_vo.code = utils::REDIS_ERROR;
+      common_vo.message = "Redis error checking verify code";
+      common_vo.data = "";
+      return;
+    }
+
+    auto exists = reply.AsInteger();
+    if (exists.has_value() && exists.value() > 0)
+    {
+      logger.error("{}: Verification code already sent to {}", request_id, dto.email);
+      common_vo.code = utils::CODE_ALREADY_SENT;
+      common_vo.message = "Verification code already sent";
       common_vo.data = "";
       return;
     }

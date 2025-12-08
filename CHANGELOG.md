@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [2025-12-08]
+
+### ✨ Features
+- **[chore]** 修改验证码生成逻辑为 uuid 截取前六位，增加 redis 连接池，并封装多个操作方法接口增加 health-check 路由，用于健康检查 增加安全响应头设置，增加安全路由白名单 优化发送验证码逻辑，先查询 redis 中是否存在未过期的验证码，若存在则直接返回成功，避免频繁发送邮件
+
 ## [2025-12-07]
 
 ### ✨ Features

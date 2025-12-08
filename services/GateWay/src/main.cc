@@ -4,28 +4,36 @@
 #include <core/server/server.hpp>
 #include <global/Global.hpp>
 #include <tools/Logger.hpp>
+#include <utils/common/routes.hpp>
 #include <utils/grpc/client/verify_code_client.hpp>
 #include <utils/pool/mariadb/db_pool.hpp>
+#include <utils/pool/redis/redis_pool.hpp>
 
 using namespace global::server;
 
 // 初始化连接池
-void init_connection_pool()
+void init()
 {
+  std::string rpc_address = std::string(RPC_SERVER_HOST) + ":" + std::to_string(RPC_SERVER_PORT);
+
+  utils::DBConfig db_config{.host = DB_HOST,
+                            .port = DB_PORT,
+                            .user = DB_USER,
+                            .password = DB_PASSWORD,
+                            .database = DB_NAME,
+                            .pool_size = DB_MAX_POOL_SIZE};
+
+  utils::RedisConfig redis_config{.host = REDIS_HOST,
+                                  .port = REDIS_PORT,
+                                  .password = REDIS_PASSWORD,
+                                  .db_index = REDIS_DB_INDEX,
+                                  .pool_size = REDIS_MAX_POOL_SIZE,
+                                  .timeout = std::chrono::seconds(REDIS_TIMEOUT)};
+
   tools::Logger::getInstance();
-
-  utils::VerifyCodeClient::GetInstance().Init(std::string(RPC_SERVER_HOST) + ":" + std::to_string(RPC_SERVER_PORT),
-                                              RPC_CONNECTION_POOL_SIZE);
-
-  utils::DBConfig config{.host = DB_HOST,
-                         .port = DB_PORT,
-                         .user = DB_USER,
-                         .password = DB_PASSWORD,
-                         .database = DB_NAME,
-                         .pool_size = DB_MAX_POOL_SIZE};
-
-  utils::DBPool::GetInstance().Init(config);
-
+  utils::VerifyCodeClient::GetInstance().Init(rpc_address, RPC_CONNECTION_POOL_SIZE);
+  utils::DBPool::GetInstance().Init(db_config);
+  utils::RedisPool::GetInstance().Init(redis_config);
   core::Business::GetInstance();
   core::IO::GetInstance();
 }
@@ -34,7 +42,7 @@ int main()
 {
   try
   {
-    init_connection_pool();
+    init();
 
     boost::asio::io_context ioc;
     const auto& logger = tools::Logger::getInstance();

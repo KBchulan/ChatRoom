@@ -40,3 +40,10 @@
 - 调整 connection 逻辑，把处理后的请求直接投递到 bussiness 的池子里处理，随后再返回 io 线程发送回包。
 - 修复 UserController/Logic/UserRepository/UserService 的单例实现。
 - 为 context 增加移动相关操作。
+
+### [2025-12-09] 优化调整
+
+- 增加 redis 连接池，并封装多个操作方法接口
+- 增加 health-check 路由，用于健康检查
+- 增加安全响应头设置，增加安全路由白名单
+- 优化发送验证码逻辑，先查询 redis 中是否存在未过期的验证码，若存在则直接返回成功，避免频繁发送邮件

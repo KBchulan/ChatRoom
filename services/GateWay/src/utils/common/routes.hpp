@@ -11,13 +11,21 @@
 #ifndef ROUTES_HPP
 #define ROUTES_HPP
 
+#include <string>
+#include <unordered_set>
+
 namespace utils
 {
-
 // ================
 // user 模块路由
 // ================
+constexpr const char* HEALTH_CHECK_ROUTE = "/health-check";
 constexpr const char* USER_SEND_CODE_ROUTE = "/user/send-code";
+
+inline const std::unordered_set<std::string> NO_AUTH_ROUTES = {
+    HEALTH_CHECK_ROUTE,
+    USER_SEND_CODE_ROUTE,
+};
 
 }  // namespace utils
 

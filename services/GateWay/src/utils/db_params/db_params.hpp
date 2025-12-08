@@ -73,7 +73,6 @@ struct UTILS_EXPORT StringBuffer
   std::array<char, N> data{};
   unsigned long length{0};
 
-  // cppcheck-suppress unusedFunction
   [[nodiscard]] std::string str() const
   {
     return std::string(data.data(), length);
@@ -115,7 +114,6 @@ ResultHolder MakeResultBind(double& value);
 
 // 变参模板构建结果列表
 template <typename... Args>
-// cppcheck-suppress unusedFunction
 std::vector<ResultHolder> MakeResults(Args&... args)
 {
   std::vector<ResultHolder> holders;

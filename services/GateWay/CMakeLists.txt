@@ -222,6 +222,17 @@ else()
   )
 endif()
 
+# hiredis
+find_package(hiredis QUIET)
+if(NOT hiredis_FOUND)
+  pkg_check_modules(hiredis REQUIRED IMPORTED_TARGET hiredis)
+  if(hiredis_FOUND)
+    if(NOT TARGET hiredis::hiredis)
+      add_library(hiredis::hiredis ALIAS PkgConfig::hiredis)
+    endif()
+  endif()
+endif()
+
 # Google Test
 find_package(GTest QUIET)
 if(NOT GTest_FOUND)

@@ -43,12 +43,10 @@ public:
   bool Execute(const char* sql, const std::vector<ParamHolder>& params);
 
   // 查询单行 (SELECT ... LIMIT 1)，成功返回 true
-  // cppcheck-suppress unusedFunction
   bool QueryOne(const char* sql, const std::vector<ParamHolder>& params, const std::vector<ResultHolder>& results);
 
   // 查询多行，返回行数
   template <typename Callback>
-  // cppcheck-suppress unusedFunction
   std::size_t QueryMany(const char* sql, const std::vector<ParamHolder>& params,
                         const std::vector<ResultHolder>& results, Callback callback);
 

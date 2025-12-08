@@ -10,6 +10,7 @@
 #include <tools/Defer.hpp>
 #include <tools/Id.hpp>
 #include <tools/Logger.hpp>
+#include <utils/common/routes.hpp>
 #include <utils/common/type.hpp>
 #include <utils/context/context.hpp>
 
@@ -94,6 +95,8 @@ struct Connection::_impl
     _response.keep_alive(false);
     _response.set(boost::beast::http::field::content_type, "application/json");
     _response.set(boost::beast::http::field::server, "ChatRoom-GateWay");
+    _response.set("X-Frame-Options", "DENY");
+    _response.set("X-Content-Type-Options", "nosniff");
 
     // 解析 URL
     auto url = utils::ParseUrl(_request.target());
@@ -112,7 +115,7 @@ struct Connection::_impl
     utils::Context ctx(url.value(), body);
 
     // 增加 request id 方便追踪日志
-    auto request_id = tools::UuidGenerator::generateShortUuid();
+    auto request_id = tools::UuidGenerator::generateUuid();
     if (!request_id.has_value())
     {
       int status_code = static_cast<int>(boost::beast::http::status::bad_request);
@@ -128,6 +131,9 @@ struct Connection::_impl
 
     // TODO: 增加重复请求检测机制/幂等性
     // TODO: 增加 JWT 校验机制
+    if (!utils::NO_AUTH_ROUTES.contains(url->path))
+    {
+    }
 
     // 将请求交给业务线程池处理
     boost::asio::post(

@@ -25,7 +25,7 @@ grpc::Status VerifyCodeServiceImpl::VerifyCode([[maybe_unused]] grpc::ServerCont
   }
 
   // 生成验证码，取前六位即可
-  auto verify_code_gen = tools::SnowflakeIdGenerator::generateIdString();
+  auto verify_code_gen = tools::UuidGenerator::generateUuid();
   if (!verify_code_gen.has_value())
   {
     tools::Logger::getInstance().error("Failed to generate verify code");
