@@ -20,6 +20,35 @@ struct UserRepository::_impl
     return conn.Execute(sql, params);
   }
 
+  [[nodiscard]] std::expected<bool, std::string> check_user_exists(const std::string& email,
+                                                                   const std::string& nickname) const
+  {
+    auto conn = _db_pool.GetConnection();
+
+    std::int8_t count = 0;
+    auto params = utils::MakeParams(nickname, email);
+    auto results = utils::MakeResults(count);
+
+    const char* sql = "SELECT COUNT(*) FROM users WHERE nickname = ? OR email = ?";
+    if (!conn.QueryOne(sql, params, results))
+    {
+      return std::unexpected("Failed to execute check_user_exists query");
+    }
+
+    return count > 0;
+  }
+
+  [[nodiscard]] bool insert_user(const UserDO& user_do) const
+  {
+    auto conn = _db_pool.GetConnection();
+
+    const char* sql = "INSERT INTO users (uuid, nickname, avatar, email, password_hash) VALUES (?, ?, ?, ?, ?)";
+    auto params =
+        utils::MakeParams(user_do.uuid, user_do.nickname, user_do.avatar, user_do.email, user_do.password_hash);
+
+    return conn.Execute(sql, params);
+  }
+
   // // 下面两个用于演示
   // [[nodiscard]] std::optional<UserVerifyCodeDO> find_by_email_and_purpose(const std::string& email,
   //                                                                         std::int8_t purpose) const
@@ -103,6 +132,17 @@ UserRepository& UserRepository::GetInstance()
 bool UserRepository::InsertVerifyCode(const UserVerifyCodeDO& user_verify_code_do) const
 {
   return _pimpl->insert_verify_code(user_verify_code_do);
+}
+
+std::expected<bool, std::string> UserRepository::CheckUserExists(const std::string& email,
+                                                                 const std::string& nickname) const
+{
+  return _pimpl->check_user_exists(email, nickname);
+}
+
+bool UserRepository::InsertUser(const UserDO& user_do) const
+{
+  return _pimpl->insert_user(user_do);
 }
 
 }  // namespace core

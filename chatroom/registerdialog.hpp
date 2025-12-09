@@ -33,6 +33,7 @@ public:
 
 private slots:
   void on_verify_code_btn_clicked();
+  void on_confirm_btn_clicked();
   void slot_reg_mod_finish(QString str, ErrorCode err, ReqID id);
 
 private:

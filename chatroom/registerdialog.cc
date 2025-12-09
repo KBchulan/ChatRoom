@@ -51,12 +51,74 @@ void RegisterDialog::on_verify_code_btn_clicked()
   HttpManager::GetInstance().PostHttpReq(QUrl(GateWayUrl + "/user/send-code"), dto, ReqID::ID_GET_VERIFY_CODE, Module::REGISTER);
 }
 
+void RegisterDialog::on_confirm_btn_clicked()
+{
+  QRegularExpression regex(R"(^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$)");
+
+  auto name = ui->user_edit->text();
+  if (name == "")
+  {
+    show_tip("昵称不能为空", false);
+    return;
+  }
+
+  auto email = ui->email_edit->text();
+  if (email == "")
+  {
+    show_tip("邮箱不能为空", false);
+    return;
+  }
+
+  // 格式不匹配，设置错误信息
+  if (!regex.match(email).hasMatch())
+  {
+    show_tip("邮箱格式不正确", false);
+    return;
+  }
+
+  auto password = ui->password_edit->text();
+  if (password == "")
+  {
+    show_tip("密码不能为空", false);
+    return;
+  }
+
+  auto confirm_pass = ui->confirm_edit->text();
+  if (confirm_pass == "")
+  {
+    show_tip("确认密码不能为空", false);
+    return;
+  }
+
+  if (password != confirm_pass)
+  {
+    show_tip("两次输入的密码不一致", false);
+    return;
+  }
+
+  auto verify_code = ui->verify_code_edit->text();
+  if (verify_code == "")
+  {
+    show_tip("验证码不能为空", false);
+    return;
+  }
+
+  QJsonObject dto;
+  dto["nickname"] = name;
+  dto["email"] = email;
+  dto["password"] = password;
+  dto["confirm_password"] = confirm_pass;
+  dto["verify_code"] = verify_code;
+  dto["purpose"] = 1;
+
+  HttpManager::GetInstance().PostHttpReq(QUrl(GateWayUrl + "/user/register"), dto, ReqID::ID_REGISTER, Module::REGISTER);
+}
+
 void RegisterDialog::slot_reg_mod_finish(QString str, ErrorCode err, ReqID id)
 {
   if (err != ErrorCode::SUCCESS)
   {
-    show_tip("网络请求错误", false);
-    return;
+    qDebug() << "当前请求存在网络错误\n";
   }
 
   // 如果没有错误
@@ -106,5 +168,19 @@ void RegisterDialog::init_handlers()
 
     show_tip("验证码已发送至邮箱，请注意查收", true);
   });
-}
 
+  _handlers.insert(ReqID::ID_REGISTER, [this](const QJsonObject& obj) -> void
+  {
+    auto code = obj["code"].toInt();
+    auto message = obj["message"].toString();
+
+    if (code != 0)
+    {
+      show_tip(message, false);
+      return;
+    }
+
+    // TODO: 提示注册成功并实现跳转，预期使用 stack page 进行操作
+    show_tip("注册成功", true);
+  });
+}

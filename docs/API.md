@@ -1,71 +1,24 @@
 # API 文档
 
-## Demo 模块
+## 用户模块
 
-### GET /demo/get-test
+### 健康检查
 
-GET {{baseUrl}}/demo/get-test?name=chulan&age=18 HTTP/1.1
+```http
+GET {{baseUrl}}/health-check HTTP/1.1
+```
 
+```json
 {
   "code": 0,
-  "message": "Success",
-  "data": {
-    "age": 18,
-    "name": "chulan"
-  }
+  "data": "",
+  "message": "Service is healthy"
 }
-
-### POST /demo/post-test
-
-POST {{baseUrl}}/demo/post-test HTTP/1.1
-Content-Type: application/json
-
-{
-  "title": "Test Title",
-  "content": "Test Content"
-}
-
-{
-  "code": 0,
-  "message": "Success",
-  "data": {
-    "content": "Test Content",
-    "title": "Test Title"
-  }
-}
-
-### PUT /demo/put-test
-PUT {{baseUrl}}/demo/put-test HTTP/1.1
-Content-Type: application/json
-
-{
-  "title": "Test Title",
-  "content": "Test Content"
-}
-
-{
-  "code": 0,
-  "message": "Success",
-  "data": {
-    "content": "Test Content",
-    "title": "Test Title"
-  }
-}
-
-### DELETE /demo/delete-test
-DELETE {{baseUrl}}/demo/delete-test?id=123 HTTP/1.1
-
-{
-  "code": 0,
-  "message": "receive id is: 123",
-  "data": {
-    "id": "d1f2fd98-df90-4900-84c1-d5411241da07"
-  }
-}
-
-## User 模块
+```
 
 ### 发送验证码
+
+```http
 POST {{baseUrl}}/user/send-code HTTP/1.1
 Content-Type: application/json
 
@@ -73,8 +26,36 @@ Content-Type: application/json
   "email": "2262317520@qq.com",
   "purpose": 1
 }
+```
 
+```json
 {
   "code": 0,
+  "data": "",
   "message": "Verification code sent successfully"
 }
+```
+
+### 用户注册
+
+```http
+POST {{baseUrl}}/user/register HTTP/1.1
+Content-Type: application/json
+
+{
+  "nickname": "chulan",
+  "email": "2262317520@qq.com",
+  "password": "whx051021",
+  "confirm_password": "whx051021",
+  "verify_code": "89140e",
+  "purpose": 1
+}
+```
+
+```json
+{
+  "code": 0,
+  "data": "",
+  "message": "User registered successfully"
+}
+```

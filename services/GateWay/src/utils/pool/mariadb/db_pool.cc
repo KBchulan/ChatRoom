@@ -28,11 +28,13 @@ bool PooledConnection::Execute(const char* sql, const std::vector<ParamHolder>& 
   MYSQL_STMT* stmt = mysql_stmt_init(_conn);
   if (stmt == nullptr)
   {
+    tools::Logger::getInstance().error("mysql_stmt_init failed: {}", mysql_error(_conn));
     return false;
   }
 
   if (mysql_stmt_prepare(stmt, sql, std::strlen(sql)) != 0)
   {
+    tools::Logger::getInstance().error("mysql_stmt_prepare failed: {}", mysql_stmt_error(stmt));
     mysql_stmt_close(stmt);
     return false;
   }
@@ -45,12 +47,17 @@ bool PooledConnection::Execute(const char* sql, const std::vector<ParamHolder>& 
 
     if (mysql_stmt_bind_param(stmt, binds.data()) != 0)
     {
+      tools::Logger::getInstance().error("mysql_stmt_bind_param failed: {}", mysql_stmt_error(stmt));
       mysql_stmt_close(stmt);
       return false;
     }
   }
 
   int result = mysql_stmt_execute(stmt);
+  if (result != 0)
+  {
+    tools::Logger::getInstance().error("mysql_stmt_execute failed: {}", mysql_stmt_error(stmt));
+  }
   mysql_stmt_close(stmt);
   return result == 0;
 }
@@ -61,11 +68,13 @@ bool PooledConnection::QueryOne(const char* sql, const std::vector<ParamHolder>&
   MYSQL_STMT* stmt = mysql_stmt_init(_conn);
   if (stmt == nullptr)
   {
+    tools::Logger::getInstance().error("mysql_stmt_init failed: {}", mysql_error(_conn));
     return false;
   }
 
   if (mysql_stmt_prepare(stmt, sql, std::strlen(sql)) != 0)
   {
+    tools::Logger::getInstance().error("mysql_stmt_prepare failed: {}", mysql_stmt_error(stmt));
     mysql_stmt_close(stmt);
     return false;
   }
@@ -78,6 +87,7 @@ bool PooledConnection::QueryOne(const char* sql, const std::vector<ParamHolder>&
 
     if (mysql_stmt_bind_param(stmt, binds.data()) != 0)
     {
+      tools::Logger::getInstance().error("mysql_stmt_bind_param failed: {}", mysql_stmt_error(stmt));
       mysql_stmt_close(stmt);
       return false;
     }
@@ -85,6 +95,7 @@ bool PooledConnection::QueryOne(const char* sql, const std::vector<ParamHolder>&
 
   if (mysql_stmt_execute(stmt) != 0)
   {
+    tools::Logger::getInstance().error("mysql_stmt_execute failed: {}", mysql_stmt_error(stmt));
     mysql_stmt_close(stmt);
     return false;
   }
@@ -97,6 +108,7 @@ bool PooledConnection::QueryOne(const char* sql, const std::vector<ParamHolder>&
 
     if (mysql_stmt_bind_result(stmt, binds.data()) != 0)
     {
+      tools::Logger::getInstance().error("mysql_stmt_bind_result failed: {}", mysql_stmt_error(stmt));
       mysql_stmt_close(stmt);
       return false;
     }
@@ -114,11 +126,13 @@ std::size_t PooledConnection::QueryMany(const char* sql, const std::vector<Param
   MYSQL_STMT* stmt = mysql_stmt_init(_conn);
   if (stmt == nullptr)
   {
+    tools::Logger::getInstance().error("mysql_stmt_init failed: {}", mysql_error(_conn));
     return 0;
   }
 
   if (mysql_stmt_prepare(stmt, sql, std::strlen(sql)) != 0)
   {
+    tools::Logger::getInstance().error("mysql_stmt_prepare failed: {}", mysql_stmt_error(stmt));
     mysql_stmt_close(stmt);
     return 0;
   }
@@ -131,6 +145,7 @@ std::size_t PooledConnection::QueryMany(const char* sql, const std::vector<Param
 
     if (mysql_stmt_bind_param(stmt, binds.data()) != 0)
     {
+      tools::Logger::getInstance().error("mysql_stmt_bind_param failed: {}", mysql_stmt_error(stmt));
       mysql_stmt_close(stmt);
       return 0;
     }
@@ -138,6 +153,7 @@ std::size_t PooledConnection::QueryMany(const char* sql, const std::vector<Param
 
   if (mysql_stmt_execute(stmt) != 0)
   {
+    tools::Logger::getInstance().error("mysql_stmt_execute failed: {}", mysql_stmt_error(stmt));
     mysql_stmt_close(stmt);
     return 0;
   }
@@ -150,6 +166,7 @@ std::size_t PooledConnection::QueryMany(const char* sql, const std::vector<Param
 
     if (mysql_stmt_bind_result(stmt, binds.data()) != 0)
     {
+      tools::Logger::getInstance().error("mysql_stmt_bind_result failed: {}", mysql_stmt_error(stmt));
       mysql_stmt_close(stmt);
       return 0;
     }

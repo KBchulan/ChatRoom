@@ -13,6 +13,7 @@
 
 #include <core/CoreExport.hpp>
 #include <core/domain/do/user/user_do.hpp>
+#include <expected>
 #include <memory>
 
 namespace core
@@ -24,6 +25,11 @@ public:
   static UserRepository& GetInstance();
 
   [[nodiscard]] bool InsertVerifyCode(const UserVerifyCodeDO& user_verify_code_do) const;
+
+  [[nodiscard]] std::expected<bool, std::string> CheckUserExists(const std::string& email,
+                                                                 const std::string& nickname) const;
+
+  [[nodiscard]] bool InsertUser(const UserDO& user_do) const;
 
   UserRepository(const UserRepository&) = delete;
   UserRepository& operator=(const UserRepository&) = delete;

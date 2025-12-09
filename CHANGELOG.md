@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [2025-12-09]
+
+### ✨ Features
+- **[server]** 创建一个新的用户表，完善用户注册接口，更新 API 文档，增加 db_pool 的日志详情，引入 sodium 库，用于密码加盐哈希处理
+
 ## [2025-12-08]
 
 ### ✨ Features

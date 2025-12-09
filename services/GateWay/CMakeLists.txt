@@ -233,6 +233,16 @@ if(NOT hiredis_FOUND)
   endif()
 endif()
 
+# sodium - 用于 argon2id 密码哈希
+if(PkgConfig_FOUND)
+  pkg_check_modules(SODIUM REQUIRED libsodium)
+else()
+  message(FATAL_ERROR
+    "Sodium is required.\n"
+    "Please install: sudo pacman -S libsodium"
+  )
+endif()
+
 # Google Test
 find_package(GTest QUIET)
 if(NOT GTest_FOUND)

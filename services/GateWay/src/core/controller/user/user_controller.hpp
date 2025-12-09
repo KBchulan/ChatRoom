@@ -25,6 +25,7 @@ public:
   static UserController& GetInstance();
 
   void HandleSendCodeRequest(const utils::Context& ctx, const UserSendCodeDTO& dto, core::CommonVO& common_vo) const;
+  void HandleRegisterRequest(const utils::Context& ctx, const UserRegisterDTO& dto, core::CommonVO& common_vo) const;
 
   UserController(const UserController&) = delete;
   UserController& operator=(const UserController&) = delete;

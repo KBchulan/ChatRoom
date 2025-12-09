@@ -114,6 +114,7 @@ target_link_libraries(
   protobuf::libprotobuf
   PkgConfig::MARIADB
   hiredis::hiredis
+  ${SODIUM_LIBRARIES}
 )
 
 # 安装库文件和头文件

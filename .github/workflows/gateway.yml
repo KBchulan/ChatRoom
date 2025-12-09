@@ -25,7 +25,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y cppcheck libgtest-dev libbenchmark-dev libfmt-dev libboost-all-dev libgrpc++-dev libprotobuf-dev protobuf-compiler protobuf-compiler-grpc libmariadb-dev libhiredis-dev
+          sudo apt-get install -y cppcheck libgtest-dev libbenchmark-dev libfmt-dev libboost-all-dev libgrpc++-dev libprotobuf-dev protobuf-compiler protobuf-compiler-grpc libmariadb-dev libhiredis-dev libsodium-dev
           sudo ln -s /usr/include/mariadb /usr/include/mysql
         shell: bash
 
@@ -51,7 +51,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y lcov libgtest-dev libfmt-dev libboost-all-dev libgrpc++-dev libprotobuf-dev protobuf-compiler protobuf-compiler-grpc libmariadb-dev libhiredis-dev
+          sudo apt-get install -y lcov libgtest-dev libfmt-dev libboost-all-dev libgrpc++-dev libprotobuf-dev protobuf-compiler protobuf-compiler-grpc libmariadb-dev libhiredis-dev libsodium-dev
           sudo ln -s /usr/include/mariadb /usr/include/mysql
         shell: bash
 

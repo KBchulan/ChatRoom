@@ -131,6 +131,20 @@ struct Logic::_impl
 
       UserController::GetInstance().HandleSendCodeRequest(ctx, dto.value(), common_vo);
     };
+
+    _post_handlers[utils::USER_REGISTER_ROUTE] = [](const utils::Context& ctx, core::CommonVO& common_vo)
+    {
+      auto dto = UserRegisterDTO::FromJsonString(ctx.GetBody());
+      if (!dto.has_value())
+      {
+        common_vo.code = utils::JSON_PARSE_ERROR;
+        common_vo.message = "JSON parse error";
+        common_vo.data = "";
+        return;
+      }
+
+      UserController::GetInstance().HandleRegisterRequest(ctx, dto.value(), common_vo);
+    };
   }
 };
 

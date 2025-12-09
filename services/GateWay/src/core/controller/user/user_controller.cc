@@ -19,7 +19,6 @@
 #include <global/Global.hpp>
 #include <tools/Logger.hpp>
 #include <utils/common/code.hpp>
-#include <utils/pool/redis/redis_pool.hpp>
 
 namespace core
 {
@@ -28,13 +27,19 @@ struct UserController::_impl
 {
   UserService& user_service = UserService::GetInstance();
   tools::Logger& logger = tools::Logger::getInstance();
-  utils::RedisPool& redis_pool = utils::RedisPool::GetInstance();
 
   [[nodiscard]] static bool is_valid_email(const std::string& email)
   {
     // 基本的邮箱正则表达式
     static const std::regex pattern(R"([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})");
     return std::regex_match(email, pattern);
+  }
+
+  [[nodiscard]] static bool is_valid_password(const std::string& password)
+  {
+    // 基本的密码正则表达式，至少6位，包含字母和数字
+    static const std::regex pattern(R"((?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,})");
+    return std::regex_match(password, pattern);
   }
 
   void handle_send_code_request(const utils::Context& ctx, const UserSendCodeDTO& dto, core::CommonVO& common_vo) const
@@ -51,35 +56,12 @@ struct UserController::_impl
       return;
     }
 
+    // 验证邮箱格式
     if (!is_valid_email(dto.email))
     {
       logger.error("{}: Invalid email format", request_id);
       common_vo.code = utils::INVALID_EMAIL_FORMAT;
       common_vo.message = "Invalid email format";
-      common_vo.data = "";
-      return;
-    }
-
-    // 检查是否已经发送
-    std::string email_key = global::server::VERIFY_CODE_PREFIX + dto.email;
-    auto conn = redis_pool.GetConnection();
-    auto reply = conn.Exists(email_key);
-
-    if (!reply.IsValid() || reply.IsError())
-    {
-      logger.error("{}: Redis error checking verify code", request_id);
-      common_vo.code = utils::REDIS_ERROR;
-      common_vo.message = "Redis error checking verify code";
-      common_vo.data = "";
-      return;
-    }
-
-    auto exists = reply.AsInteger();
-    if (exists.has_value() && exists.value() > 0)
-    {
-      logger.error("{}: Verification code already sent to {}", request_id, dto.email);
-      common_vo.code = utils::CODE_ALREADY_SENT;
-      common_vo.message = "Verification code already sent";
       common_vo.data = "";
       return;
     }
@@ -93,6 +75,63 @@ struct UserController::_impl
 
     common_vo.code = utils::SUCCESS;
     common_vo.message = "Verification code sent successfully";
+    common_vo.data = "";
+  }
+
+  void handle_register_request(const utils::Context& ctx, const UserRegisterDTO& dto, core::CommonVO& common_vo) const
+  {
+    auto request_id = std::any_cast<std::string>(ctx.Get("request_id"));
+
+    // 校验参数
+    if (dto.nickname.empty() || dto.email.empty() || dto.password.empty() || dto.confirm_password.empty() ||
+        dto.verify_code.empty() || dto.purpose != 1)
+    {
+      logger.error("{}: Invalid parameters", request_id);
+      common_vo.code = utils::INVALID_PARAMETERS;
+      common_vo.message = "Invalid parameters";
+      common_vo.data = "";
+      return;
+    }
+
+    // 验证邮箱格式
+    if (!is_valid_email(dto.email))
+    {
+      logger.error("{}: Invalid email format", request_id);
+      common_vo.code = utils::INVALID_EMAIL_FORMAT;
+      common_vo.message = "Invalid email format";
+      common_vo.data = "";
+      return;
+    }
+
+    // 两次密码需要相同
+    if (dto.password != dto.confirm_password)
+    {
+      logger.error("{}: Passwords do not equal to confirm password", request_id);
+      common_vo.code = utils::PASSWORDS_UNEQUAL_CONFIRM;
+      common_vo.message = "Passwords do not equal to confirm password";
+      common_vo.data = "";
+      return;
+    }
+
+    // 密码是否有效
+    if (!is_valid_password(dto.password))
+    {
+      logger.error("{}: Invalid password format", request_id);
+      common_vo.code = utils::INVALID_PASSWORD_FORMAT;
+      common_vo.message = "Invalid password format, must be at least 6 characters with letters and numbers";
+      common_vo.data = "";
+      return;
+    }
+
+    // 调用 Service 处理
+    user_service.HandleRegisterRequest(ctx, dto, common_vo);
+    if (common_vo.code != utils::SUCCESS)
+    {
+      return;
+    }
+
+    common_vo.code = utils::SUCCESS;
+    common_vo.message = "User registered successfully";
     common_vo.data = "";
   }
 };
@@ -113,6 +152,12 @@ void UserController::HandleSendCodeRequest(const utils::Context& ctx, const User
                                            core::CommonVO& common_vo) const
 {
   _pimpl->handle_send_code_request(ctx, dto, common_vo);
+}
+
+void UserController::HandleRegisterRequest(const utils::Context& ctx, const UserRegisterDTO& dto,
+                                           core::CommonVO& common_vo) const
+{
+  _pimpl->handle_register_request(ctx, dto, common_vo);
 }
 
 }  // namespace core

@@ -11,3 +11,16 @@ Content-Type: application/json
   "email": "2262317520@qq.com",
   "purpose": 1
 }
+
+### 用户注册
+POST {{baseUrl}}/user/register HTTP/1.1
+Content-Type: application/json
+
+{
+  "nickname": "chulan",
+  "email": "2262317520@qq.com",
+  "password": "whx051021",
+  "confirm_password": "whx051021",
+  "verify_code": "89140e",
+  "purpose": 1
+}

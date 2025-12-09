@@ -31,6 +31,8 @@ void HttpManager::PostHttpReq(const QUrl& url, const QJsonObject& json, ReqID id
     // 回收 reply
     defer(reply->deleteLater());
 
+    QString res = reply->readAll();
+
     // 存在错误
     if (reply->error() != QNetworkReply::NoError)
     {
@@ -38,12 +40,11 @@ void HttpManager::PostHttpReq(const QUrl& url, const QJsonObject& json, ReqID id
                << "req id is: " << static_cast<int>(id)
                << "err msg is: " << reply->errorString() << '\n';
 
-      emit sig_post_http_finish("", ErrorCode::NETWORK_ERROR, id, mod);
+      emit sig_post_http_finish(res, ErrorCode::NETWORK_ERROR, id, mod);
       return;
     }
 
     // 没有错误
-    QString res = reply->readAll();
     emit sig_post_http_finish(res, ErrorCode::SUCCESS, id, mod);
   });
 }

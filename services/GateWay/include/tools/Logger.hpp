@@ -262,8 +262,8 @@ private:
     localtime_r(&time_t, &time_info);
 #endif
 
-    return fmt::format("{:04d}-{:02d}-{:02d}-{:02d}:{:02d}", time_info.tm_year + 1900, time_info.tm_mon + 1,
-                       time_info.tm_mday, time_info.tm_hour, time_info.tm_min);
+    return fmt::format("{:04d}-{:02d}-{:02d}-{:02d}:{:02d}:{:02d}", time_info.tm_year + 1900, time_info.tm_mon + 1,
+                       time_info.tm_mday, time_info.tm_hour, time_info.tm_min, time_info.tm_sec);
   }
 };
 

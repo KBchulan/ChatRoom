@@ -28,6 +28,19 @@ struct CORE_EXPORT UserVerifyCodeDO
   std::chrono::system_clock::time_point created_at;
 };
 
+struct CORE_EXPORT UserDO
+{
+  std::int64_t id;
+  std::string uuid;
+  std::string nickname;
+  std::string avatar;
+  std::string email;
+  std::string password_hash;
+  std::string last_login;
+  std::string created_at;
+  std::string updated_at;
+};
+
 }  // namespace core
 
 #endif  // USER_DO_HPP
