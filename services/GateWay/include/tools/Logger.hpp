@@ -19,12 +19,16 @@
 #include <array>
 #include <atomic>
 #include <chrono>
+#include <config/Config.hpp>
 #include <cstddef>
 #include <cstdint>
+#include <filesystem>
+#include <fstream>
 #include <global/Global.hpp>
 #include <global/SuperQueue.hpp>
 #include <string>
 #include <thread>
+#include <unordered_map>
 
 namespace tools
 {
@@ -193,9 +197,51 @@ private:
   std::atomic<bool> _should_stop{false};
   mutable std::atomic<size_t> _pending_count{0};
 
+  // 文件日志相关
+  std::unordered_map<LogLevel, std::ofstream> _log_files;
+
   Logger()
   {
+    _initLogFiles();
     _worker_thread = std::jthread([this] -> void { _logWorker(); });
+  }
+
+  void _initLogFiles()
+  {
+    if constexpr (!global::logger::ENABLE_FILE_LOG)
+    {
+      return;
+    }
+
+    std::filesystem::path log_dir(LOGS_DIR);
+    if (!std::filesystem::exists(log_dir))
+    {
+      std::filesystem::create_directories(log_dir);
+    }
+
+    constexpr std::array levels = {LogLevel::TRACE,   LogLevel::DEBUG, LogLevel::INFO,
+                                   LogLevel::WARNING, LogLevel::ERROR, LogLevel::FATAL};
+
+    for (auto level : levels)
+    {
+      auto file_path = log_dir / fmt::format("{}.log", _getLevelString(level));
+      _log_files[level].open(file_path, std::ios::app);
+    }
+  }
+
+  void _writeToFile(const LogMessage& msg)
+  {
+    if constexpr (!global::logger::ENABLE_FILE_LOG)
+    {
+      return;
+    }
+
+    if (auto iter = _log_files.find(msg._level); iter != _log_files.end() && iter->second.is_open())
+    {
+      iter->second << fmt::format("[{}] [{}] {}\n", _getLevelString(msg._level), _formatTimestamp(msg._timestamp),
+                                  msg._formatted_message.data());
+      iter->second.flush();
+    }
   }
 
   void _logWorker() noexcept
@@ -217,6 +263,7 @@ private:
       {
         fmt::print(msg._style, "[{}] [{}] {}\n", _getLevelString(msg._level), _formatTimestamp(msg._timestamp),
                    msg._formatted_message.data());
+        _writeToFile(msg);
 
         _pending_count.fetch_sub(1, std::memory_order_acq_rel);
       }
@@ -227,6 +274,7 @@ private:
     {
       fmt::print(msg._style, "[{}] [{}] {}\n", _getLevelString(msg._level), _formatTimestamp(msg._timestamp),
                  msg._formatted_message.data());
+      _writeToFile(msg);
     }
   }
 
