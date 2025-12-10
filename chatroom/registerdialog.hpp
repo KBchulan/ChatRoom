@@ -15,6 +15,7 @@
 #include <QMap>
 #include <QDialog>
 #include <QString>
+#include <QAction>
 #include <QJsonObject>
 #include <QRegularExpression>
 
@@ -60,8 +61,8 @@ private:
 
 private:
   Ui::RegisterDialog* ui;
-  QAction* toggle_password;
-  QAction* toggle_confirm_password;
+  QAction* _toggle_password;
+  QAction* _toggle_confirm_password;
   QMap<ReqID, std::function<void(const QJsonObject&)>> _handlers;
 
   int _counter;

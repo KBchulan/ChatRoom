@@ -34,12 +34,12 @@ RegisterDialog::RegisterDialog(QWidget* parent) : QDialog(parent), ui(new Ui::Re
   ui->verify_code_edit->installEventFilter(this);
 
   // 密码与确认密码的眼睛图标，可以切换密码样式
-  toggle_password = ui->password_edit->addAction(
+  _toggle_password = ui->password_edit->addAction(
     QIcon(":/icons/eye_close.png"),
     QLineEdit::TrailingPosition
   );
 
-  toggle_confirm_password = ui->confirm_edit->addAction(
+  _toggle_confirm_password = ui->confirm_edit->addAction(
     QIcon(":/icons/eye_close.png"),
     QLineEdit::TrailingPosition
   );
@@ -55,31 +55,31 @@ RegisterDialog::RegisterDialog(QWidget* parent) : QDialog(parent), ui(new Ui::Re
 
   // 连接槽信息
   connect(&HttpManager::GetInstance(), &HttpManager::sig_register_mod_finish, this, &RegisterDialog::slot_reg_mod_finish);
-  connect(toggle_password, &QAction::triggered, this, [this]() -> void
+  connect(_toggle_password, &QAction::triggered, this, [this]() -> void
   {
     if (ui->password_edit->echoMode() == QLineEdit::Password)
     {
       ui->password_edit->setEchoMode(QLineEdit::Normal);
-      toggle_password->setIcon(QIcon(":/icons/eye_open.png"));
+      _toggle_password->setIcon(QIcon(":/icons/eye_open.png"));
     }
     else
     {
       ui->password_edit->setEchoMode(QLineEdit::Password);
-      toggle_password->setIcon(QIcon(":/icons/eye_close.png"));
+      _toggle_password->setIcon(QIcon(":/icons/eye_close.png"));
     }
   });
 
-  connect(toggle_confirm_password, &QAction::triggered, this, [this]() -> void
+  connect(_toggle_confirm_password, &QAction::triggered, this, [this]() -> void
   {
     if (ui->confirm_edit->echoMode() == QLineEdit::Password)
     {
       ui->confirm_edit->setEchoMode(QLineEdit::Normal);
-      toggle_confirm_password->setIcon(QIcon(":/icons/eye_open.png"));
+      _toggle_confirm_password->setIcon(QIcon(":/icons/eye_open.png"));
     }
     else
     {
       ui->confirm_edit->setEchoMode(QLineEdit::Password);
-      toggle_confirm_password->setIcon(QIcon(":/icons/eye_close.png"));
+      _toggle_confirm_password->setIcon(QIcon(":/icons/eye_close.png"));
     }
   });
 
@@ -115,8 +115,8 @@ void RegisterDialog::Reset()
   // 重置密码显示状态
   ui->password_edit->setEchoMode(QLineEdit::Password);
   ui->confirm_edit->setEchoMode(QLineEdit::Password);
-  toggle_password->setIcon(QIcon(":/icons/eye_close.png"));
-  toggle_confirm_password->setIcon(QIcon(":/icons/eye_close.png"));
+  _toggle_password->setIcon(QIcon(":/icons/eye_close.png"));
+  _toggle_confirm_password->setIcon(QIcon(":/icons/eye_close.png"));
 
   // 重置定时器
   ui->verify_code_btn->Reset();
