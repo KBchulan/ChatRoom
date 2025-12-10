@@ -2,6 +2,8 @@
     <qresource prefix="/">
         <file>chatroom.png</file>
         <file>avatar/avatar.ico</file>
+        <file>icons/eye_open.png</file>
+        <file>icons/eye_close.png</file>
         <file>style/login_window.qss</file>
         <file>style/register_window.qss</file>
     </qresource>

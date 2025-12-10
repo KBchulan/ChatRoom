@@ -9,7 +9,7 @@ LoginDialog::LoginDialog(QWidget* parent) : QDialog(parent), ui(new Ui::LoginDia
   ui->setupUi(this);
 
   // 连接信号
-  connect(ui->register_button, &QPushButton::clicked, this, &LoginDialog::sig_switch_register);
+  connect(ui->register_button, &QPushButton::clicked, this, &LoginDialog::SigSwitchRegister);
 }
 
 LoginDialog::~LoginDialog()

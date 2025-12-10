@@ -2,14 +2,17 @@
 #include "httpmanager.hpp"
 
 #include <QLineEdit>
-#include <QRegularExpression>
+#include <QToolButton>
 #include <QJsonDocument>
 
 #include "ui_registerdialog.h"
 
-RegisterDialog::RegisterDialog(QWidget* parent) : QDialog(parent), ui(new Ui::RegisterDialog)
+RegisterDialog::RegisterDialog(QWidget* parent) : QDialog(parent), ui(new Ui::RegisterDialog), _counter(kDefaultReturnCount)
 {
   ui->setupUi(this);
+
+  // 初始页面
+  ui->stackedWidget->setCurrentWidget(ui->page);
 
   // 注册处理回调
   init_handlers();
@@ -19,11 +22,79 @@ RegisterDialog::RegisterDialog(QWidget* parent) : QDialog(parent), ui(new Ui::Re
   ui->confirm_edit->setEchoMode(QLineEdit::Password);
 
   // 设置 err_msg_label 属性
+  ui->err_msg_label->clear();
   ui->err_msg_label->setProperty("state", "normal");
   repolish(ui->err_msg_label);
 
+  // 安装过滤器，实现离开焦点即检测
+  ui->user_edit->installEventFilter(this);
+  ui->email_edit->installEventFilter(this);
+  ui->password_edit->installEventFilter(this);
+  ui->confirm_edit->installEventFilter(this);
+  ui->verify_code_edit->installEventFilter(this);
+
+  // 密码与确认密码的眼睛图标，可以切换密码样式
+  toggle_password = ui->password_edit->addAction(
+    QIcon(":/icons/eye_close.png"),
+    QLineEdit::TrailingPosition
+  );
+
+  toggle_confirm_password = ui->confirm_edit->addAction(
+    QIcon(":/icons/eye_close.png"),
+    QLineEdit::TrailingPosition
+  );
+
+  // 设置眼睛图标按钮的鼠标悬停光标为小手
+  for (auto* btn : ui->password_edit->findChildren<QToolButton*>())
+    btn->setCursor(Qt::PointingHandCursor);
+  for (auto* btn : ui->confirm_edit->findChildren<QToolButton*>())
+    btn->setCursor(Qt::PointingHandCursor);
+
+  // 设置返回定时器
+  _return_timer = new QTimer(this);
+
   // 连接槽信息
   connect(&HttpManager::GetInstance(), &HttpManager::sig_register_mod_finish, this, &RegisterDialog::slot_reg_mod_finish);
+  connect(toggle_password, &QAction::triggered, this, [this]() -> void
+  {
+    if (ui->password_edit->echoMode() == QLineEdit::Password)
+    {
+      ui->password_edit->setEchoMode(QLineEdit::Normal);
+      toggle_password->setIcon(QIcon(":/icons/eye_open.png"));
+    }
+    else
+    {
+      ui->password_edit->setEchoMode(QLineEdit::Password);
+      toggle_password->setIcon(QIcon(":/icons/eye_close.png"));
+    }
+  });
+
+  connect(toggle_confirm_password, &QAction::triggered, this, [this]() -> void
+  {
+    if (ui->confirm_edit->echoMode() == QLineEdit::Password)
+    {
+      ui->confirm_edit->setEchoMode(QLineEdit::Normal);
+      toggle_confirm_password->setIcon(QIcon(":/icons/eye_open.png"));
+    }
+    else
+    {
+      ui->confirm_edit->setEchoMode(QLineEdit::Password);
+      toggle_confirm_password->setIcon(QIcon(":/icons/eye_close.png"));
+    }
+  });
+
+  connect(_return_timer, &QTimer::timeout, this, [this]() -> void
+  {
+    --_counter;
+    if (_counter <= 0)
+    {
+      emit SigSwitchLogin();
+      return;
+    }
+
+    QString str = QString("注册成功, %1s 后返回登录").arg(_counter);
+    ui->return_label->setText(str);
+  });
 }
 
 RegisterDialog::~RegisterDialog()
@@ -31,13 +102,40 @@ RegisterDialog::~RegisterDialog()
   delete ui;
 }
 
+void RegisterDialog::Reset()
+{
+  // 清除输入框
+  ui->err_msg_label->clear();
+  ui->user_edit->clear();
+  ui->email_edit->clear();
+  ui->password_edit->clear();
+  ui->confirm_edit->clear();
+  ui->verify_code_edit->clear();
+
+  // 重置密码显示状态
+  ui->password_edit->setEchoMode(QLineEdit::Password);
+  ui->confirm_edit->setEchoMode(QLineEdit::Password);
+  toggle_password->setIcon(QIcon(":/icons/eye_close.png"));
+  toggle_confirm_password->setIcon(QIcon(":/icons/eye_close.png"));
+
+  // 重置定时器
+  ui->verify_code_btn->Reset();
+  _return_timer->stop();
+  _counter = kDefaultReturnCount;
+
+  // 重置返回提示文字
+  ui->return_label->setText("注册成功, 5s 后返回登录");
+
+  // 回到默认页面
+  ui->stackedWidget->setCurrentWidget(ui->page);
+}
+
 void RegisterDialog::on_verify_code_btn_clicked()
 {
   auto email = ui->email_edit->text();
-  QRegularExpression regex(R"(^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$)");
 
   // 格式不匹配，设置错误信息
-  if (!regex.match(email).hasMatch())
+  if (!email_regex.match(email).hasMatch())
   {
     show_tip("邮箱格式不正确", false);
     return;
@@ -53,8 +151,6 @@ void RegisterDialog::on_verify_code_btn_clicked()
 
 void RegisterDialog::on_confirm_btn_clicked()
 {
-  QRegularExpression regex(R"(^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$)");
-
   auto name = ui->user_edit->text();
   if (name == "")
   {
@@ -69,8 +165,7 @@ void RegisterDialog::on_confirm_btn_clicked()
     return;
   }
 
-  // 格式不匹配，设置错误信息
-  if (!regex.match(email).hasMatch())
+  if (!email_regex.match(email).hasMatch())
   {
     show_tip("邮箱格式不正确", false);
     return;
@@ -114,6 +209,16 @@ void RegisterDialog::on_confirm_btn_clicked()
   HttpManager::GetInstance().PostHttpReq(QUrl(GateWayUrl + "/user/register"), dto, ReqID::ID_REGISTER, Module::REGISTER);
 }
 
+void RegisterDialog::on_return_button_clicked()
+{
+  emit SigSwitchLogin();
+}
+
+void RegisterDialog::on_cancel_btn_clicked()
+{
+  emit SigSwitchLogin();
+}
+
 void RegisterDialog::slot_reg_mod_finish(QString str, ErrorCode err, ReqID id)
 {
   if (err != ErrorCode::SUCCESS)
@@ -125,17 +230,30 @@ void RegisterDialog::slot_reg_mod_finish(QString str, ErrorCode err, ReqID id)
   QJsonDocument jsonDoc = QJsonDocument::fromJson(str.toUtf8());
   if (jsonDoc.isNull())
   {
-    show_tip("Json 解析失败", false);
+    show_tip("响应数据为空", false);
     return;
   }
   if (!jsonDoc.isObject())
   {
-    show_tip("Json 解析错误", false);
+    show_tip("响应数据格式错误", false);
     return;
   }
 
   // 都正常解析就可以处理了
   _handlers[id](jsonDoc.object());
+}
+
+bool RegisterDialog::eventFilter(QObject* obj, QEvent* event)
+{
+  if (event->type() == QEvent::FocusOut)
+  {
+    if (obj == ui->user_edit) check_user_valid();
+    else if (obj == ui->email_edit) check_email_valid();
+    else if (obj == ui->password_edit) check_password_valid();
+    else if (obj == ui->confirm_edit) check_confirm_password_valid();
+    else if (obj == ui->verify_code_edit) check_verify_code_valid();
+  }
+  return QDialog::eventFilter(obj, event);
 }
 
 void RegisterDialog::show_tip(const QString &str, bool ok)
@@ -166,7 +284,7 @@ void RegisterDialog::init_handlers()
       return;
     }
 
-    show_tip("验证码已发送至邮箱，请注意查收", true);
+    show_tip("验证码已发送至邮箱，请于1分钟内完成注册", true);
   });
 
   _handlers.insert(ReqID::ID_REGISTER, [this](const QJsonObject& obj) -> void
@@ -180,7 +298,72 @@ void RegisterDialog::init_handlers()
       return;
     }
 
-    // TODO: 提示注册成功并实现跳转，预期使用 stack page 进行操作
-    show_tip("注册成功", true);
+    // 提示注册成功并实现跳转，使用 stack page 进行操作
+    ui->stackedWidget->setCurrentWidget(ui->page_2);
+    _return_timer->start(1000);
   });
+}
+
+void RegisterDialog::check_user_valid()
+{
+  if (ui->user_edit->text().isEmpty())
+  {
+    show_tip("用户名不能为空", false);
+    return;
+  }
+  ui->err_msg_label->clear();
+}
+
+void RegisterDialog::check_email_valid()
+{
+  if (!email_regex.match(ui->email_edit->text()).hasMatch())
+  {
+    show_tip("邮箱格式不正确", false);
+    return;
+  }
+  ui->err_msg_label->clear();
+}
+
+void RegisterDialog::check_password_valid()
+{
+  auto password = ui->password_edit->text();
+  if (password.isEmpty())
+  {
+    show_tip("密码不能为空", false);
+    return;
+  }
+
+  if (!password_regex.match(password).hasMatch())
+  {
+    show_tip("密码需不少于6位且含有数字和字母", false);
+    return;
+  }
+  ui->err_msg_label->clear();
+}
+
+void RegisterDialog::check_confirm_password_valid()
+{
+  auto confirm_pass = ui->confirm_edit->text();
+  if (confirm_pass.isEmpty())
+  {
+    show_tip("确认密码不能为空", false);
+    return;
+  }
+
+  if (confirm_pass != ui->password_edit->text())
+  {
+    show_tip("两次密码输入不一致", false);
+    return;
+  }
+  ui->err_msg_label->clear();
+}
+
+void RegisterDialog::check_verify_code_valid()
+{
+  if (ui->verify_code_edit->text().isEmpty())
+  {
+    show_tip("验证码不能为空", false);
+    return;
+  }
+  ui->err_msg_label->clear();
 }

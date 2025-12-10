@@ -32,9 +32,9 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         logindialog.hpp logindialog.cc logindialog.ui
         registerdialog.hpp registerdialog.cc registerdialog.ui
         global.hpp  global.cc
+        timerbutton.hpp timerbutton.cc
         httpmanager.hpp httpmanager.cc
-        Defer.hpp
-        config.ini
+        Defer.hpp config.ini
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET chatroom APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
@@ -47,9 +47,9 @@ else()
             logindialog.hpp logindialog.cc logindialog.ui
             registerdialog.hpp registerdialog.cc registerdialog.ui
             global.hpp  global.cc
+            timerbutton.hpp timerbutton.cc
             httpmanager.hpp httpmanager.cc
-            Defer.hpp
-            config.ini
+            Defer.hpp config.ini
         )
 # Define properties for Android with Qt 5 after find_package() calls as:
 #    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
@@ -59,12 +59,14 @@ else()
             logindialog.hpp logindialog.cc logindialog.ui
             registerdialog.hpp registerdialog.cc registerdialog.ui
             global.hpp  global.cc
+            timerbutton.hpp timerbutton.cc
             httpmanager.hpp httpmanager.cc
-            Defer.hpp
-            config.ini
+            Defer.hpp config.ini
         )
     endif()
 endif()
+
+target_include_directories(chatroom PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
 target_link_libraries(chatroom PRIVATE
     Qt${QT_VERSION_MAJOR}::Widgets

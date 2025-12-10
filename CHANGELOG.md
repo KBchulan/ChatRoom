@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [2025-12-10]
+
+### ✨ Features
+- **[ui]** 改 LoginDialog 的信号为大驼峰命名法，因为是共有的 修改 MainWindow 的管理为父子机制，而非智能指针，界面的管理采用 stackedWidget 进行管理 实现定时按钮基类封装，可自动显示倒计时按钮 注册页面: 设置初始页面为 Page，安装过滤器，对五个输入框的焦点缺失事件进行校验，密码和确认密码搞了个眼睛切换显示密码功能，还有小手图标，注册成功后，等待5s/手动返回/page的取消按钮都会返回登录页面，并重置注册页面
+
 ## [2025-12-09]
 
 ### ✨ Features

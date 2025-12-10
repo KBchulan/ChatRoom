@@ -6,29 +6,35 @@
 
 #include "./ui_mainwindow.h"
 
-
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
   ui->setupUi(this);
 
   // 初始化其他窗口
-  _login_dialog = std::make_unique<LoginDialog>();
-  _register_dialog = std::make_unique<RegisterDialog>();
+  _stacked_widget = new QStackedWidget(this);
+  _login_dialog = new LoginDialog();
+  _register_dialog = new RegisterDialog();
 
-  // 连接信号槽
-  connect(_login_dialog.get(), &LoginDialog::sig_switch_register, this, &MainWindow::SlotSwitchRegister);
-
-  // 绑定快捷键
-  action = std::make_unique<QAction>();
-
-  // ctrl + q 退出
-  action->setShortcut(QKeySequence::Quit);
-  connect(action.get(), &QAction::triggered, this, &QWidget::close);
-
-  addAction(action.get());
+  _stacked_widget->addWidget(_login_dialog);
+  _stacked_widget->addWidget(_register_dialog);
 
   // 设置中心窗口
-  setCentralWidget(_login_dialog.get());
+  setCentralWidget(_stacked_widget);
+  _stacked_widget->setCurrentWidget(_login_dialog);
+
+  // 连接信号槽
+  connect(_login_dialog, &LoginDialog::SigSwitchRegister, this, &MainWindow::SlotSwitchRegister);
+  connect(_register_dialog, &RegisterDialog::SigSwitchLogin, this, &MainWindow::SlotSwitchLogin);
+
+
+  // 绑定快捷键
+  _action = new QAction(this);
+
+  // ctrl + q 退出
+  _action->setShortcut(QKeySequence::Quit);
+  connect(_action, &QAction::triggered, this, &QWidget::close);
+
+  addAction(_action);
 }
 
 MainWindow::~MainWindow()
@@ -38,5 +44,11 @@ MainWindow::~MainWindow()
 
 void MainWindow::SlotSwitchRegister()
 {
-  setCentralWidget(_register_dialog.get());
+  _stacked_widget->setCurrentWidget(_register_dialog);
+}
+
+void MainWindow::SlotSwitchLogin()
+{
+  _stacked_widget->setCurrentWidget(_login_dialog);
+  _register_dialog->Reset();
 }

@@ -31,7 +31,7 @@ private:
   Ui::LoginDialog* ui;
 
 signals:
-  void sig_switch_register();
+  void SigSwitchRegister();
 };
 
 #endif  // LOGINDIALOG_HPP

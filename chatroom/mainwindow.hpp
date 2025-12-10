@@ -13,7 +13,7 @@
 
 #include <QMainWindow>
 #include <QAction>
-#include <memory>
+#include <QStackedWidget>
 
 QT_BEGIN_NAMESPACE
 namespace Ui
@@ -35,11 +35,14 @@ public:
 
 public slots:
   void SlotSwitchRegister();
+  void SlotSwitchLogin();
 
 private:
   Ui::MainWindow* ui;
-  std::unique_ptr<QAction> action;
-  std::unique_ptr<LoginDialog> _login_dialog;
-  std::unique_ptr<RegisterDialog> _register_dialog;
+  QAction* _action;
+
+  QStackedWidget* _stacked_widget;
+  LoginDialog* _login_dialog;
+  RegisterDialog* _register_dialog;
 };
 #endif  // MAINWINDOW_HPP
