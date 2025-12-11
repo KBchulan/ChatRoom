@@ -1,0 +1,14 @@
+/* Reset Password Window Style */
+
+/* Main Window and Dialog Background */
+QMainWindow, QDialog, QWidget {
+    background-color: #f8f6f1;
+}
+
+#err_msg_label[state="normal"] {
+    color: green;
+}
+
+#err_msg_label[state="error"] {
+    color: red;
+}

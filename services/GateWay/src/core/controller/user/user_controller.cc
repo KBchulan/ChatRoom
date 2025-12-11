@@ -134,6 +134,63 @@ struct UserController::_impl
     common_vo.message = "User registered successfully";
     common_vo.data = "";
   }
+
+  void handle_reset_pass_request(const utils::Context& ctx, const UserResetPasswordDTO& dto, core::CommonVO& common_vo) const
+  {
+    auto request_id = std::any_cast<std::string>(ctx.Get("request_id"));
+
+    // 校验参数
+    if (dto.email.empty() || dto.password.empty() || dto.confirm_password.empty() ||
+        dto.verify_code.empty() || dto.purpose != 2)
+    {
+      logger.error("{}: Invalid parameters", request_id);
+      common_vo.code = utils::INVALID_PARAMETERS;
+      common_vo.message = "Invalid parameters";
+      common_vo.data = "";
+      return;
+    }
+
+    // 验证邮箱格式
+    if (!is_valid_email(dto.email))
+    {
+      logger.error("{}: Invalid email format", request_id);
+      common_vo.code = utils::INVALID_EMAIL_FORMAT;
+      common_vo.message = "Invalid email format";
+      common_vo.data = "";
+      return;
+    }
+
+    // 两次密码需要相同
+    if (dto.password != dto.confirm_password)
+    {
+      logger.error("{}: Passwords do not equal to confirm password", request_id);
+      common_vo.code = utils::PASSWORDS_UNEQUAL_CONFIRM;
+      common_vo.message = "Passwords do not equal to confirm password";
+      common_vo.data = "";
+      return;
+    }
+
+    // 密码是否有效
+    if (!is_valid_password(dto.password))
+    {
+      logger.error("{}: Invalid password format", request_id);
+      common_vo.code = utils::INVALID_PASSWORD_FORMAT;
+      common_vo.message = "Invalid password format, must be at least 6 characters with letters and numbers";
+      common_vo.data = "";
+      return;
+    }
+
+    // 调用 Service 处理
+    user_service.HandleResetRequest(ctx, dto, common_vo);
+    if (common_vo.code != utils::SUCCESS)
+    {
+      return;
+    }
+
+    common_vo.code = utils::SUCCESS;
+    common_vo.message = "Password reset successfully";
+    common_vo.data = "";
+  }
 };
 
 UserController::UserController() : _pimpl(std::make_unique<_impl>())
@@ -158,6 +215,11 @@ void UserController::HandleRegisterRequest(const utils::Context& ctx, const User
                                            core::CommonVO& common_vo) const
 {
   _pimpl->handle_register_request(ctx, dto, common_vo);
+}
+
+void UserController::HandleResetPassRequest(const utils::Context& ctx, const UserResetPasswordDTO& dto, core::CommonVO& common_vo) const
+{
+  _pimpl->handle_reset_pass_request(ctx, dto, common_vo);
 }
 
 }  // namespace core

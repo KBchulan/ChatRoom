@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [2025-12-11]
 
 ### ✨ Features
+- **[reset]** 增加重置密码接口，与注册比较接近，写了一个数据库定时备份的服务，前端主要是对三个页面的联调，，完善了一下页面跳转以及这个重置密码的页面
 - **[logs]** 增加日志落盘
 
 ## [2025-12-10]

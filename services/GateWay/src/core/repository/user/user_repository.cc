@@ -49,6 +49,16 @@ struct UserRepository::_impl
     return conn.Execute(sql, params);
   }
 
+  [[nodiscard]] bool update_user_password(const std::string& email, const std::string& password_hash) const
+  {
+    auto conn = _db_pool.GetConnection();
+
+    const char* sql = "UPDATE users SET password_hash = ? WHERE email = ?";
+    auto params = utils::MakeParams(password_hash, email);
+
+    return conn.Execute(sql, params);
+  }
+
   // // 下面两个用于演示
   // [[nodiscard]] std::optional<UserVerifyCodeDO> find_by_email_and_purpose(const std::string& email,
   //                                                                         std::int8_t purpose) const
@@ -143,6 +153,11 @@ std::expected<bool, std::string> UserRepository::CheckUserExists(const std::stri
 bool UserRepository::InsertUser(const UserDO& user_do) const
 {
   return _pimpl->insert_user(user_do);
+}
+
+bool UserRepository::UpdateUserPassword(const std::string& email, const std::string& password_hash) const
+{
+  return _pimpl->update_user_password(email, password_hash);
 }
 
 }  // namespace core

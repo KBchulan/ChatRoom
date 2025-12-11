@@ -4,10 +4,12 @@ on:
   push:
     paths:
       - "chatroom/**"
+      - ".github/workflows/client.yml"
     branches: ["main"]
   pull_request:
     paths:
       - "chatroom/**"
+      - ".github/workflows/client.yml"
     branches: ["main"]
 
 defaults:

@@ -31,6 +31,8 @@ public:
 
   [[nodiscard]] bool InsertUser(const UserDO& user_do) const;
 
+  [[nodiscard]] bool UpdateUserPassword(const std::string& email, const std::string& password_hash) const;
+
   UserRepository(const UserRepository&) = delete;
   UserRepository& operator=(const UserRepository&) = delete;
   UserRepository(UserRepository&&) = delete;

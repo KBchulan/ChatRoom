@@ -5,10 +5,12 @@ on:
   push:
     paths:
       - "services/VerifyCode/**"
+      - ".github/workflows/verify-code.yml"
     branches: ["main"]
   pull_request:
     paths:
       - "services/VerifyCode/**"
+      - ".github/workflows/verify-code.yml"
     branches: ["main"]
 
 defaults:

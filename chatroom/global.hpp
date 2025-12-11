@@ -22,11 +22,13 @@ enum class ReqID
 {
   ID_GET_VERIFY_CODE = 1001,  // 获取验证码
   ID_REGISTER = 1002,         // 注册
+  ID_RESET_PASSWORD = 1003    // 重置密码
 };
 
 enum class Module
 {
   REGISTER = 0,  // 注册模块
+  RESET = 1,     // 重置密码模块
 };
 
 enum class ErrorCode

@@ -26,6 +26,7 @@ public:
 
   void HandleSendCodeRequest(const utils::Context& ctx, const UserSendCodeDTO& dto, core::CommonVO& common_vo) const;
   void HandleRegisterRequest(const utils::Context& ctx, const UserRegisterDTO& dto, core::CommonVO& common_vo) const;
+  void HandleResetRequest(const utils::Context& ctx, const UserResetPasswordDTO& dto, core::CommonVO& common_vo) const;
 
   UserService(const UserService&) = delete;
   UserService& operator=(const UserService&) = delete;

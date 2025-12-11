@@ -13,6 +13,7 @@
 #define LOGINDIALOG_HPP
 
 #include <QDialog>
+#include <QEvent>
 
 namespace Ui
 {
@@ -30,8 +31,12 @@ public:
 private:
   Ui::LoginDialog* ui;
 
+protected:
+  bool eventFilter(QObject* watched, QEvent* event) override;
+
 signals:
   void SigSwitchRegister();
+  void SigForgetPassword();
 };
 
 #endif  // LOGINDIALOG_HPP

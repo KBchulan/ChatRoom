@@ -176,6 +176,88 @@ struct UserService::_impl
     }
   }
 
+  void handle_reset_request(const utils::Context& ctx, const UserResetPasswordDTO& dto, core::CommonVO& common_vo) const
+  {
+    auto request_id = std::any_cast<std::string>(ctx.Get("request_id"));
+
+    // 检查用户是否存在
+    auto user_exists = _user_repository.CheckUserExists(dto.email, "");
+    if (!user_exists.has_value())
+    {
+      logger.error("{}: Error checking user existence: {}", request_id, user_exists.error());
+      common_vo.code = utils::DATABASE_ERROR;
+      common_vo.message = user_exists.error();
+      common_vo.data = "";
+      return;
+    }
+    if (!user_exists.value())
+    {
+      logger.error("{}: User with email {} not exists", request_id, dto.email);
+      common_vo.code = utils::USER_NOT_EXISTS;
+      common_vo.message = "User with given email or nickname not exists";
+      common_vo.data = "";
+      return;
+    }
+
+    // 校验验证码
+    std::string email_key = global::server::VERIFY_CODE_PREFIX + dto.email;
+    auto conn = redis_pool.GetConnection();
+    auto reply = conn.Get(email_key);
+
+    if (!reply.IsValid() || reply.IsError())
+    {
+      logger.error("{}: Redis error checking verify code", request_id);
+      common_vo.code = utils::REDIS_ERROR;
+      common_vo.message = "Redis error checking verify code";
+      common_vo.data = "";
+      return;
+    }
+    if (reply.IsNil())
+    {
+      logger.error("{}: Verification code expired for {}", request_id, dto.email);
+      common_vo.code = utils::EXPIRED_VERIFY_CODE;
+      common_vo.message = "Verification code expired";
+      common_vo.data = "";
+      return;
+    }
+    if (dto.verify_code != reply.AsString())
+    {
+      logger.error("{}: Error verification code for {}", request_id, dto.email);
+      common_vo.code = utils::ERROR_VERIFY_CODE;
+      common_vo.message = "Error verification code";
+      common_vo.data = "";
+      return;
+    }
+
+    // 加密密码
+    auto hash_pass = utils::HashPassWord(dto.password);
+    if (!hash_pass.has_value())
+    {
+      logger.error("{}: Error in hash password: {}", request_id, dto.password);
+      common_vo.code = utils::ERROR_HASH_PASSWORD;
+      common_vo.message = "Error in hash password";
+      common_vo.data = "";
+      return;
+    }
+
+    // 更新用户密码
+    if (!_user_repository.UpdateUserPassword(dto.email, hash_pass.value()))
+    {
+      logger.error("{}: Error in update user password to database", request_id);
+      common_vo.code = utils::DATABASE_ERROR;
+      common_vo.message = "Error in update user password to database";
+      common_vo.data = "";
+      return;
+    }
+
+    // 清除 redis 中的验证码
+    reply = conn.Del(email_key);
+    if (!reply.IsValid() || reply.IsError() || reply.AsInteger() == 0)
+    {
+      logger.warning("{}: Redis error delete verify code", request_id);
+    }
+  }
+
   _impl() = default;
   ~_impl() = default;
 };
@@ -202,6 +284,12 @@ void UserService::HandleRegisterRequest(const utils::Context& ctx, const UserReg
                                         core::CommonVO& common_vo) const
 {
   _pimpl->handle_register_request(ctx, dto, common_vo);
+}
+
+void UserService::HandleResetRequest(const utils::Context& ctx, const UserResetPasswordDTO& dto,
+                                     core::CommonVO& common_vo) const
+{
+  _pimpl->handle_reset_request(ctx, dto, common_vo);
 }
 
 }  // namespace core

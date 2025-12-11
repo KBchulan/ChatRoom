@@ -1,76 +1,65 @@
 /******************************************************************************
  *
- * @file       registerdialog.hpp
- * @brief      注册页面
+ * @file       resetpassworddialog.hpp
+ * @brief      重置密码的页面
  *
  * @author     KBchulan
- * @date       2025/11/30
+ * @date       2025/12/11
  * @history
  *****************************************************************************/
 
-#ifndef REGISTERDIALOG_HPP
-#define REGISTERDIALOG_HPP
+#ifndef RESETPASSWORDDIALOG_HPP
+#define RESETPASSWORDDIALOG_HPP
 
-#include <QTimer>
-#include <QMap>
 #include <QDialog>
-#include <QString>
 #include <QAction>
-#include <QJsonObject>
 #include <QRegularExpression>
 
 #include "global.hpp"
 
 namespace Ui
 {
-class RegisterDialog;
+class ResetPasswordDialog;
 }
 
-class RegisterDialog : public QDialog
+class ResetPasswordDialog : public QDialog
 {
   Q_OBJECT
 
-  static constexpr int kDefaultReturnCount = 5;
-
 public:
-  explicit RegisterDialog(QWidget* parent = nullptr);
-  ~RegisterDialog();
+  explicit ResetPasswordDialog(QWidget* parent = nullptr);
+  ~ResetPasswordDialog();
 
   void Reset();
-
-signals:
-  void SigSwitchLogin();
-
-private slots:
-  void on_verify_code_btn_clicked();
-  void on_confirm_btn_clicked();
-  void on_return_button_clicked();
-  void on_cancel_btn_clicked();
-  void slot_reg_mod_finish(QString str, ErrorCode err, ReqID id);
 
 protected:
   bool eventFilter(QObject* obj, QEvent* event) override;
 
+signals:
+  void SigSwitchToLogin();
+
+private slots:
+  void on_return_btn_clicked();
+  void on_verify_code_btn_clicked();
+  void on_confirm_btn_clicked();
+  void slot_reset_mod_finish(QString str, ErrorCode err, ReqID id);
+
 private:
   void show_tip(const QString& str, bool ok);
-  void init_handlers();
-  void check_user_valid();
+  void init_handler();
   void check_email_valid();
   void check_password_valid();
   void check_confirm_password_valid();
   void check_verify_code_valid();
 
 private:
-  Ui::RegisterDialog* ui;
+  Ui::ResetPasswordDialog* ui;
   QAction* _toggle_password;
   QAction* _toggle_confirm_password;
   QMap<ReqID, std::function<void(const QJsonObject&)>> _handlers;
-
-  int _counter;
-  QTimer* _return_timer;
 
   inline static const QRegularExpression email_regex{R"(^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$)"};
   inline static const QRegularExpression password_regex{R"((?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,})"};
 };
 
-#endif  // REGISTERDIALOG_HPP
+#endif  // RESETPASSWORDDIALOG_HPP

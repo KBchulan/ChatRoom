@@ -5,10 +5,12 @@ on:
   push:
     paths:
       - "services/GateWay/**"
+      - ".github/workflows/gateway.yml"
     branches: ["main"]
   pull_request:
     paths:
       - "services/GateWay/**"
+      - ".github/workflows/gateway.yml"
     branches: ["main"]
 
 defaults:

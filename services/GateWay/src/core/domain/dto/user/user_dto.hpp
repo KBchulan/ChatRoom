@@ -62,6 +62,30 @@ struct CORE_EXPORT UserRegisterDTO
   }
 };
 
+struct CORE_EXPORT UserResetPasswordDTO
+{
+  std::string email;
+  std::string password;
+  std::string confirm_password;
+  std::string verify_code;
+  std::int8_t purpose;
+
+  static std::optional<UserResetPasswordDTO> FromJsonString(const std::string& json_str)
+  {
+    auto root = utils::ParseJson(json_str);
+    if (!root || !(*root).isObject())
+    {
+      return std::nullopt;
+    }
+
+    return UserResetPasswordDTO{.email = (*root)["email"].asString(),
+                                .password = (*root)["password"].asString(),
+                                .confirm_password = (*root)["confirm_password"].asString(),
+                                .verify_code = (*root)["verify_code"].asString(),
+                                .purpose = static_cast<std::int8_t>((*root)["purpose"].asInt())};
+  }
+};
+
 }  // namespace core
 
 #endif  // USER_DTO_HPP

@@ -25,6 +25,7 @@ QT_END_NAMESPACE
 
 class LoginDialog;
 class RegisterDialog;
+class ResetPasswordDialog;
 class MainWindow : public QMainWindow
 {
   Q_OBJECT
@@ -36,6 +37,7 @@ public:
 public slots:
   void SlotSwitchRegister();
   void SlotSwitchLogin();
+  void SlotSwitchResetPassword();
 
 private:
   Ui::MainWindow* ui;
@@ -44,5 +46,6 @@ private:
   QStackedWidget* _stacked_widget;
   LoginDialog* _login_dialog;
   RegisterDialog* _register_dialog;
+  ResetPasswordDialog* _reset_password_dialog;
 };
 #endif  // MAINWINDOW_HPP

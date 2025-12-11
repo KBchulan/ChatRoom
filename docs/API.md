@@ -59,3 +59,26 @@ Content-Type: application/json
   "message": "User registered successfully"
 }
 ```
+
+### 重置密码
+
+```http
+POST {{baseUrl}}/user/reset HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "2262317520@qq.com",
+  "password": "newwhx051021",
+  "confirm_password": "newwhx051021",
+  "verify_code": "89140e",
+  "purpose": 2
+}
+```
+
+```json
+{
+  "code": 0,
+  "data": "",
+  "message": "Password reset successfully"
+}
+```
