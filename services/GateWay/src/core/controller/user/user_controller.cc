@@ -135,13 +135,14 @@ struct UserController::_impl
     common_vo.data = "";
   }
 
-  void handle_reset_pass_request(const utils::Context& ctx, const UserResetPasswordDTO& dto, core::CommonVO& common_vo) const
+  void handle_reset_pass_request(const utils::Context& ctx, const UserResetPasswordDTO& dto,
+                                 core::CommonVO& common_vo) const
   {
     auto request_id = std::any_cast<std::string>(ctx.Get("request_id"));
 
     // 校验参数
-    if (dto.email.empty() || dto.password.empty() || dto.confirm_password.empty() ||
-        dto.verify_code.empty() || dto.purpose != 2)
+    if (dto.email.empty() || dto.password.empty() || dto.confirm_password.empty() || dto.verify_code.empty() ||
+        dto.purpose != 2)
     {
       logger.error("{}: Invalid parameters", request_id);
       common_vo.code = utils::INVALID_PARAMETERS;
@@ -217,7 +218,8 @@ void UserController::HandleRegisterRequest(const utils::Context& ctx, const User
   _pimpl->handle_register_request(ctx, dto, common_vo);
 }
 
-void UserController::HandleResetPassRequest(const utils::Context& ctx, const UserResetPasswordDTO& dto, core::CommonVO& common_vo) const
+void UserController::HandleResetPassRequest(const utils::Context& ctx, const UserResetPasswordDTO& dto,
+                                            core::CommonVO& common_vo) const
 {
   _pimpl->handle_reset_pass_request(ctx, dto, common_vo);
 }

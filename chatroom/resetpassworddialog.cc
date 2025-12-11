@@ -5,6 +5,7 @@
 
 #include <QJsonObject>
 #include <QToolButton>
+#include <QJsonDocument>
 
 ResetPasswordDialog::ResetPasswordDialog(QWidget* parent) : QDialog(parent), ui(new Ui::ResetPasswordDialog)
 {
