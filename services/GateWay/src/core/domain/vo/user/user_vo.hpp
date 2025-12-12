@@ -11,8 +11,32 @@
 #ifndef USER_VO_HPP
 #define USER_VO_HPP
 
+#include <json/value.h>
+
+#include <core/CoreExport.hpp>
+#include <cstdint>
+#include <string>
+
 namespace core
 {
+
+struct CORE_EXPORT UserLoginVO
+{
+  std::string uuid;
+  std::string host;
+  std::int16_t port;
+  std::string token;
+
+  [[nodiscard]] Json::Value ToJson() const
+  {
+    Json::Value root;
+    root["uuid"] = uuid;
+    root["host"] = host;
+    root["port"] = port;
+    root["token"] = token;
+    return root;
+  }
+};
 
 }  // namespace core
 

@@ -50,6 +50,7 @@ signals:
   void sig_post_http_finish(QString str, ErrorCode err, ReqID id, Module mod);
   void sig_register_mod_finish(QString str, ErrorCode err, ReqID id);
   void sig_reset_mod_finish(QString str, ErrorCode err, ReqID id);
+  void sig_login_mod_finish(QString str, ErrorCode err, ReqID id);
 };
 
 #endif  // HTTPMANAGER_HPP

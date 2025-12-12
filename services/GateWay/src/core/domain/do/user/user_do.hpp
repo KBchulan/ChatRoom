@@ -24,7 +24,7 @@ struct CORE_EXPORT UserVerifyCodeDO
   std::int64_t id;
   std::string email;
   std::string code;
-  std::int8_t purpose;  // 1: 注册, 2: 重置密码, 3: 登录
+  std::int8_t purpose;  // 1: 注册, 2: 重置密码
   std::chrono::system_clock::time_point created_at;
 };
 

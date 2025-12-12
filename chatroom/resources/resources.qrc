@@ -6,5 +6,6 @@
         <file>icons/eye_close.png</file>
         <file>style/login_window.qss</file>
         <file>style/register_window.qss</file>
+        <file>style/reset_pass_window.qss</file>
     </qresource>
 </RCC>

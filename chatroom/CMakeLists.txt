@@ -35,6 +35,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         global.hpp  global.cc
         timerbutton.hpp timerbutton.cc
         httpmanager.hpp httpmanager.cc
+        serverinfo.hpp serverinfo.cc
         Defer.hpp config.ini
     )
 # Define target properties for Android with Qt 6 as:
@@ -51,6 +52,7 @@ else()
             global.hpp  global.cc
             timerbutton.hpp timerbutton.cc
             httpmanager.hpp httpmanager.cc
+            serverinfo.hpp serverinfo.cc
             Defer.hpp config.ini
         )
 # Define properties for Android with Qt 5 after find_package() calls as:
@@ -64,6 +66,7 @@ else()
             global.hpp  global.cc
             timerbutton.hpp timerbutton.cc
             httpmanager.hpp httpmanager.cc
+            serverinfo.hpp serverinfo.cc
             Defer.hpp config.ini
         )
     endif()

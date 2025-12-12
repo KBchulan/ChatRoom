@@ -6,6 +6,7 @@
 #include <tools/Logger.hpp>
 #include <utils/common/code.hpp>
 #include <utils/common/func.hpp>
+#include <utils/grpc/client/status_server_client.hpp>
 #include <utils/grpc/client/verify_code_client.hpp>
 #include <utils/pool/redis/redis_pool.hpp>
 
@@ -18,6 +19,7 @@ struct UserService::_impl
   utils::RedisPool& redis_pool = utils::RedisPool::GetInstance();
   UserRepository& _user_repository = UserRepository::GetInstance();
   utils::VerifyCodeClient& _verify_code_client = utils::VerifyCodeClient::GetInstance();
+  utils::StatusServerClinet& _status_server_client = utils::StatusServerClinet::GetInstance();
 
   void handle_send_code_request(const utils::Context& ctx, const UserSendCodeDTO& dto, core::CommonVO& common_vo) const
   {
@@ -258,6 +260,68 @@ struct UserService::_impl
     }
   }
 
+  void handle_login_request(const utils::Context& ctx, const UserLoginDTO& dto, core::CommonVO& common_vo,
+                            UserLoginVO& login_vo) const
+  {
+    auto request_id = std::any_cast<std::string>(ctx.Get("request_id"));
+
+    // 检查用户是否存在
+    auto user_exists = _user_repository.CheckUserExists(dto.is_email ? dto.user : "", dto.is_email ? "" : dto.user);
+    if (!user_exists.has_value())
+    {
+      logger.error("{}: Error checking user existence: {}", request_id, user_exists.error());
+      common_vo.code = utils::DATABASE_ERROR;
+      common_vo.message = user_exists.error();
+      common_vo.data = "";
+      return;
+    }
+    if (!user_exists.value())
+    {
+      logger.error("{}: User with {} not exists", request_id, dto.user);
+      common_vo.code = utils::USER_NOT_EXISTS;
+      common_vo.message = "User with given info not exists";
+      common_vo.data = "";
+      return;
+    }
+
+    // 验证密码
+    auto [user_uuid, password_hash] = _user_repository.GetUidPassByUser(dto.user, dto.is_email);
+    if (password_hash.empty() || user_uuid.empty())
+    {
+      logger.error("{}: Error getting user info by: {}", request_id, dto.user);
+      common_vo.code = utils::DATABASE_ERROR;
+      common_vo.message = "Error getting user by input info";
+      common_vo.data = "";
+      return;
+    }
+
+    auto verify_pass = utils::VerifyPassword(dto.password, password_hash);
+    if (!verify_pass)
+    {
+      logger.error("{}: Error password for user {}", request_id, dto.user);
+      common_vo.code = utils::ERROR_PASSWORD;
+      common_vo.message = "Error password for user";
+      common_vo.data = "";
+      return;
+    }
+
+    // 调用 RPC 服务获取空闲的 Tcp server
+    auto res = _status_server_client.GetTcpServer(user_uuid);
+    if (!res)
+    {
+      logger.error("{}: Error getting Tcp server for user {}, err is: {}", request_id, user_uuid, res.error().message);
+      common_vo.code = utils::ERROR_GET_TCP_SERVER;
+      common_vo.message = res.error().message;
+      common_vo.data = "";
+      return;
+    }
+
+    login_vo.uuid = user_uuid;
+    login_vo.host = res->data().find("host")->second;
+    login_vo.port = static_cast<int16_t>(std::stoi(res->data().find("port")->second));
+    login_vo.token = res->data().find("token")->second;
+  }
+
   _impl() = default;
   ~_impl() = default;
 };
@@ -290,6 +354,12 @@ void UserService::HandleResetRequest(const utils::Context& ctx, const UserResetP
                                      core::CommonVO& common_vo) const
 {
   _pimpl->handle_reset_request(ctx, dto, common_vo);
+}
+
+void UserService::HandleLoginRequest(const utils::Context& ctx, const UserLoginDTO& dto, core::CommonVO& common_vo,
+                                     UserLoginVO& login_vo) const
+{
+  _pimpl->handle_login_request(ctx, dto, common_vo, login_vo);
 }
 
 }  // namespace core

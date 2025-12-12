@@ -2,11 +2,13 @@ syntax = "proto3";
 
 package KBchulan.ChatRoom.VerifyCode;
 
+// 发送验证码的请求
 message VerifyCodeRequest
 {
   string email = 1;
 }
 
+// 发送验证码的响应
 message VerifyCodeResponse
 {
   int32 code = 1;
@@ -14,7 +16,9 @@ message VerifyCodeResponse
   map<string, string> data = 3;
 }
 
+// 定义发送验证码的 RPC 服务
 service VerifyCodeService
 {
+  // 发送验证码的 RPC 方法
   rpc VerifyCode(VerifyCodeRequest) returns (VerifyCodeResponse);
 }

@@ -14,6 +14,7 @@
 #include <core/CoreExport.hpp>
 #include <core/domain/dto/user/user_dto.hpp>
 #include <core/domain/vo/common_vo.hpp>
+#include <core/domain/vo/user/user_vo.hpp>
 #include <utils/context/context.hpp>
 
 namespace core
@@ -27,6 +28,8 @@ public:
   void HandleSendCodeRequest(const utils::Context& ctx, const UserSendCodeDTO& dto, core::CommonVO& common_vo) const;
   void HandleRegisterRequest(const utils::Context& ctx, const UserRegisterDTO& dto, core::CommonVO& common_vo) const;
   void HandleResetRequest(const utils::Context& ctx, const UserResetPasswordDTO& dto, core::CommonVO& common_vo) const;
+  void HandleLoginRequest(const utils::Context& ctx, const UserLoginDTO& dto, core::CommonVO& common_vo,
+                          UserLoginVO& login_vo) const;
 
   UserService(const UserService&) = delete;
   UserService& operator=(const UserService&) = delete;

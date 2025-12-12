@@ -170,14 +170,14 @@ struct Connection::_impl
                 if (result.has_value())
                 {
                   status_code = static_cast<int>(boost::beast::http::status::ok);
-                  tools::Logger::getInstance().info(" {} | {} | {} | {}", request_id, method_str, status_code, target);
+                  tools::Logger::getInstance().info("{} | {} | {} | {}", request_id, method_str, status_code, target);
                   _response.result(boost::beast::http::status::ok);
                   boost::beast::ostream(_response.body()) << result.value();
                 }
                 else
                 {
                   status_code = static_cast<int>(boost::beast::http::status::bad_request);
-                  tools::Logger::getInstance().error(" {} | {} | {} | {}", request_id, method_str, status_code, target);
+                  tools::Logger::getInstance().error("{} | {} | {} | {}", request_id, method_str, status_code, target);
                   _response.result(boost::beast::http::status::bad_request);
                   boost::beast::ostream(_response.body()) << result.error();
                 }

@@ -31,8 +31,17 @@ Content-Type: application/json
 
 {
   "email": "2262317520@qq.com",
-  "password": "newwhx051021",
-  "confirm_password": "newwhx051021",
-  "verify_code": "89140e",
+  "password": "whx051021",
+  "confirm_password": "whx051021",
+  "verify_code": "cd91e6",
   "purpose": 2
+}
+
+### 用户登录
+POST {{baseUrl}}/user/login HTTP/1.1
+Content-Type: application/json
+
+{
+  "user": "2262317520@qq.com",  // 可以是 email 或者 nickname
+  "password": "whx051021"
 }

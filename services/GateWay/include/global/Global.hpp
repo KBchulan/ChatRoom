@@ -50,10 +50,15 @@ constexpr std::int8_t IO_CONTEXT_POOL_SIZE = 8;        // io_context 池子大�
 constexpr std::int8_t BUSINESS_POOL_SIZE = 8;          // 业务池子大小
 constexpr std::uint16_t MAX_FLATBUFFER_SIZE = 8192;    // 最大扁平化缓冲区大小 8KB
 
-constexpr const char* RPC_SERVER_HOST = "127.0.0.1";              // RPC 服务器地址
-constexpr std::uint16_t RPC_SERVER_PORT = 10002;                  // RPC 服务器端口
-constexpr std::size_t RPC_CONNECTION_POOL_SIZE = 8;               // RPC 连接池大小
 constexpr std::int32_t RPC_MAX_SEND_RECV_SIZE = 4 * 1024 * 1024;  // RPC 最大发送和接收消息大小 4MB
+
+constexpr const char* EMAIL_RPC_SERVER_HOST = "127.0.0.1";  // 邮箱 RPC 服务器地址
+constexpr std::uint16_t EMAIL_RPC_SERVER_PORT = 10002;      // 邮箱 RPC 服务器端口
+constexpr std::size_t EMAIL_RPC_CONNECTION_POOL_SIZE = 8;   // 邮箱 RPC 连接池大小
+
+constexpr const char* STATUS_RPC_SERVER_HOST = "127.0.0.1";  // 状态 RPC 服务器地址
+constexpr std::uint16_t STATUS_RPC_SERVER_PORT = 10003;      // 状态 RPC 服务器端口
+constexpr std::size_t STATUS_RPC_CONNECTION_POOL_SIZE = 8;   // 状态 RPC 连接池大小
 
 constexpr const char* DB_HOST = "127.0.0.1";  // 数据库主机地址
 constexpr std::uint16_t DB_PORT = 3306;       // 数据库端口

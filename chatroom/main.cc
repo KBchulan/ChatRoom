@@ -37,6 +37,13 @@ void loadResources(QApplication &app)
     register_qss.close();
   }
 
+  QFile reset_qss(":/style/reset_pass_window.qss");
+  if (reset_qss.open(QFile::ReadOnly))
+  {
+    styleSheet += QLatin1String(reset_qss.readAll());
+    reset_qss.close();
+  }
+
   app.setStyleSheet(styleSheet);
 }
 

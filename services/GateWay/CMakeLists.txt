@@ -346,6 +346,7 @@ if(ENABLE_CPPCHECK)
       --suppress='*:*/build/_deps/*'
       --suppress='*:*/build/*/_deps/*'
       --suppress='*:*/src/utils/grpc/verify_code/*.pb.*'
+      --suppress='*:*/src/utils/grpc/status_server/*.pb.*'
       --suppress=missingIncludeSystem
       --suppress='constParameterCallback:*/benchmark/*'
       -DPROTOBUF_VERSION=${PROTOBUF_VERSION_NUM}

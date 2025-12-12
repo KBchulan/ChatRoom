@@ -3,33 +3,60 @@ include(GenerateExportHeader)
 
 # Proto 代码生成
 set(PROTO_DIR ${PROJECT_SOURCE_DIR}/../../proto)
-set(PROTO_OUT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/grpc/verify_code)
 
-# 确保输出目录存在
-file(MAKE_DIRECTORY ${PROTO_OUT_DIR})
+# ========== verify_code.proto ==========
+set(VERIFY_CODE_OUT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/grpc/verify_code)
+file(MAKE_DIRECTORY ${VERIFY_CODE_OUT_DIR})
 
-# 定义生成的文件
-set(PROTO_SRCS
-  ${PROTO_OUT_DIR}/verify_code.pb.cc
-  ${PROTO_OUT_DIR}/verify_code.grpc.pb.cc
+set(VERIFY_CODE_SRCS
+  ${VERIFY_CODE_OUT_DIR}/verify_code.pb.cc
+  ${VERIFY_CODE_OUT_DIR}/verify_code.grpc.pb.cc
 )
-set(PROTO_HDRS
-  ${PROTO_OUT_DIR}/verify_code.pb.h
-  ${PROTO_OUT_DIR}/verify_code.grpc.pb.h
+set(VERIFY_CODE_HDRS
+  ${VERIFY_CODE_OUT_DIR}/verify_code.pb.h
+  ${VERIFY_CODE_OUT_DIR}/verify_code.grpc.pb.h
 )
 
-# 添加自定义命令生成 protobuf/grpc 代码
 add_custom_command(
-  OUTPUT ${PROTO_SRCS} ${PROTO_HDRS}
+  OUTPUT ${VERIFY_CODE_SRCS} ${VERIFY_CODE_HDRS}
   COMMAND ${PROTOC}
     --proto_path=${PROTO_DIR}
-    --cpp_out=${PROTO_OUT_DIR}
-    --grpc_out=${PROTO_OUT_DIR}
+    --cpp_out=${VERIFY_CODE_OUT_DIR}
+    --grpc_out=${VERIFY_CODE_OUT_DIR}
     --plugin=protoc-gen-grpc=${GRPC_CPP_PLUGIN}
     ${PROTO_DIR}/verify_code.proto
   DEPENDS ${PROTO_DIR}/verify_code.proto
   COMMENT "Generating protobuf/grpc code for verify_code.proto"
 )
+
+# ========== status_server.proto ==========
+set(STATUS_SERVER_OUT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/grpc/status_server)
+file(MAKE_DIRECTORY ${STATUS_SERVER_OUT_DIR})
+
+set(STATUS_SERVER_SRCS
+  ${STATUS_SERVER_OUT_DIR}/status_server.pb.cc
+  ${STATUS_SERVER_OUT_DIR}/status_server.grpc.pb.cc
+)
+set(STATUS_SERVER_HDRS
+  ${STATUS_SERVER_OUT_DIR}/status_server.pb.h
+  ${STATUS_SERVER_OUT_DIR}/status_server.grpc.pb.h
+)
+
+add_custom_command(
+  OUTPUT ${STATUS_SERVER_SRCS} ${STATUS_SERVER_HDRS}
+  COMMAND ${PROTOC}
+    --proto_path=${PROTO_DIR}
+    --cpp_out=${STATUS_SERVER_OUT_DIR}
+    --grpc_out=${STATUS_SERVER_OUT_DIR}
+    --plugin=protoc-gen-grpc=${GRPC_CPP_PLUGIN}
+    ${PROTO_DIR}/status_server.proto
+  DEPENDS ${PROTO_DIR}/status_server.proto
+  COMMENT "Generating protobuf/grpc code for status_server.proto"
+)
+
+# ========== 汇总所有 Proto 源文件 ==========
+set(PROTO_SRCS ${VERIFY_CODE_SRCS} ${STATUS_SERVER_SRCS})
+set(PROTO_HDRS ${VERIFY_CODE_HDRS} ${STATUS_SERVER_HDRS})
 
 # 为生成的 proto 文件禁用警告
 set_source_files_properties(

@@ -49,6 +49,7 @@ MainWindow::~MainWindow()
 void MainWindow::SlotSwitchRegister()
 {
   _stacked_widget->setCurrentWidget(_register_dialog);
+  _login_dialog->Reset();
 }
 
 void MainWindow::SlotSwitchLogin()
@@ -61,4 +62,5 @@ void MainWindow::SlotSwitchLogin()
 void MainWindow::SlotSwitchResetPassword()
 {
   _stacked_widget->setCurrentWidget(_reset_password_dialog);
+  _login_dialog->Reset();
 }

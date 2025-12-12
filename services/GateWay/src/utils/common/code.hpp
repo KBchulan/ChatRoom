@@ -33,6 +33,8 @@ constexpr std::int16_t ERROR_HASH_PASSWORD = 13;        // 密码哈希失败
 constexpr std::int16_t EXPIRED_VERIFY_CODE = 14;        // 验证码过期
 constexpr std::int16_t USER_ALREADY_EXISTS = 15;        // 用户已存在
 constexpr std::int16_t USER_NOT_EXISTS = 16;            // 用户不存在
+constexpr std::int16_t ERROR_PASSWORD = 17;             // 密码错误
+constexpr std::int16_t ERROR_GET_TCP_SERVER = 18;       // 获取 TCP 服务器信息失败
 
 }  // namespace utils
 

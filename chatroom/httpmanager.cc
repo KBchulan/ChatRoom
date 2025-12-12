@@ -59,4 +59,8 @@ void HttpManager::slot_post_http_finish(QString str, ErrorCode err, ReqID id, Mo
   {
     emit sig_reset_mod_finish(str, err, id);
   }
+  else if (mod== Module::LOGIN)
+  {
+    emit sig_login_mod_finish(str, err, id);
+  }
 }

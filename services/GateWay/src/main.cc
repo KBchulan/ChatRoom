@@ -4,7 +4,7 @@
 #include <core/server/server.hpp>
 #include <global/Global.hpp>
 #include <tools/Logger.hpp>
-#include <utils/common/routes.hpp>
+#include <utils/grpc/client/status_server_client.hpp>
 #include <utils/grpc/client/verify_code_client.hpp>
 #include <utils/pool/mariadb/db_pool.hpp>
 #include <utils/pool/redis/redis_pool.hpp>
@@ -14,7 +14,8 @@ using namespace global::server;
 // 初始化连接池
 void init()
 {
-  std::string rpc_address = std::string(RPC_SERVER_HOST) + ":" + std::to_string(RPC_SERVER_PORT);
+  std::string email_rpc_address = std::string(EMAIL_RPC_SERVER_HOST) + ":" + std::to_string(EMAIL_RPC_SERVER_PORT);
+  std::string status_address = std::string(STATUS_RPC_SERVER_HOST) + ":" + std::to_string(STATUS_RPC_SERVER_PORT);
 
   utils::DBConfig db_config{.host = DB_HOST,
                             .port = DB_PORT,
@@ -31,7 +32,8 @@ void init()
                                   .timeout = std::chrono::seconds(REDIS_TIMEOUT)};
 
   tools::Logger::getInstance();
-  utils::VerifyCodeClient::GetInstance().Init(rpc_address, RPC_CONNECTION_POOL_SIZE);
+  utils::VerifyCodeClient::GetInstance().Init(email_rpc_address, EMAIL_RPC_CONNECTION_POOL_SIZE);
+  utils::StatusServerClinet::GetInstance().Init(status_address, STATUS_RPC_CONNECTION_POOL_SIZE);
   utils::DBPool::GetInstance().Init(db_config);
   utils::RedisPool::GetInstance().Init(redis_config);
   core::Business::GetInstance();

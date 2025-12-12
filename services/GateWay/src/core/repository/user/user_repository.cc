@@ -59,38 +59,33 @@ struct UserRepository::_impl
     return conn.Execute(sql, params);
   }
 
-  // // 下面两个用于演示
-  // [[nodiscard]] std::optional<UserVerifyCodeDO> find_by_email_and_purpose(const std::string& email,
-  //                                                                         std::int8_t purpose) const
-  // {
-  //   void(this);
+  [[nodiscard]] std::pair<std::string, std::string> get_uid_pass_by_user(const std::string& user, bool is_email) const
+  {
+    auto conn = _db_pool.GetConnection();
 
-  //   auto conn = utils::DBPool::GetInstance().GetConnection();
+    std::string sql;
+    if (is_email)
+    {
+      sql = "SELECT uuid, password_hash FROM users WHERE email = ?";
+    }
+    else
+    {
+      sql = "SELECT uuid, password_hash FROM users WHERE nickname = ?";
+    }
 
-  //   const char* sql =
-  //       "SELECT id, email, code, purpose, created_at FROM user_verification_codes WHERE email = ? AND purpose = ? "
-  //       "ORDER BY created_at DESC LIMIT 1";
-  //   auto params = utils::MakeParams(email, purpose);
+    auto params = utils::MakeParams(user);
 
-  //   std::int64_t db_id{};
-  //   utils::StringBuffer<255> db_email;
-  //   utils::StringBuffer<16> db_code;
-  //   std::int8_t db_purpose{};
-  //   utils::StringBuffer<255> db_created_at;
+    utils::StringBuffer<36> uuid;
+    utils::StringBuffer<255> password_hash;
+    auto results = utils::MakeResults(uuid, password_hash);
 
-  //   auto results = utils::MakeResults(db_id, db_email, db_code, db_purpose, db_created_at);
+    if (!conn.QueryOne(sql.c_str(), params, results))
+    {
+      return {};
+    }
 
-  //   if (conn.QueryOne(sql, params, results))
-  //   {
-  //     return UserVerifyCodeDO{.id = db_id,
-  //                             .email = db_email.str(),
-  //                             .code = db_code.str(),
-  //                             .purpose = db_purpose,
-  //                             .created_at = std::chrono::system_clock::time_point{}};
-  //   }
-
-  //   return std::nullopt;
-  // }
+    return {uuid.str(), password_hash.str()};
+  }
 
   // [[nodiscard]] std::vector<UserVerifyCodeDO> FindAllByEmail(const std::string& email)
   // {
@@ -158,6 +153,11 @@ bool UserRepository::InsertUser(const UserDO& user_do) const
 bool UserRepository::UpdateUserPassword(const std::string& email, const std::string& password_hash) const
 {
   return _pimpl->update_user_password(email, password_hash);
+}
+
+std::pair<std::string, std::string> UserRepository::GetUidPassByUser(const std::string& user, bool is_email) const
+{
+  return _pimpl->get_uid_pass_by_user(user, is_email);
 }
 
 }  // namespace core

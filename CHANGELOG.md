@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [2025-12-12]
+
+### ✨ Features
+- **[login]** httpmanager 增加一个处理 Login 模块的函数 完善登录页面，所有模块进行动态检查，以及登录按钮的使能状态 补充 main.cc 对重置页面的样式加载 在 mainwindow 中切换到其他页面对登录页面进行重置 增加 ServerInfo 类，用于保存 TCP 服务器信息 更换头像图片为新图片 增加状态服务器，因此封装了一个 新的 rpc client，用于处理登录请求 更新 global 的配置，增加 status_server 的配置，并修改 email_server 的名称，在 main.cc 中初始化 增加用户登录接口，与注册和重置密码类似，暂时只调用 RPC 返回一个空闲的 tcp server，真正连接请求暂未完成 增加获取 Tcp 服务器的请求，自动计算负载最小的服务器，并将请求转发到该服务器 存储 uuid -> token 的映射关系，以便后续使用
+
 ## [2025-12-11]
 
 ### ✨ Features

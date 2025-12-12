@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS `user_verification_codes` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '自增主键',
   `email` VARCHAR(255) NOT NULL COMMENT '用户邮箱',
   `code` VARCHAR(16) NOT NULL COMMENT '验证码',
-  `purpose` TINYINT NOT NULL COMMENT '1=register, 2=reset_password, 3=login, 发送验证码目的',
+  `purpose` TINYINT NOT NULL COMMENT '1=register, 2=reset_password, 发送验证码目的',
   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '验证码创建时间',
 
   PRIMARY KEY (`id`),

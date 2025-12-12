@@ -33,6 +33,8 @@ public:
 
   [[nodiscard]] bool UpdateUserPassword(const std::string& email, const std::string& password_hash) const;
 
+  [[nodiscard]] std::pair<std::string, std::string> GetUidPassByUser(const std::string& user, bool is_email) const;
+
   UserRepository(const UserRepository&) = delete;
   UserRepository& operator=(const UserRepository&) = delete;
   UserRepository(UserRepository&&) = delete;

@@ -15,6 +15,7 @@
 #pragma clang diagnostic pop
 #endif
 
+#include <core/domain/vo/user/user_vo.hpp>
 #include <core/service/user/user_service.hpp>
 #include <global/Global.hpp>
 #include <tools/Logger.hpp>
@@ -47,7 +48,7 @@ struct UserController::_impl
     auto request_id = std::any_cast<std::string>(ctx.Get("request_id"));
 
     // 校验参数
-    if (dto.email.empty() || (dto.purpose != 1 && dto.purpose != 2 && dto.purpose != 3))
+    if (dto.email.empty() || (dto.purpose != 1 && dto.purpose != 2))
     {
       logger.error("{}: Invalid parameters", request_id);
       common_vo.code = utils::INVALID_PARAMETERS;
@@ -192,6 +193,57 @@ struct UserController::_impl
     common_vo.message = "Password reset successfully";
     common_vo.data = "";
   }
+
+  void handle_login_request(const utils::Context& ctx, UserLoginDTO& dto, core::CommonVO& common_vo) const
+  {
+    auto request_id = std::any_cast<std::string>(ctx.Get("request_id"));
+
+    // 校验参数
+    if (dto.user.empty() || dto.password.empty())
+    {
+      logger.error("{}: Invalid parameters", request_id);
+      common_vo.code = utils::INVALID_PARAMETERS;
+      common_vo.message = "Invalid parameters";
+      common_vo.data = "";
+      return;
+    }
+
+    // 如果使用邮箱的话
+    if (dto.user.contains('@'))
+    {
+      dto.is_email = true;
+      if (!is_valid_email(dto.user))
+      {
+        logger.error("{}: Invalid email format", request_id);
+        common_vo.code = utils::INVALID_EMAIL_FORMAT;
+        common_vo.message = "Invalid email format";
+        common_vo.data = "";
+        return;
+      }
+    }
+
+    // 验证密码格式
+    if (!is_valid_password(dto.password))
+    {
+      logger.error("{}: Invalid password format", request_id);
+      common_vo.code = utils::INVALID_PASSWORD_FORMAT;
+      common_vo.message = "Invalid password format, must be at least 6 characters with letters and numbers";
+      common_vo.data = "";
+      return;
+    }
+
+    // 调用 Service 处理
+    UserLoginVO login_vo;
+    user_service.HandleLoginRequest(ctx, dto, common_vo, login_vo);
+    if (common_vo.code != utils::SUCCESS)
+    {
+      return;
+    }
+
+    common_vo.code = utils::SUCCESS;
+    common_vo.message = "Get tcp server info successfully";
+    common_vo.data = login_vo.ToJson();
+  }
 };
 
 UserController::UserController() : _pimpl(std::make_unique<_impl>())
@@ -222,6 +274,11 @@ void UserController::HandleResetPassRequest(const utils::Context& ctx, const Use
                                             core::CommonVO& common_vo) const
 {
   _pimpl->handle_reset_pass_request(ctx, dto, common_vo);
+}
+
+void UserController::HandleLoginRequest(const utils::Context& ctx, UserLoginDTO& dto, core::CommonVO& common_vo) const
+{
+  _pimpl->handle_login_request(ctx, dto, common_vo);
 }
 
 }  // namespace core
