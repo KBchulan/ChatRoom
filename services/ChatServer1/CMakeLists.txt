@@ -1,9 +1,6 @@
 # 指定最小版本
 cmake_minimum_required(VERSION 3.25)
 
-# 构建系统选择 ninja
-set(CMAKE_GENERATOR "Ninja" CACHE INTERNAL "")
-
 # 项目配置
 project(
   ChatServer1

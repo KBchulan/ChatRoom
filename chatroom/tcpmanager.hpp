@@ -8,7 +8,6 @@
 #include <QMap>
 #include <QTcpSocket>
 #include <QString>
-#include <QtTypes>
 
 #include "global.hpp"
 #include "serverinfo.hpp"
