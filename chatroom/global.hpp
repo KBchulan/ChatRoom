@@ -20,10 +20,12 @@ extern QString GateWayUrl;
 
 enum class ReqID
 {
-  ID_GET_VERIFY_CODE = 1001,  // 获取验证码
-  ID_REGISTER = 1002,         // 注册
-  ID_RESET_PASSWORD = 1003,   // 重置密码
-  ID_LOGIN = 1004             // 登录
+  ID_GET_VERIFY_CODE = 1001,       // 获取验证码
+  ID_REGISTER = 1002,              // 注册
+  ID_RESET_PASSWORD = 1003,        // 重置密码
+  ID_LOGIN = 1004,                 // 登录
+  ID_LOGIN_CHAT = 1005,            // 逻辑登录
+  ID_LOGIN_CHAT_RESPONSE = 1006,   // 登录回包
 };
 
 enum class Module

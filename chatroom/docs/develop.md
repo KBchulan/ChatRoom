@@ -49,3 +49,5 @@
 - 在 mainwindow 中切换到其他页面对登录页面进行重置
 - 增加 ServerInfo 类，用于保存 TCP 服务器信息
 - 更换头像图片为新图片
+- 修改 serverinfo 的 port 为 uint16_t，避免端口为 0 的情况
+- 增加 TCP 管理者，串通端口逻辑，实现 TCP 连接

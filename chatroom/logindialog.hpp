@@ -45,6 +45,7 @@ private:
 private:
   Ui::LoginDialog* ui;
   QAction* _toggle_password;
+  ServerInfo _server_info;
   QMap<ReqID, std::function<void(const QJsonObject&)>> _handlers;
 
   inline static const QRegularExpression email_regex{R"(^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$)"};
@@ -61,6 +62,8 @@ signals:
 private slots:
   void on_login_button_clicked();
   void slot_login_mod_finish(QString str, ErrorCode err, ReqID id);
+  void slot_tcp_conn_finish(bool);
+  void slot_login_failed(int);
 };
 
 #endif  // LOGINDIALOG_HPP

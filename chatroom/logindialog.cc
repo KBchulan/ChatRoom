@@ -1,5 +1,6 @@
 #include "logindialog.hpp"
 #include "httpmanager.hpp"
+#include "tcpmanager.hpp"
 
 #include <QAction>
 #include <QLabel>
@@ -14,7 +15,7 @@
 
 #include "ui_logindialog.h"
 
-LoginDialog::LoginDialog(QWidget* parent) : QDialog(parent), ui(new Ui::LoginDialog)
+LoginDialog::LoginDialog(QWidget* parent) : QDialog(parent), ui(new Ui::LoginDialog), _server_info("", "", 0, "")
 {
   ui->setupUi(this);
 
@@ -51,6 +52,9 @@ LoginDialog::LoginDialog(QWidget* parent) : QDialog(parent), ui(new Ui::LoginDia
   // 连接信号
   connect(ui->register_button, &QPushButton::clicked, this, &LoginDialog::SigSwitchRegister);
   connect(&HttpManager::GetInstance(), &HttpManager::sig_login_mod_finish, this, &LoginDialog::slot_login_mod_finish);
+  connect(this, &LoginDialog::SigConnectTcp, &TcpManager::GetInstance(), &TcpManager::SlotTcpConnect);
+  connect(&TcpManager::GetInstance(), &TcpManager::sig_conn_finish, this, &LoginDialog::slot_tcp_conn_finish);
+  connect(&TcpManager::GetInstance(), &TcpManager::sig_login_failed, this, &LoginDialog::slot_login_failed);
 
   connect(_toggle_password, &QAction::triggered, this, [this]() -> void
   {
@@ -117,7 +121,8 @@ void LoginDialog::init_handlers()
       return;
     }
 
-    ServerInfo server_info(uuid, host, static_cast<int16_t>(port), token);
+    ServerInfo server_info(uuid, host, static_cast<uint16_t>(port), token);
+    _server_info = std::move(server_info);
     show_tip("登录成功，正在连接服务器", true);
     emit SigConnectTcp(server_info);
   });
@@ -282,3 +287,29 @@ void LoginDialog::slot_login_mod_finish(QString str, ErrorCode err, ReqID id)
   _handlers[id](jsonDoc.object());
 }
 
+void LoginDialog::slot_tcp_conn_finish(bool success)
+{
+  if (success)
+  {
+    show_tip("连接服务器成功，正在校验信息", true);
+
+    QJsonObject obj;
+    obj["uuid"] = _server_info.GetUUID();
+    obj["token"] = _server_info.GetToken();
+
+    QJsonDocument doc{obj};
+    QString jsonStr = doc.toJson(QJsonDocument::Indented);
+
+    TcpManager::GetInstance().sig_send_data(ReqID::ID_LOGIN_CHAT, jsonStr);
+  }
+  else
+  {
+    show_tip("网络异常，连接服务器失败", false);
+  }
+}
+
+void LoginDialog::slot_login_failed(int error_code)
+{
+  QString result = QString("登录失败，错误码为: %1").arg(error_code);
+  show_tip(result, false);
+}
