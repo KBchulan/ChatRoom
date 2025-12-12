@@ -34,10 +34,10 @@ struct CORE_EXPORT TcpServerInfo
   int connection_count = 0;
 };
 
-class CORE_EXPORT StatusServiceImpl final : public StatusService::Service
+class StatusServiceImpl final : public StatusService::Service
 {
 public:
-  StatusServiceImpl(const std::vector<TcpServerInfo>& servers) : _tcp_servers(servers)
+  explicit StatusServiceImpl(const std::vector<TcpServerInfo>& servers) : _tcp_servers(servers)
   {
   }
 

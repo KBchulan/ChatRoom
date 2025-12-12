@@ -1,9 +1,6 @@
 # 指定最小版本
 cmake_minimum_required(VERSION 3.25)
 
-# 构建系统选择 ninja
-set(CMAKE_GENERATOR "Ninja" CACHE INTERNAL "")
-
 # 项目配置
 project(
   StatusServer
@@ -261,6 +258,22 @@ endif()
 if(ENABLE_CPPCHECK)
   find_program(CPPCHECK cppcheck)
   if(CPPCHECK)
+    # 设置 PROTOBUF_VERSION_NUM 变量
+    string(REPLACE "." ";" PB_VERSION_LIST ${Protobuf_VERSION})
+    list(GET PB_VERSION_LIST 0 PB_MAJOR)
+    list(GET PB_VERSION_LIST 1 PB_MINOR)
+    list(LENGTH PB_VERSION_LIST PB_VERSION_LEN)
+    if(PB_VERSION_LEN GREATER 2)
+      list(GET PB_VERSION_LIST 2 PB_PATCH)
+    else()
+      set(PB_PATCH 0)
+    endif()
+    if(PB_MAJOR LESS 5)
+      math(EXPR PROTOBUF_VERSION_NUM "${PB_MAJOR} * 1000000 + ${PB_MINOR} * 1000 + ${PB_PATCH}")
+    else()
+      math(EXPR PROTOBUF_VERSION_NUM "6 * 1000000 + ${PB_MAJOR} * 1000 + ${PB_MINOR}")
+    endif()
+
     set(CPPCHECK_COMMAND ${CPPCHECK}
       --enable=all
       --check-level=exhaustive
@@ -274,7 +287,9 @@ if(ENABLE_CPPCHECK)
       --suppress='*:*/build/_deps/*'
       --suppress='*:*/build/*/_deps/*'
       --suppress=missingIncludeSystem
+      --suppress='*:*/src/utils/gen/*.pb.*'
       --suppress='constParameterCallback:*/benchmark/*'
+      -DPROTOBUF_VERSION=${PROTOBUF_VERSION_NUM}
       --project=${CMAKE_BINARY_DIR}/compile_commands.json
     )
     add_custom_target(

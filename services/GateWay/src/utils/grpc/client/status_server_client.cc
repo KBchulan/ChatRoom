@@ -21,7 +21,7 @@ GetTcpServerResult StatusServerClinet::GetTcpServer(std::string_view uuid)
   auto stub = create_stub();
 
   GetTcpServerRequest request;
-  request.set_uuid(uuid);
+  request.set_uuid(std::string(uuid));
 
   GetTcpServerResponse response;
   grpc::ClientContext context;

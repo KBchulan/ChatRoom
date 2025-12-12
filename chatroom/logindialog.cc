@@ -1,6 +1,7 @@
 #include "logindialog.hpp"
 #include "httpmanager.hpp"
 
+#include <QAction>
 #include <QLabel>
 #include <QPainter>
 #include <QPainterPath>
