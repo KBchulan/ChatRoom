@@ -27,7 +27,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y cppcheck pkg-config libgtest-dev libbenchmark-dev libfmt-dev libgrpc++-dev libprotobuf-dev protobuf-compiler protobuf-compiler-grpc
+          sudo apt-get install -y cppcheck pkg-config libgtest-dev libbenchmark-dev libfmt-dev libboost-all-dev libgrpc++-dev libprotobuf-dev protobuf-compiler protobuf-compiler-grpc
         shell: bash
 
       - name: Configure
@@ -52,7 +52,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y lcov libgtest-dev pkg-config libfmt-dev libgrpc++-dev libprotobuf-dev protobuf-compiler protobuf-compiler-grpc
+          sudo apt-get install -y lcov libgtest-dev pkg-config libfmt-dev libboost-all-dev libgrpc++-dev libprotobuf-dev protobuf-compiler protobuf-compiler-grpc
         shell: bash
 
       - name: Configure with Coverage
