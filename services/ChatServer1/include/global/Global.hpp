@@ -40,6 +40,30 @@ constexpr bool ENABLE_FILE_LOG = true;                    // 是否启用文件�
 constexpr std::chrono::microseconds FLUSH_INTERVAL{100};  // 刷新等待间隔
 }  // namespace logger
 
+// ================
+// 服务器相关常量
+// ================
+namespace server
+{
+
+constexpr unsigned short DEFAULT_SERVER_PORT = 10004;  // 默认服务器端口
+constexpr std::int8_t IO_CONTEXT_POOL_SIZE = 8;        // io_context 池子大小
+constexpr std::int8_t MSG_TYPE_LENGTH = 2;             // 消息类型长度
+constexpr std::int8_t MSG_LEN_LENGTH = 2;              // 消息长度字段长度
+constexpr std::int8_t MSG_HEAD_TOTAL_LEN = 4;          // 消息头总长度
+constexpr std::size_t RECV_BUFFER_SIZE = 8192;         // 接收缓冲区大小
+constexpr std::size_t SEND_QUEUE_CAPACITY = 1024;      // 发送队列容量 2^10
+constexpr std::size_t SEND_EXPIRE_TIME_S = 60 * 5;     // 单条发送过期时间 300s
+constexpr std::size_t LOGIC_QUEUE_CAPACITY = 4096;     // 逻辑队列容量 2^12
+
+constexpr std::int32_t RPC_MAX_SEND_RECV_SIZE = 4 * 1024 * 1024;  // RPC 最大发送和接收消息大小 4MB
+
+constexpr const char* STATUS_RPC_SERVER_HOST = "127.0.0.1";  // 状态 RPC 服务器地址
+constexpr std::uint16_t STATUS_RPC_SERVER_PORT = 10003;      // 状态 RPC 服务器端口
+constexpr std::size_t STATUS_RPC_CONNECTION_POOL_SIZE = 8;   // 状态 RPC 连接池大小
+
+}  // namespace server
+
 }  // namespace global
 
 #endif  // GLOBAL_HPP

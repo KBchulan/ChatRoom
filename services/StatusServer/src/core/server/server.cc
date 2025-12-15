@@ -39,11 +39,30 @@ grpc::Status StatusServiceImpl::GetTcpServer([[maybe_unused]] grpc::ServerContex
   // 为其选择一个合适的 tcp server，先返回给它信息，随后再真正连接时再增加计数
   auto& server = *std::ranges::min_element(_tcp_servers, {}, &TcpServerInfo::connection_count);
 
+  response->set_code(0);
+  response->set_message("Get TCP server success");
   response->mutable_data()->insert({"host", server.host});
   response->mutable_data()->insert({"port", std::to_string(server.port)});
   response->mutable_data()->insert({"token", token});
 
   tools::Logger::getInstance().info("GetTcpServer: uuid = {}, token = {}", uuid, token);
+  return grpc::Status::OK;
+}
+
+grpc::Status StatusServiceImpl::LoginVerify([[maybe_unused]] grpc::ServerContext* ctx,
+                                            const LoginVerifyRequest* request, LoginVerifyResponse* response)
+{
+  const auto& uuid = request->uuid();
+  const auto& token = request->token();
+
+  if (!_tokens.contains(uuid) || _tokens[uuid] != token)
+  {
+    tools::Logger::getInstance().error("LoginVerify error: uuid = {}, token = {}", uuid, token);
+    return {grpc::StatusCode::PERMISSION_DENIED, "Invalid token"};
+  }
+
+  response->set_code(0);
+  response->set_message("Login verify success");
   return grpc::Status::OK;
 }
 

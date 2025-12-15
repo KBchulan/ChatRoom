@@ -63,3 +63,7 @@
 - 增加状态服务器，因此封装了一个 新的 rpc client，用于处理登录请求
 - 更新 global 的配置，增加 status_server 的配置，并修改 email_server 的名称，在 main.cc 中初始化
 - 增加用户登录接口，与注册和重置密码类似，暂时只调用 RPC 返回一个空闲的 tcp server，真正连接请求暂未完成
+
+### [2025-12-15] 完善架构
+
+- 独立 GrpcError，方便后续横向扩展

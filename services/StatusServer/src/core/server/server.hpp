@@ -11,6 +11,8 @@
 #ifndef SERVER_HPP
 #define SERVER_HPP
 
+#include <grpcpp/support/status.h>
+
 #include <core/CoreExport.hpp>
 #include <string>
 #include <unordered_map>
@@ -45,6 +47,9 @@ public:
 
   grpc::Status GetTcpServer(grpc::ServerContext* ctx, const GetTcpServerRequest* request,
                             GetTcpServerResponse* response) override;
+
+  grpc::Status LoginVerify(grpc::ServerContext* ctx, const LoginVerifyRequest* request,
+                           LoginVerifyResponse* response) override;
 
 private:
   std::vector<TcpServerInfo> _tcp_servers;

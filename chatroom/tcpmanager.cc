@@ -102,7 +102,7 @@ void TcpManager::init_handlers()
 
     QJsonObject jsonObj = jsonDoc.object();
 
-    // TODO: 解析响应数据并存下
+    // 解析响应数据并存下
     auto code = jsonObj["code"].toInt();
     auto message = jsonObj["message"].toString();
 

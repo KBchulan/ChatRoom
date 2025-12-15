@@ -23,18 +23,13 @@
 #include <expected>
 #include <memory>
 #include <utils/UtilsExport.hpp>
+#include <utils/grpc/client/grpc_error.hpp>
 #include <utils/pool/channel/channel_pool.hpp>
 
 namespace utils
 {
 
 using namespace KBchulan::ChatRoom::VerifyCode;
-
-struct UTILS_EXPORT GrpcError
-{
-  grpc::StatusCode code;
-  std::string message;
-};
 
 using VerifyCodeResult = std::expected<VerifyCodeResponse, GrpcError>;
 

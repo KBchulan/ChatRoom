@@ -1,15 +1,15 @@
 /******************************************************************************
  *
- * @file       tcp_server_client.hpp
- * @brief      向状态服务器获取聊天服务器的客户端
+ * @file       status_server_client.hpp
+ * @brief      与状态服务器通信的客户端
  *
  * @author     KBchulan
- * @date       2025/12/12
+ * @date       2025/12/15
  * @history
  ******************************************************************************/
 
-#ifndef TCP_SERVER_CLIENT_HPP
-#define TCP_SERVER_CLIENT_HPP
+#ifndef STATUS_SERVER_CLIENT_HPP
+#define STATUS_SERVER_CLIENT_HPP
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wconversion"
@@ -18,7 +18,6 @@
 #pragma GCC diagnostic pop
 
 #include <expected>
-#include <memory>
 #include <utils/UtilsExport.hpp>
 #include <utils/grpc/client/grpc_error.hpp>
 #include <utils/pool/channel/channel_pool.hpp>
@@ -28,7 +27,7 @@ namespace utils
 
 using namespace KBchulan::ChatRoom::StatusServer;
 
-using GetTcpServerResult = std::expected<GetTcpServerResponse, GrpcError>;
+using LoginVerifyResult = std::expected<LoginVerifyResponse, GrpcError>;
 
 class UTILS_EXPORT StatusServerClinet
 {
@@ -37,7 +36,7 @@ public:
 
   void Init(const std::string& server_address, std::size_t pool_size);
 
-  [[nodiscard]] GetTcpServerResult GetTcpServer(std::string_view uuid);
+  [[nodiscard]] LoginVerifyResult VerifyLoginInfo(const std::string& uuid, const std::string& token);
 
   StatusServerClinet(const StatusServerClinet&) = delete;
   StatusServerClinet& operator=(const StatusServerClinet&) = delete;
@@ -55,4 +54,4 @@ private:
 
 }  // namespace utils
 
-#endif  // TCP_SERVER_CLIENT_HPP
+#endif  // STATUS_SERVER_CLIENT_HPP

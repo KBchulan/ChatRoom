@@ -1,13 +1,54 @@
 # 引入module
 include(GenerateExportHeader)
 
+# Proto 代码生成
+set(PROTO_DIR ${PROJECT_SOURCE_DIR}/../../proto)
+
+# ========== status_server.proto ==========
+set(STATUS_SERVER_OUT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/grpc/status_server)
+file(MAKE_DIRECTORY ${STATUS_SERVER_OUT_DIR})
+
+set(STATUS_SERVER_SRCS
+  ${STATUS_SERVER_OUT_DIR}/status_server.pb.cc
+  ${STATUS_SERVER_OUT_DIR}/status_server.grpc.pb.cc
+)
+set(STATUS_SERVER_HDRS
+  ${STATUS_SERVER_OUT_DIR}/status_server.pb.h
+  ${STATUS_SERVER_OUT_DIR}/status_server.grpc.pb.h
+)
+
+add_custom_command(
+  OUTPUT ${STATUS_SERVER_SRCS} ${STATUS_SERVER_HDRS}
+  COMMAND ${PROTOC}
+    --proto_path=${PROTO_DIR}
+    --cpp_out=${STATUS_SERVER_OUT_DIR}
+    --grpc_out=${STATUS_SERVER_OUT_DIR}
+    --plugin=protoc-gen-grpc=${GRPC_CPP_PLUGIN}
+    ${PROTO_DIR}/status_server.proto
+  DEPENDS ${PROTO_DIR}/status_server.proto
+  COMMENT "Generating protobuf/grpc code for status_server.proto"
+)
+
+# ========== 汇总所有 Proto 源文件 ==========
+set(PROTO_SRCS ${STATUS_SERVER_SRCS})
+set(PROTO_HDRS ${STATUS_SERVER_HDRS})
+
+# 为生成的 proto 文件禁用警告
+set_source_files_properties(
+  ${PROTO_SRCS}
+  PROPERTIES
+  COMPILE_OPTIONS "-Wno-conversion;-Wno-shadow"
+)
+
 # 获取所有utils文件
 file(GLOB_RECURSE SRC_UTILS_FILES ${CMAKE_CURRENT_SOURCE_DIR}/*.cc)
+list(FILTER SRC_UTILS_FILES EXCLUDE REGEX ".*\\.pb\\.cc$")
 
 # 生成库
 add_library(
   utils
   ${SRC_UTILS_FILES}
+  ${PROTO_SRCS}
 )
 
 # 设置警告标志
@@ -64,6 +105,14 @@ target_include_directories(
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src>
   $<INSTALL_INTERFACE:include>
+)
+
+# 第三方库
+target_link_libraries(
+  utils PUBLIC
+  ${JSONCPP_LINK_TARGET}
+  gRPC::grpc++
+  protobuf::libprotobuf
 )
 
 # 安装库文件和头文件

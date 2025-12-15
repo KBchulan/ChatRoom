@@ -7,3 +7,6 @@ Config.hpp
 compile_commands.json
 
 logs
+
+*.pb.cc
+*.pb.h

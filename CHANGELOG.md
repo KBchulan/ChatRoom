@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [2025-12-15]
+
+### ✨ Features
+- **[server]** 搭建 chatserver 骨架，详细文档参见对应目录的 develop，增加 statusserver 的登录验证服务，抽离 grpcerror，方便横向扩展
+
 ## [2025-12-13]
 
 ### ✨ Features
