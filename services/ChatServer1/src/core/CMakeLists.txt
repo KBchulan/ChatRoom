@@ -66,6 +66,12 @@ target_include_directories(
   $<INSTALL_INTERFACE:include>
 )
 
+# 第三方库
+target_link_libraries(
+  core PUBLIC
+  ${JSONCPP_LINK_TARGET}
+)
+
 # 安装库文件和头文件
 install(
   TARGETS core
