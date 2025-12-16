@@ -107,3 +107,28 @@ Content-Type: application/json
   }
 }
 ```
+
+### 逻辑登录
+
+本接口为 tcp 服务接口，用于用户与 tcp 服务的登录，采用 tlv 的格式发送，其中，[1005] 为消息 id，[len] 为消息体的长度，消息体为 json 格式序列化后的字符串，[1006] 表示登录成功的回包 id:
+
+```
+[1005][len]
+[{
+  "uuid": "715eeb30-6b1a-4554-89a2-7794bd20c3a6",
+  "token": "96d0b4b9-5887-4c1a-9e09-d3a52e8f6b1a"
+}]
+```
+
+```
+[1006][len]
+[{
+  "code": 0,
+  "message": "Login successful",
+  "data": {
+    "nickname": "chulan",
+    "avatar": "http://example.com/avatar.jpg",
+    "email": "2262317520@qq.com"
+  }
+}]
+```

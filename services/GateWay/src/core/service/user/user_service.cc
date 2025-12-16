@@ -284,7 +284,7 @@ struct UserService::_impl
       return;
     }
 
-    // 验证密码
+    // 获取用户 uuid 和 password_hash
     auto [user_uuid, password_hash] = _user_repository.GetUidPassByUser(dto.user, dto.is_email);
     if (password_hash.empty() || user_uuid.empty())
     {
@@ -295,6 +295,27 @@ struct UserService::_impl
       return;
     }
 
+    // 判断用户是否已经登录
+    auto conn = redis_pool.GetConnection();
+    auto redis_info_exists = conn.Exists(global::server::USER_INFO_PREFIX + user_uuid);
+    if (!redis_info_exists.IsValid() || redis_info_exists.IsError())
+    {
+      logger.error("{}: Redis error checking user info", request_id);
+      common_vo.code = utils::REDIS_ERROR;
+      common_vo.message = "Redis error checking user info";
+      common_vo.data = "";
+      return;
+    }
+    if (redis_info_exists.AsInteger().has_value() && redis_info_exists.AsInteger().value() > 0)
+    {
+      logger.error("{}: User {} already logged in", request_id, dto.user);
+      common_vo.code = utils::USER_ALREADY_LOGGED_IN;
+      common_vo.message = "User already logged in";
+      common_vo.data = "";
+      return;
+    }
+
+    // 验证密码
     auto verify_pass = utils::VerifyPassword(dto.password, password_hash);
     if (!verify_pass)
     {

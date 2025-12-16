@@ -3,6 +3,7 @@
 #include <json/json.h>
 
 #include <atomic>
+#include <core/repository/user_repository.hpp>
 #include <core/session/session.hpp>
 #include <global/Global.hpp>
 #include <global/SuperQueue.hpp>
@@ -13,6 +14,7 @@
 #include <unordered_map>
 #include <utils/common/code.hpp>
 #include <utils/grpc/client/status_server_client.hpp>
+#include <utils/pool/redis/redis_pool.hpp>
 
 namespace core
 {
@@ -88,8 +90,7 @@ struct Logic::_impl
   void init_handlers()
   {
     // 注册消息处理函数
-    _handlers[utils::ID_LOGIN_CHAT] =
-        [this](const Session::Ptr& session, [[maybe_unused]] const std::span<const char>& data)
+    _handlers[utils::ID_LOGIN_CHAT] = [this](const Session::Ptr& session, const std::span<const char>& data)
     {
       Json::Value response;
       Json::StreamWriterBuilder writer;
@@ -117,8 +118,28 @@ struct Logic::_impl
         return;
       }
 
+      // 查询用户基本信息
+      UserDO user = UserRepository::getUserById(uuid);
+
+      Json::Value user_info;
+      user_info["nickname"] = user.nickname;
+      user_info["avatar"] = user.avatar;
+      user_info["email"] = user.email;
+
+      // 存入 redis，按照 prefix + email 作为 key
+      auto redis_conn = utils::RedisPool::GetInstance().GetConnection();
+      auto key = global::server::USER_INFO_PREFIX + uuid;
+      auto pipeline = redis_conn.NewPipeLine();
+      pipeline.Append("HSET %s nickname %s", key.c_str(), user.nickname.c_str())
+          .Append("HSET %s avatar %s", key.c_str(), user.avatar.c_str())
+          .Append("HSET %s email %s", key.c_str(), user.email.c_str())
+          .Append("EXPIRE %s %d", key.c_str(), global::server::USER_INFO_EXPIRE_TIME_S);
+      pipeline.Execute();
+
+      // 返回响应
       response["code"] = utils::SUCCESS;
       response["message"] = "Login successful";
+      response["data"] = user_info;
       session->Send(std::make_shared<SendNode>(utils::ID_LOGIN_CHAT_RESPONSE, Json::writeString(writer, response)));
     };
   }

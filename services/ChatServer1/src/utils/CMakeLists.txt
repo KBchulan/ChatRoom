@@ -113,6 +113,8 @@ target_link_libraries(
   ${JSONCPP_LINK_TARGET}
   gRPC::grpc++
   protobuf::libprotobuf
+  PkgConfig::MARIADB
+  hiredis::hiredis
 )
 
 # 安装库文件和头文件

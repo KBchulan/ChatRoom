@@ -75,6 +75,7 @@ constexpr std::size_t REDIS_MAX_POOL_SIZE = 16;  // Redis 最大连接池大小
 constexpr std::size_t REDIS_TIMEOUT = 3;         // Redis 连接超时时间
 
 constexpr const char* VERIFY_CODE_PREFIX = "verify_code_";  // 验证码在 Redis 中的键前缀
+constexpr const char* USER_INFO_PREFIX = "user_info:";      // 用户信息前缀
 constexpr const char* DEFAULT_AVATAR_URL =
     "http://14.103.206.66:8888/group1/M00/00/00/oYYBAGk3_NKAO9_qAAFp-FKCqaY435.jpg";  // 默认头像 URL
 

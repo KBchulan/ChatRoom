@@ -1,4 +1,5 @@
 #include "tcpmanager.hpp"
+#include "userinfo.hpp"
 
 #include <QtEndian>
 #include <QDebug>
@@ -113,6 +114,12 @@ void TcpManager::init_handlers()
       return;
     }
 
+    if (jsonObj.contains("data") && jsonObj["data"].isObject()) {
+      const QJsonObject data = jsonObj["data"].toObject();
+      UserInfo::GetInstance().SetNickname(data["nickname"].toString());
+      UserInfo::GetInstance().SetAvatar(data["avatar"].toString());
+      UserInfo::GetInstance().SetEmail(data["email"].toString());
+    }
     emit sig_switch_chat_dialog();
   });
 }

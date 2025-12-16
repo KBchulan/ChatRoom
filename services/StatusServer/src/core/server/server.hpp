@@ -14,6 +14,7 @@
 #include <grpcpp/support/status.h>
 
 #include <core/CoreExport.hpp>
+#include <mutex>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -36,6 +37,12 @@ struct CORE_EXPORT TcpServerInfo
   int connection_count = 0;
 };
 
+struct CORE_EXPORT UserConnectionInfo
+{
+  std::string token;
+  std::size_t server_index;
+};
+
 class StatusServiceImpl final : public StatusService::Service
 {
 public:
@@ -52,8 +59,9 @@ public:
                            LoginVerifyResponse* response) override;
 
 private:
+  std::mutex _mutex;
   std::vector<TcpServerInfo> _tcp_servers;
-  std::unordered_map<std::string, std::string> _tokens;
+  std::unordered_map<std::string, UserConnectionInfo> _pending_connections;
 };
 
 }  // namespace core

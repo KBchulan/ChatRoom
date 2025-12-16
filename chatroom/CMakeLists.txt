@@ -37,6 +37,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         httpmanager.hpp httpmanager.cc
         serverinfo.hpp serverinfo.cc
         tcpmanager.hpp tcpmanager.cc
+        userinfo.hpp userinfo.cc
         Defer.hpp config.ini
     )
 # Define target properties for Android with Qt 6 as:
@@ -55,6 +56,7 @@ else()
             httpmanager.hpp httpmanager.cc
             serverinfo.hpp serverinfo.cc
             tcpmanager.hpp tcpmanager.cc
+            userinfo.hpp userinfo.cc
             Defer.hpp config.ini
         )
 # Define properties for Android with Qt 5 after find_package() calls as:
@@ -70,6 +72,7 @@ else()
             httpmanager.hpp httpmanager.cc
             serverinfo.hpp serverinfo.cc
             tcpmanager.hpp tcpmanager.cc
+            userinfo.hpp userinfo.cc
             Defer.hpp config.ini
         )
     endif()

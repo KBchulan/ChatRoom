@@ -203,6 +203,27 @@ endif()
 find_program(PROTOC protoc REQUIRED)
 find_program(GRPC_CPP_PLUGIN grpc_cpp_plugin REQUIRED)
 
+# MariaDB
+if(PkgConfig_FOUND)
+  pkg_check_modules(MARIADB REQUIRED IMPORTED_TARGET libmariadb)
+else()
+  message(FATAL_ERROR
+    "MariaDB is required.\n"
+    "Please install: sudo pacman -S mariadb-libs"
+  )
+endif()
+
+# hiredis
+find_package(hiredis QUIET)
+if(NOT hiredis_FOUND)
+  pkg_check_modules(hiredis REQUIRED IMPORTED_TARGET hiredis)
+  if(hiredis_FOUND)
+    if(NOT TARGET hiredis::hiredis)
+      add_library(hiredis::hiredis ALIAS PkgConfig::hiredis)
+    endif()
+  endif()
+endif()
+
 # Google Test
 find_package(GTest QUIET)
 if(NOT GTest_FOUND)

@@ -95,3 +95,8 @@ ChatServer1/
 - gRPC + Protobuf（RPC 通信）
 - jsoncpp（JSON 解析）
 - spdlog/fmt（日志）
+
+### [2025-12-16] 完善登录请求
+
+- 引入 mariadb + redis，包括连接池以及调用，复用网关层的东西
+- 逻辑层修改，查询用户信息并存入 redis 和返回给客户端

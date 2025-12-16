@@ -9,6 +9,8 @@
 #include <core/server/server.hpp>
 #include <tools/Logger.hpp>
 #include <utils/grpc/client/status_server_client.hpp>
+#include <utils/pool/mariadb/db_pool.hpp>
+#include <utils/pool/redis/redis_pool.hpp>
 
 using namespace global::server;
 
@@ -26,8 +28,24 @@ void init()
 {
   std::string status_address = std::string(STATUS_RPC_SERVER_HOST) + ":" + std::to_string(STATUS_RPC_SERVER_PORT);
 
+  utils::DBConfig db_config{.host = DB_HOST,
+                            .port = DB_PORT,
+                            .user = DB_USER,
+                            .password = DB_PASSWORD,
+                            .database = DB_NAME,
+                            .pool_size = DB_MAX_POOL_SIZE};
+
+  utils::RedisConfig redis_config{.host = REDIS_HOST,
+                                  .port = REDIS_PORT,
+                                  .password = REDIS_PASSWORD,
+                                  .db_index = REDIS_DB_INDEX,
+                                  .pool_size = REDIS_MAX_POOL_SIZE,
+                                  .timeout = std::chrono::seconds(REDIS_TIMEOUT)};
+
   tools::Logger::getInstance();
   utils::StatusServerClinet::GetInstance().Init(status_address, STATUS_RPC_CONNECTION_POOL_SIZE);
+  utils::DBPool::GetInstance().Init(db_config);
+  utils::RedisPool::GetInstance().Init(redis_config);
   core::IO::GetInstance();
   core::Logic::GetInstance();
 }

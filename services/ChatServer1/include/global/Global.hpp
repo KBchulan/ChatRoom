@@ -62,6 +62,23 @@ constexpr const char* STATUS_RPC_SERVER_HOST = "127.0.0.1";  // 状态 RPC 服�
 constexpr std::uint16_t STATUS_RPC_SERVER_PORT = 10003;      // 状态 RPC 服务器端口
 constexpr std::size_t STATUS_RPC_CONNECTION_POOL_SIZE = 8;   // 状态 RPC 连接池大小
 
+constexpr const char* DB_HOST = "127.0.0.1";  // 数据库主机地址
+constexpr std::uint16_t DB_PORT = 3306;       // 数据库端口
+constexpr const char* DB_USER = "root";       // 数据库用户名
+constexpr const char* DB_PASSWORD = "whx";    // 数据库密码
+constexpr const char* DB_NAME = "chatroom";   // 数据库名称
+constexpr std::size_t DB_MAX_POOL_SIZE = 16;  // 数据库最大连接池大小
+
+constexpr const char* REDIS_HOST = "127.0.0.1";  // Redis 主机地址
+constexpr std::uint16_t REDIS_PORT = 6379;       // Redis 端口
+constexpr const char* REDIS_PASSWORD = "whx";    // Redis 密码
+constexpr std::size_t REDIS_DB_INDEX = 0;        // Redis 数据库索引
+constexpr std::size_t REDIS_MAX_POOL_SIZE = 16;  // Redis 最大连接池大小
+constexpr std::size_t REDIS_TIMEOUT = 3;         // Redis 连接超时时间
+
+constexpr const char* USER_INFO_PREFIX = "user_info:";  // 用户信息前缀
+constexpr std::size_t USER_INFO_EXPIRE_TIME_S = 3600;   // 用户信息过期时间 1小时
+
 }  // namespace server
 
 }  // namespace global

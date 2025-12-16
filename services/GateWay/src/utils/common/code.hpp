@@ -35,6 +35,7 @@ constexpr std::int16_t USER_ALREADY_EXISTS = 15;        // 用户已存在
 constexpr std::int16_t USER_NOT_EXISTS = 16;            // 用户不存在
 constexpr std::int16_t ERROR_PASSWORD = 17;             // 密码错误
 constexpr std::int16_t ERROR_GET_TCP_SERVER = 18;       // 获取 TCP 服务器信息失败
+constexpr std::int16_t USER_ALREADY_LOGGED_IN = 19;     // 用户已登录
 
 }  // namespace utils
 

@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [2025-12-16]
+
+### ✨ Features
+- **[login]** chatServer: 逻辑层修改，查询用户信息并存入 redis 和返回给客户端 引入 mariadb + redis，包括连接池以及调用，复用网关层的东西 gateWay:登录时先判断用户是否存在，若不存在则直接返回错误 status: 修改现有两个请求，调整为 uuid -> token/server_idx 的映射关系，在获取和登录时更新相关信息 client: 存储返回信息
+
 ## [2025-12-15]
 
 ### ✨ Features

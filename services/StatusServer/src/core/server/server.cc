@@ -28,21 +28,34 @@ grpc::Status StatusServiceImpl::GetTcpServer([[maybe_unused]] grpc::ServerContex
 {
   const auto& uuid = request->uuid();
 
-  // 存储该 uuid -> token 的映射关系
-  auto token = generate_token();
+  // 生成 token
+  const auto token = generate_token();
   if (token.empty())
   {
     return {grpc::StatusCode::INTERNAL, "Failed to generate token"};
   }
-  _tokens[uuid] = token;
 
-  // 为其选择一个合适的 tcp server，先返回给它信息，随后再真正连接时再增加计数
-  auto& server = *std::ranges::min_element(_tcp_servers, {}, &TcpServerInfo::connection_count);
+  std::string host;
+  std::string port;
+  {
+    std::lock_guard lock(_mutex);
+
+    // 为其选择一个合适的 tcp server，先返回给它信息，随后再真正连接时再增加计数
+    auto iter = std::ranges::min_element(_tcp_servers, {}, &TcpServerInfo::connection_count);
+    auto server_index = static_cast<size_t>(std::distance(_tcp_servers.begin(), iter));
+    const auto& server = *iter;
+
+    // 存储 uuid -> {token, server_index} 的映射
+    _pending_connections[uuid] = {.token = token, .server_index = server_index};
+
+    host = server.host;
+    port = std::to_string(server.port);
+  }
 
   response->set_code(0);
   response->set_message("Get TCP server success");
-  response->mutable_data()->insert({"host", server.host});
-  response->mutable_data()->insert({"port", std::to_string(server.port)});
+  response->mutable_data()->insert({"host", host});
+  response->mutable_data()->insert({"port", port});
   response->mutable_data()->insert({"token", token});
 
   tools::Logger::getInstance().info("GetTcpServer: uuid = {}, token = {}", uuid, token);
@@ -55,10 +68,20 @@ grpc::Status StatusServiceImpl::LoginVerify([[maybe_unused]] grpc::ServerContext
   const auto& uuid = request->uuid();
   const auto& token = request->token();
 
-  if (!_tokens.contains(uuid) || _tokens[uuid] != token)
   {
-    tools::Logger::getInstance().error("LoginVerify error: uuid = {}, token = {}", uuid, token);
-    return {grpc::StatusCode::PERMISSION_DENIED, "Invalid token"};
+    std::lock_guard lock(_mutex);
+
+    // 验证 token
+    if (!_pending_connections.contains(uuid) || _pending_connections[uuid].token != token)
+    {
+      tools::Logger::getInstance().error("LoginVerify error: uuid = {}, token = {}", uuid, token);
+      return {grpc::StatusCode::PERMISSION_DENIED, "Invalid token"};
+    }
+
+    // 验证通过后，增加该 tcp server 的连接数并移除 token
+    auto server_index = _pending_connections[uuid].server_index;
+    _tcp_servers[server_index].connection_count++;
+    _pending_connections.erase(uuid);
   }
 
   response->set_code(0);
