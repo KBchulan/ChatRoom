@@ -5,7 +5,6 @@
 #include <boost/asio/awaitable.hpp>
 #include <boost/asio/co_spawn.hpp>
 #include <boost/asio/detached.hpp>
-#include <boost/asio/experimental/awaitable_operators.hpp>
 #include <boost/asio/read.hpp>
 #include <boost/asio/redirect_error.hpp>
 #include <boost/asio/steady_timer.hpp>
@@ -22,8 +21,6 @@
 namespace core
 {
 
-using namespace boost::asio::experimental::awaitable_operators;
-
 struct Session::_impl
 {
   std::atomic<bool> _closed;
@@ -38,9 +35,8 @@ struct Session::_impl
 
   std::string _uuid;
   std::weak_ptr<Server> _server;
-  std::weak_ptr<Session> _self;
 
-  boost::asio::awaitable<void> read_loop()
+  boost::asio::awaitable<void> read_loop(Ptr self)
   {
     using namespace global::server;
 
@@ -72,11 +68,11 @@ struct Session::_impl
 
       auto recv_node = std::make_shared<RecvNode>(
           msg_id, std::span<const char>(_recv_buffer.data(), static_cast<std::size_t>(msg_len)));
-      Logic::GetInstance().PostToLogic(_self.lock(), recv_node);
+      Logic::GetInstance().PostToLogic(self, recv_node);
     }
   }
 
-  boost::asio::awaitable<void> write_loop()
+  boost::asio::awaitable<void> write_loop([[maybe_unused]] Ptr self)
   {
     using namespace global::server;
 
@@ -105,19 +101,28 @@ struct Session::_impl
 
   void start(const Ptr& self)
   {
-    _self = self;
-
     boost::asio::co_spawn(
         _socket.get_executor(),
         [self, this]() -> boost::asio::awaitable<void>
         {
+          const auto& logger = tools::Logger::getInstance();
+
           try
           {
-            co_await (self->_pimpl->read_loop() || self->_pimpl->write_loop());
+            // 启动读写协程
+            boost::asio::co_spawn(_socket.get_executor(), self->_pimpl->write_loop(self), boost::asio::detached);
+            co_await self->_pimpl->read_loop(self);
           }
-          catch (const std::exception& e)
+          catch (const boost::system::system_error& errc)
           {
-            tools::Logger::getInstance().error("Session error: {}", e.what());
+            if (errc.code() == boost::asio::error::eof)
+            {
+              logger.debug("Client {} disconnected", _uuid);
+            }
+            else
+            {
+              logger.error("Session {} network error: {} ({})", _uuid, errc.what(), errc.code().message());
+            }
           }
 
           if (auto server = _server.lock())

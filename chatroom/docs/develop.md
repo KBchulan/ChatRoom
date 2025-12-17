@@ -60,3 +60,8 @@
 
 - Http 请求头增加 keep-alive，避免频繁创建连接
 - 将 uuid 移动到 userinfo 中，jwt-token 同样如此，而不是在 serverinfo 中，确保 serverinfo 只保存服务器信息
+
+### [2025-12-15]
+
+- 增加聊天界面占位，完善流程
+- 修改 ctrl + q，明确关闭 tcp 连接

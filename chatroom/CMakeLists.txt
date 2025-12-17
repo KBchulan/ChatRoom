@@ -32,6 +32,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         logindialog.hpp logindialog.cc logindialog.ui
         registerdialog.hpp registerdialog.cc registerdialog.ui
         resetpassworddialog.hpp resetpassworddialog.cc resetpassworddialog.ui
+        chatdialog.hpp chatdialog.cc chatdialog.ui
         global.hpp  global.cc
         timerbutton.hpp timerbutton.cc
         httpmanager.hpp httpmanager.cc
@@ -51,6 +52,7 @@ else()
             logindialog.hpp logindialog.cc logindialog.ui
             registerdialog.hpp registerdialog.cc registerdialog.ui
             resetpassworddialog.hpp resetpassworddialog.cc resetpassworddialog.ui
+            chatdialog.hpp chatdialog.cc chatdialog.ui
             global.hpp  global.cc
             timerbutton.hpp timerbutton.cc
             httpmanager.hpp httpmanager.cc
@@ -67,6 +69,7 @@ else()
             logindialog.hpp logindialog.cc logindialog.ui
             registerdialog.hpp registerdialog.cc registerdialog.ui
             resetpassworddialog.hpp resetpassworddialog.cc resetpassworddialog.ui
+            chatdialog.hpp chatdialog.cc chatdialog.ui
             global.hpp  global.cc
             timerbutton.hpp timerbutton.cc
             httpmanager.hpp httpmanager.cc

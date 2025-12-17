@@ -19,6 +19,9 @@ class TcpManager : public QObject
 public:
   static TcpManager& GetInstance();
 
+  // 断开连接
+  void Disconnect();
+
 private:
   TcpManager();
   ~TcpManager();

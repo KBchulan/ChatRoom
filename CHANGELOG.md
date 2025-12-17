@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [2025-12-18]
+
+### 🐛 Bug Fixes
+- **[server]** 客户端：增加聊天界面占位，完善流程，修改 ctrl + q，明确关闭 tcp 连接 tcp 服务器：选择把 self 进行值传递，同时放弃 协程 || 操作，选择单独挂一个读协程，并阻塞当前 session 进入读协程，此时才可以监听到对端关闭事件
+
 ## [2025-12-17]
 
 ### ✨ Features

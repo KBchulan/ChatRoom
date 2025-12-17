@@ -85,6 +85,16 @@ TcpManager::TcpManager() : _host(""), _port(0), _recv_pending(false), _message_i
 
 TcpManager::~TcpManager()
 {
+  Disconnect();
+}
+
+void TcpManager::Disconnect()
+{
+  if (_socket.state() == QAbstractSocket::UnconnectedState)
+  {
+    return;
+  }
+
   _socket.disconnectFromHost();
 }
 
@@ -114,7 +124,8 @@ void TcpManager::init_handlers()
       return;
     }
 
-    if (jsonObj.contains("data") && jsonObj["data"].isObject()) {
+    if (jsonObj.contains("data") && jsonObj["data"].isObject())
+    {
       const QJsonObject data = jsonObj["data"].toObject();
       UserInfo::GetInstance().SetNickname(data["nickname"].toString());
       UserInfo::GetInstance().SetAvatar(data["avatar"].toString());

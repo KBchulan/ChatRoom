@@ -2,6 +2,8 @@
 #include "logindialog.hpp"
 #include "registerdialog.hpp"
 #include "resetpassworddialog.hpp"
+#include "chatdialog.hpp"
+#include "tcpmanager.hpp"
 
 #include <QKeySequence>
 
@@ -16,10 +18,12 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::MainWi
   _login_dialog = new LoginDialog();
   _register_dialog = new RegisterDialog();
   _reset_password_dialog = new ResetPasswordDialog();
+  _chat_dialog = new ChatDialog();
 
   _stacked_widget->addWidget(_login_dialog);
   _stacked_widget->addWidget(_register_dialog);
   _stacked_widget->addWidget(_reset_password_dialog);
+  _stacked_widget->addWidget(_chat_dialog);
 
   // 设置中心窗口
   setCentralWidget(_stacked_widget);
@@ -30,15 +34,23 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::MainWi
   connect(_register_dialog, &RegisterDialog::SigSwitchLogin, this, &MainWindow::SlotSwitchLogin);
   connect(_login_dialog, &LoginDialog::SigForgetPassword, this, &MainWindow::SlotSwitchResetPassword);
   connect(_reset_password_dialog, &ResetPasswordDialog::SigSwitchToLogin, this, &MainWindow::SlotSwitchLogin);
+  connect(&TcpManager::GetInstance(), &TcpManager::sig_switch_chat_dialog, this, &MainWindow::SlotSwitchChat);
 
   // 绑定快捷键
   _action = new QAction(this);
 
   // ctrl + q 退出
   _action->setShortcut(QKeySequence::Quit);
-  connect(_action, &QAction::triggered, this, &QWidget::close);
+  connect(_action, &QAction::triggered, this, [this]()
+  {
+    TcpManager::GetInstance().Disconnect();
+    close();
+  });
 
   addAction(_action);
+
+
+  // FIXME: 这里是模拟，聊天页面开发完成需要删除
 }
 
 MainWindow::~MainWindow()
@@ -62,5 +74,11 @@ void MainWindow::SlotSwitchLogin()
 void MainWindow::SlotSwitchResetPassword()
 {
   _stacked_widget->setCurrentWidget(_reset_password_dialog);
+  _login_dialog->Reset();
+}
+
+void MainWindow::SlotSwitchChat()
+{
+  _stacked_widget->setCurrentWidget(_chat_dialog);
   _login_dialog->Reset();
 }
