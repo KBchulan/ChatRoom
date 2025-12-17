@@ -103,7 +103,8 @@ Content-Type: application/json
     "host": "127.0.0.1",
     "port": 10004,
     "token": "96d0b4b9-5887-4c1a-9e09-d3a52e8f6b1a",
-    "uuid": "715eeb30-6b1a-4554-89a2-7794bd20c3a6"
+    "uuid": "715eeb30-6b1a-4554-89a2-7794bd20c3a6",
+    "jwt_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXUyJ9.eyJleHAiOjE3NjY1NTQwOTcsImlhdCI6MTc2NTk0OTI5NywiaXNzIjoiQ2hhdFJvb20tR2F0ZVdheSIsInV1aWQiOiI3MTVlZWIzMC02YjFhLTQ1NTQtODlhMi03Nzk0YmQyMGMzYTYifQ.yWMmdsSpOv1TsZirWCYvUpiHjv_s-YcICT-tZcMioSE"
   }
 }
 ```

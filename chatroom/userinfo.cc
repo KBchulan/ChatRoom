@@ -6,6 +6,11 @@ UserInfo &UserInfo::GetInstance()
   return instance;
 }
 
+void UserInfo::SetUUID(const QString &uuid)
+{
+  _uuid = uuid;
+}
+
 void UserInfo::SetNickname(const QString& nickname)
 {
   _nickname = nickname;
@@ -21,6 +26,16 @@ void UserInfo::SetAvatar(const QString& avatar)
   _avatar = avatar;
 }
 
+void UserInfo::SetJwtToken(const QString &jwt_token)
+{
+  _jwt_token = jwt_token;
+}
+
+const QString& UserInfo::GetUUID() const
+{
+  return _uuid;
+}
+
 const QString& UserInfo::GetNickname() const
 {
   return _nickname;
@@ -34,4 +49,9 @@ const QString& UserInfo::GetEmail() const
 const QString& UserInfo::GetAvatar() const
 {
   return _avatar;
+}
+
+const QString& UserInfo::GetJwtToken() const
+{
+  return _jwt_token;
 }

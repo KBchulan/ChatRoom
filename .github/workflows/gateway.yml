@@ -27,8 +27,10 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y cppcheck libgtest-dev libbenchmark-dev libfmt-dev libboost-all-dev libgrpc++-dev libprotobuf-dev protobuf-compiler protobuf-compiler-grpc libmariadb-dev libhiredis-dev libsodium-dev
+          sudo apt-get install -y cppcheck libgtest-dev libbenchmark-dev libfmt-dev libboost-all-dev libgrpc++-dev libprotobuf-dev protobuf-compiler protobuf-compiler-grpc libmariadb-dev libhiredis-dev libsodium-dev libssl-dev
           sudo ln -s /usr/include/mariadb /usr/include/mysql
+          git clone https://github.com/Thalhammer/jwt-cpp.git
+          cd jwt-cpp && cmake . -B build -DJWT_BUILD_EXAMPLES=OFF -DJWT_BUILD_TESTS=OFF && sudo cmake --install build
         shell: bash
 
       - name: Configure
@@ -53,8 +55,10 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y lcov libgtest-dev libfmt-dev libboost-all-dev libgrpc++-dev libprotobuf-dev protobuf-compiler protobuf-compiler-grpc libmariadb-dev libhiredis-dev libsodium-dev
+          sudo apt-get install -y lcov libgtest-dev libfmt-dev libboost-all-dev libgrpc++-dev libprotobuf-dev protobuf-compiler protobuf-compiler-grpc libmariadb-dev libhiredis-dev libsodium-dev libssl-dev
           sudo ln -s /usr/include/mariadb /usr/include/mysql
+          git clone https://github.com/Thalhammer/jwt-cpp.git
+          cd jwt-cpp && cmake . -B build -DJWT_BUILD_EXAMPLES=OFF -DJWT_BUILD_TESTS=OFF && sudo cmake --install build
         shell: bash
 
       - name: Configure with Coverage

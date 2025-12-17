@@ -6,6 +6,7 @@
 #include <tools/Logger.hpp>
 #include <utils/common/code.hpp>
 #include <utils/common/func.hpp>
+#include <utils/common/jwt.hpp>
 #include <utils/grpc/client/status_server_client.hpp>
 #include <utils/grpc/client/verify_code_client.hpp>
 #include <utils/pool/redis/redis_pool.hpp>
@@ -337,10 +338,14 @@ struct UserService::_impl
       return;
     }
 
+    // 生成 jwt token
+    auto jwt_token = utils::Jwt::GenerateToken({.uuid = user_uuid});
+
     login_vo.uuid = user_uuid;
     login_vo.host = res->data().find("host")->second;
     login_vo.port = static_cast<int16_t>(std::stoi(res->data().find("port")->second));
     login_vo.token = res->data().find("token")->second;
+    login_vo.jwt_token = jwt_token;
   }
 
   _impl() = default;

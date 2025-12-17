@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [2025-12-17]
+
+### ✨ Features
+- **[frame]** 客户端：Http 请求头增加 keep-alive，避免频繁创建连接，将 uuid 移动到 userinfo 中，jwt-token 同样如此，而不是在 serverinfo 中，确保 serverinfo 只保存服务器信息，GateWay： 引入 jwt-cpp 库，新增 JWT 组件用于生成和验证 token，新增基于 Redis 滑动窗口的限流组件，默认每分钟 100 次请求，重构 connection.cc： 从 lambda 改为成员函数，代码更清晰 支持 HTTP keep-alive，避免频繁创建连接 增加 JWT 校验中间件，非白名单路由需携带 Authorization 头 增加限流检查，超限返回 429 状态码 日志格式增强，增加 client_ip 字段便于追踪 登录接口返回 jwt_token，客户端后续请求需携带此 token
+
 ## [2025-12-16]
 
 ### ✨ Features

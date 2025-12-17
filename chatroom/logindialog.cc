@@ -1,6 +1,7 @@
 #include "logindialog.hpp"
 #include "httpmanager.hpp"
 #include "tcpmanager.hpp"
+#include "userinfo.hpp"
 
 #include <QAction>
 #include <QLabel>
@@ -15,7 +16,7 @@
 
 #include "ui_logindialog.h"
 
-LoginDialog::LoginDialog(QWidget* parent) : QDialog(parent), ui(new Ui::LoginDialog), _server_info("", "", 0, "")
+LoginDialog::LoginDialog(QWidget* parent) : QDialog(parent), ui(new Ui::LoginDialog), _server_info("", 0, "")
 {
   ui->setupUi(this);
 
@@ -114,6 +115,7 @@ void LoginDialog::init_handlers()
     auto host = obj["data"]["host"].toString();
     auto port = obj["data"]["port"].toInt();
     auto token = obj["data"]["token"].toString();
+    auto jwt_token = obj["data"]["jwt_token"].toString();
 
     if (code != 0)
     {
@@ -121,8 +123,12 @@ void LoginDialog::init_handlers()
       return;
     }
 
-    ServerInfo server_info(uuid, host, static_cast<uint16_t>(port), token);
+    ServerInfo server_info(host, static_cast<uint16_t>(port), token);
     _server_info = std::move(server_info);
+
+    UserInfo::GetInstance().SetUUID(uuid);
+    UserInfo::GetInstance().SetJwtToken(jwt_token);
+
     show_tip("登录成功，正在连接服务器", true);
     emit SigConnectTcp(server_info);
   });
@@ -294,7 +300,7 @@ void LoginDialog::slot_tcp_conn_finish(bool success)
     show_tip("连接服务器成功，正在校验信息", true);
 
     QJsonObject obj;
-    obj["uuid"] = _server_info.GetUUID();
+    obj["uuid"] = UserInfo::GetInstance().GetUUID();
     obj["token"] = _server_info.GetToken();
 
     QJsonDocument doc{obj};

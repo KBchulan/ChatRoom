@@ -7,16 +7,14 @@
 class ServerInfo
 {
 public:
-  ServerInfo(QString uuid, QString host, std::uint16_t port, QString token);
+  ServerInfo(QString host, std::uint16_t port, QString token);
   ~ServerInfo();
 
-  [[nodiscard]] QString GetUUID() const;
   [[nodiscard]] QString GetHost() const;
   [[nodiscard]] std::uint16_t GetPort() const;
   [[nodiscard]] QString GetToken() const;
 
 private:
-  QString _uuid;
   QString _host;
   std::uint16_t _port;
   QString _token;

@@ -22,6 +22,7 @@ void HttpManager::PostHttpReq(const QUrl& url, const QJsonObject& json, ReqID id
   QByteArray data = QJsonDocument(json).toJson();
 
   QNetworkRequest request{url};
+  request.setRawHeader("Connection", "keep-alive");
   request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
 
   QNetworkReply* reply = _manager.post(request, data);

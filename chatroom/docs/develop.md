@@ -55,3 +55,8 @@
 ### [2025-12-13]
 
 - 增加用户信息类 UserInfo，用于保存用户信息，在 tcp 登录后设置此信息
+
+### [2025-12-14]
+
+- Http 请求头增加 keep-alive，避免频繁创建连接
+- 将 uuid 移动到 userinfo 中，jwt-token 同样如此，而不是在 serverinfo 中，确保 serverinfo 只保存服务器信息
