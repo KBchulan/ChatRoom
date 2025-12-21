@@ -1,5 +1,3 @@
-# API 文档
-
 ## 用户模块
 
 ### 健康检查
@@ -8,12 +6,8 @@
 GET {{baseUrl}}/health-check HTTP/1.1
 ```
 
-```json
-{
-  "code": 0,
-  "data": "",
-  "message": "Service is healthy"
-}
+```txt
+{"status": "ok"}
 ```
 
 ### 发送验证码

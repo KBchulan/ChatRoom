@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [2025-12-21]
 
 ### ✨ Features
+- **[server]** 增加 nginx，lvs 负载均衡支持
 - **[架构]** 网络层升级为 多 acceptor 的绑定同一端口，由内核进行负载均衡，大量完善文档
 
 ## [2025-12-18]

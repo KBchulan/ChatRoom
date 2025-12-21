@@ -111,8 +111,6 @@ struct Connection::_impl
     _response.keep_alive(_request.keep_alive());
     _response.set(boost::beast::http::field::content_type, "application/json");
     _response.set(boost::beast::http::field::server, "ChatRoom-GateWay");
-    _response.set("X-Frame-Options", "DENY");
-    _response.set("X-Content-Type-Options", "nosniff");
 
     // 限流校验
     auto client_ip = _socket.remote_endpoint().address().to_string();

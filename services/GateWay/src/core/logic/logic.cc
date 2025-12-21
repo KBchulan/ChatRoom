@@ -111,13 +111,6 @@ struct Logic::_impl
 
   void routes_user()
   {
-    _get_handlers[utils::HEALTH_CHECK_ROUTE] = [](const utils::Context&, core::CommonVO& common_vo)
-    {
-      common_vo.code = utils::SUCCESS;
-      common_vo.message = "Service is healthy";
-      common_vo.data = "";
-    };
-
     _post_handlers[utils::USER_SEND_CODE_ROUTE] = [](const utils::Context& ctx, core::CommonVO& common_vo)
     {
       auto dto = UserSendCodeDTO::FromJsonString(ctx.GetBody());
