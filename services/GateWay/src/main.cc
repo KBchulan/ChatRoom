@@ -32,8 +32,10 @@ void init()
                                   .timeout = std::chrono::seconds(REDIS_TIMEOUT)};
 
   tools::Logger::getInstance();
+
   utils::VerifyCodeClient::GetInstance().Init(email_rpc_address, EMAIL_RPC_CONNECTION_POOL_SIZE);
   utils::StatusServerClinet::GetInstance().Init(status_address, STATUS_RPC_CONNECTION_POOL_SIZE);
+
   utils::DBPool::GetInstance().Init(db_config);
   utils::RedisPool::GetInstance().Init(redis_config);
   core::Business::GetInstance();
@@ -46,17 +48,17 @@ int main()
   {
     init();
 
-    boost::asio::io_context ioc;
+    boost::asio::io_context signal_ioc;
     const auto& logger = tools::Logger::getInstance();
 
-    boost::asio::signal_set signals(ioc, SIGINT, SIGTERM);
-    auto signals_handler = [&ioc, &logger](const boost::system::error_code& err, int signal) -> void
+    boost::asio::signal_set signals(signal_ioc, SIGINT, SIGTERM);
+    auto signals_handler = [&signal_ioc, &logger](const boost::system::error_code& err, int signal) -> void
     {
       if (!err)
       {
         std::cout << '\n';
         logger.info("Received signal {}, stopping gateway", signal);
-        ioc.stop();
+        signal_ioc.stop();
       }
       else
       {
@@ -65,8 +67,8 @@ int main()
     };
     signals.async_wait(std::move(signals_handler));
 
-    core::Server server(ioc, DEFAULT_SERVER_PORT);
-    ioc.run();
+    core::Server server(DEFAULT_SERVER_PORT);
+    signal_ioc.run();
   }
   catch (const boost::system::system_error& e)
   {

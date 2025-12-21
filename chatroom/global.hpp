@@ -16,7 +16,7 @@
 #include <functional>
 
 extern std::function<void(QWidget*)> repolish;
-extern QString GateWayUrl;
+extern QString CHATROOM_API_BASE_URL;
 
 enum class ReqID
 {

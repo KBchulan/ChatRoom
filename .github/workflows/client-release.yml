@@ -4,6 +4,8 @@ on:
   push:
     tags:
       - "v*"
+    paths:
+      - ".github/workflows/client-release.yml"
 
 permissions:
   contents: write
@@ -22,14 +24,14 @@ jobs:
       - name: Install Qt
         uses: jurplel/install-qt-action@v3
         with:
-          version: "5.15.2"
+          version: "6.5.3"
           host: "linux"
           cache: true
 
       - name: Install System Dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y build-essential libgl1-mesa-dev file
+          sudo apt-get install -y build-essential libgl1-mesa-dev file libssl-dev
 
       - name: Configure CMake
         run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
@@ -39,8 +41,8 @@ jobs:
 
       - name: Download linuxdeploy
         run: |
-          wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
-          wget https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage
+          wget -q https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
+          wget -q https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage
           chmod +x linuxdeploy-x86_64.AppImage
           chmod +x linuxdeploy-plugin-qt-x86_64.AppImage
 
@@ -57,15 +59,28 @@ jobs:
 
       - name: Create AppImage
         run: |
-          export QMAKE=$Qt5_DIR/bin/qmake
-          export PATH=$Qt5_DIR/bin:$PATH
-          ./linuxdeploy-x86_64.AppImage \
-            --appdir AppDir \
-            --executable build/chatroom \
-            --desktop-file chatroom.desktop \
-            --icon-file resources/chatroom.png \
-            --plugin qt \
-            --output appimage
+          export QMAKE=$Qt6_DIR/bin/qmake6
+          export PATH=$Qt6_DIR/bin:$PATH
+          export NO_STRIP=1
+
+          # 构建命令，添加 SSL 库支持 HTTPS
+          DEPLOY_ARGS=(
+            --appdir AppDir
+            --executable build/chatroom
+            --desktop-file chatroom.desktop
+            --icon-file resources/chatroom.png
+            --plugin qt
+          )
+
+          # 添加 SSL 库
+          for lib in /usr/lib/x86_64-linux-gnu/libssl.so* /usr/lib/x86_64-linux-gnu/libcrypto.so*; do
+            if [[ -f "$lib" && ! -L "$lib" ]]; then
+              DEPLOY_ARGS+=(--library "$lib")
+            fi
+          done
+
+          DEPLOY_ARGS+=(--output appimage)
+          ./linuxdeploy-x86_64.AppImage "${DEPLOY_ARGS[@]}"
 
       - name: Rename AppImage
         run: |

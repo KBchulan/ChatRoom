@@ -56,12 +56,14 @@ int main()
   {
     init();
 
-    boost::asio::io_context ioc;
-    boost::asio::signal_set signals(ioc, SIGINT, SIGTERM);
-    boost::asio::co_spawn(ioc, signal_handler(signals), boost::asio::detached);
-    auto server = std::make_shared<core::Server>(ioc, DEFAULT_SERVER_PORT);
+    boost::asio::io_context signal_ioc;
+    boost::asio::signal_set signals(signal_ioc, SIGINT, SIGTERM);
+    boost::asio::co_spawn(signal_ioc, signal_handler(signals), boost::asio::detached);
+
+    auto server = std::make_shared<core::Server>(DEFAULT_SERVER_PORT);
     server->Start();
-    ioc.run();
+
+    signal_ioc.run();
   }
   catch (const boost::system::system_error& e)
   {

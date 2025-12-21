@@ -24,7 +24,14 @@ class CORE_EXPORT IO
 public:
   static IO& GetInstance();
 
-  boost::asio::io_context& GetIOContext();
+  // 获取轮询的 io_context
+  [[nodiscard]] boost::asio::io_context& GetIOContext();
+
+  // 获取池大小
+  [[nodiscard]] std::size_t GetPoolSize() const;
+
+  // 根据索引获取 io_context
+  [[nodiscard]] boost::asio::io_context& GetIOContextAt(std::size_t idx);
 
   IO(const IO&) = delete;
   IO& operator=(const IO&) = delete;

@@ -1,4 +1,4 @@
-@baseUrl = http://localhost:10001
+@baseUrl = http://localhost:10001/api/v1
 
 ### 健康检查
 GET {{baseUrl}}/health-check HTTP/1.1

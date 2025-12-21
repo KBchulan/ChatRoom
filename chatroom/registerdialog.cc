@@ -146,7 +146,7 @@ void RegisterDialog::on_verify_code_btn_clicked()
   dto["email"] = email;
   dto["purpose"] = 1;
 
-  HttpManager::GetInstance().PostHttpReq(QUrl(GateWayUrl + "/user/send-code"), dto, ReqID::ID_GET_VERIFY_CODE, Module::REGISTER);
+  HttpManager::GetInstance().PostHttpReq(QUrl(CHATROOM_API_BASE_URL + "/user/send-code"), dto, ReqID::ID_GET_VERIFY_CODE, Module::REGISTER);
 }
 
 void RegisterDialog::on_confirm_btn_clicked()
@@ -206,7 +206,7 @@ void RegisterDialog::on_confirm_btn_clicked()
   dto["verify_code"] = verify_code;
   dto["purpose"] = 1;
 
-  HttpManager::GetInstance().PostHttpReq(QUrl(GateWayUrl + "/user/register"), dto, ReqID::ID_REGISTER, Module::REGISTER);
+  HttpManager::GetInstance().PostHttpReq(QUrl(CHATROOM_API_BASE_URL + "/user/register"), dto, ReqID::ID_REGISTER, Module::REGISTER);
 }
 
 void RegisterDialog::on_return_button_clicked()

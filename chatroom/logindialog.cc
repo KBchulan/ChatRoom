@@ -266,7 +266,7 @@ void LoginDialog::on_login_button_clicked()
   dto["user"] = user;
   dto["password"] = password;
 
-  HttpManager::GetInstance().PostHttpReq(QUrl(GateWayUrl + "/user/login"), dto, ReqID::ID_LOGIN, Module::LOGIN);
+  HttpManager::GetInstance().PostHttpReq(QUrl(CHATROOM_API_BASE_URL + "/user/login"), dto, ReqID::ID_LOGIN, Module::LOGIN);
 }
 
 void LoginDialog::slot_login_mod_finish(QString str, ErrorCode err, ReqID id)

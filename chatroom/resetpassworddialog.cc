@@ -235,7 +235,7 @@ void ResetPasswordDialog::on_verify_code_btn_clicked()
   dto["email"] = email;
   dto["purpose"] = 2;
 
-  HttpManager::GetInstance().PostHttpReq(QUrl(GateWayUrl + "/user/send-code"), dto, ReqID::ID_GET_VERIFY_CODE, Module::RESET);
+  HttpManager::GetInstance().PostHttpReq(QUrl(CHATROOM_API_BASE_URL + "/user/send-code"), dto, ReqID::ID_GET_VERIFY_CODE, Module::RESET);
 }
 
 void ResetPasswordDialog::on_confirm_btn_clicked()
@@ -287,7 +287,7 @@ void ResetPasswordDialog::on_confirm_btn_clicked()
   dto["verify_code"] = verify_code;
   dto["purpose"] = 2;
 
-  HttpManager::GetInstance().PostHttpReq(QUrl(GateWayUrl + "/user/reset"), dto, ReqID::ID_RESET_PASSWORD, Module::RESET);
+  HttpManager::GetInstance().PostHttpReq(QUrl(CHATROOM_API_BASE_URL + "/user/reset"), dto, ReqID::ID_RESET_PASSWORD, Module::RESET);
 }
 
 void ResetPasswordDialog::slot_reset_mod_finish(QString str, ErrorCode err, ReqID id)

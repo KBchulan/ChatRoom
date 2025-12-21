@@ -8,4 +8,4 @@ std::function<void(QWidget*)> repolish = [](QWidget* w) -> void
   w->style()->polish(w);
 };
 
-QString GateWayUrl = "";
+QString CHATROOM_API_BASE_URL = "";

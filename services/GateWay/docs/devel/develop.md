@@ -83,3 +83,9 @@
   - 增加限流检查，超限返回 429 状态码
   - 日志格式增强，增加 client_ip 字段便于追踪
 - 登录接口返回 jwt_token，客户端后续请求需携带此 token
+
+### [2025-12-19] 文档完善与架构调优
+
+- 完善 README 文档，增加相关说明
+- 修改 server 层，从单 reactor 模型改为多 reactor 模型，及采用多 acceptor，每个 acceptor 绑定一个 io_context，同时绑定到同一个端口，依赖内核进行负载均衡
+- connection 中读回调修改了一下，把管道破裂和 peer 错误都当作正常关闭处理，输出 debug 日志

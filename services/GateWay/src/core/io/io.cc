@@ -66,4 +66,14 @@ boost::asio::io_context& IO::GetIOContext()
   return *_pimpl->_io_contexts[idx];
 }
 
+std::size_t IO::GetPoolSize() const
+{
+  return _pimpl->_pool_size;
+}
+
+boost::asio::io_context& IO::GetIOContextAt(std::size_t idx)
+{
+  return *_pimpl->_io_contexts[idx % _pimpl->_pool_size];
+}
+
 }  // namespace core

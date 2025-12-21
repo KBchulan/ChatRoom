@@ -45,16 +45,15 @@ func main() {
 
 	c := cron.New()
 
-	// 0 点开始
-	_, err := c.AddFunc("* * * * *", func() {
-		log.Println("开始全量备份")
-		if err := fullBackup(); err != nil {
-			log.Printf("全量备份失败: %v", err)
-		} else {
-			log.Println("全量备份完成")
-		}
+	// 每天 0 点执行
+	_, err := c.AddFunc("0 0 * * *", func() {
 		if time.Now().Weekday() == time.Sunday {
-
+			log.Println("开始全量备份")
+			if err := fullBackup(); err != nil {
+				log.Printf("全量备份失败: %v", err)
+			} else {
+				log.Println("全量备份完成")
+			}
 		} else {
 			log.Println("开始增量备份")
 			if err := incrementalBackup(); err != nil {
@@ -63,12 +62,23 @@ func main() {
 				log.Println("增量备份完成")
 			}
 		}
-
 		// 清理过期备份
 		cleanOldBackups()
 	})
+
 	if err != nil {
 		log.Fatalf("Failed to add cron job: %v", err)
+	}
+
+	// 启动时检查是否有全量备份，没有则立即执行一次
+	files, _ := filepath.Glob(filepath.Join(config.Backup.Dir, "full_*.sql"))
+	if len(files) == 0 {
+		log.Println("未发现全量备份，立即执行一次")
+		if err := fullBackup(); err != nil {
+			log.Printf("初始全量备份失败: %v", err)
+		} else {
+			log.Println("初始全量备份完成")
+		}
 	}
 
 	c.Start()

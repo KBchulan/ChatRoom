@@ -13,9 +13,9 @@ void loadResources(QApplication &app)
   QString configPath = QCoreApplication::applicationDirPath() + "/config.ini";
   QSettings settings(configPath, QSettings::IniFormat);
 
-  QString host = settings.value("GateWay/host").toString();
-  int port = settings.value("GateWay/port").toInt();
-  GateWayUrl = QString("http://%1:%2").arg(host).arg(port);
+  QString host = settings.value("ChatRoomBackend/host").toString();
+  int port = settings.value("ChatRoomBackend/port").toInt();
+  CHATROOM_API_BASE_URL = QString("http://%1:%2/api/v1").arg(host).arg(port);
 
   // 项目 icon
   app.setWindowIcon(QIcon(":/chatroom.png"));

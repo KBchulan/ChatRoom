@@ -1,58 +1,96 @@
 #include "server.hpp"
 
+#include <sys/socket.h>
+
 #include <boost/asio/ip/address_v4.hpp>
 #include <boost/asio/ip/tcp.hpp>
+#include <boost/asio/socket_base.hpp>
 #include <boost/system/detail/error_code.hpp>
 #include <core/connection/connection.hpp>
 #include <core/io/io.hpp>
-#include <functional>
-#include <tools/Defer.hpp>
 #include <tools/Logger.hpp>
 
 namespace core
 {
 
-struct Server::_impl
+// 单个 Acceptor 工作单元，每个 io_context 对应一个
+class AcceptorWorker
 {
-  boost::asio::io_context& _io_context;
-  unsigned short _port;
-  boost::asio::ip::tcp::acceptor _acceptor;
-  boost::asio::ip::tcp::socket _socket;
-  std::function<void(const boost::system::error_code&)> _accept_handler;
-
-  void start_accept()
+public:
+  AcceptorWorker(boost::asio::io_context& ioc, unsigned short port) : _io_context(ioc), _acceptor(ioc), _socket(ioc)
   {
-    _acceptor.async_accept(_socket, _accept_handler);
+    boost::asio::ip::tcp::endpoint endpoint(boost::asio::ip::address_v4::any(), port);
+
+    _acceptor.open(endpoint.protocol());
+    _acceptor.set_option(boost::asio::socket_base::reuse_address(true));
+
+    // SO_REUSEPORT: 允许多个 socket 绑定同一端口，内核级负载均衡
+    int reuse_port = 1;
+    setsockopt(_acceptor.native_handle(), SOL_SOCKET, SO_REUSEPORT, &reuse_port, sizeof(reuse_port));
+
+    _acceptor.bind(endpoint);
+    _acceptor.listen(boost::asio::socket_base::max_listen_connections);
+
+    start_accept();
   }
 
-  _impl(boost::asio::io_context& ioc, unsigned short port)
-      : _io_context(ioc),
-        _port(port),
-        _acceptor(_io_context, boost::asio::ip::tcp::endpoint(boost::asio::ip::address_v4::any(), _port)),
-        _socket(_io_context)
+  ~AcceptorWorker()
   {
-    tools::Logger::getInstance().info("Gateway started on port {}", _port);
+    boost::system::error_code errc;
+    _acceptor.close(errc);
+  }
 
-    _accept_handler = [this](const boost::system::error_code& errc) -> void
+private:
+  void start_accept()
+  {
+    _acceptor.async_accept(_socket, [this](const boost::system::error_code& errc) { on_accept(errc); });
+  }
+
+  void on_accept(const boost::system::error_code& errc)
+  {
+    if (errc == boost::asio::error::operation_aborted)
     {
-      defer({
-        _socket = boost::asio::ip::tcp::socket(IO::GetInstance().GetIOContext());
-        start_accept();
-      });
+      return;
+    }
 
-      if (errc)
-      {
-        // 出错就放弃当前连接，并监听下一个连接
-        tools::Logger::getInstance().error("Accept connection error, error msg: {}", errc.message());
-        return;
-      }
-
-      // 创建一个连接对象来处理这个连接，并继续监听其他连接
+    if (!errc)
+    {
       std::make_shared<Connection>(std::move(_socket))->Start();
-    };
+    }
+    else
+    {
+      tools::Logger::getInstance().error("Accept error: {}", errc.message());
+    }
 
-    // 首次开始监听连接
+    // 准备下一次 accept
+    _socket = boost::asio::ip::tcp::socket(_io_context);
     start_accept();
+  }
+
+  boost::asio::io_context& _io_context;
+  boost::asio::ip::tcp::acceptor _acceptor;
+  boost::asio::ip::tcp::socket _socket;
+};
+
+struct Server::_impl
+{
+  unsigned short _port;
+  std::vector<std::unique_ptr<AcceptorWorker>> _workers;
+
+  explicit _impl(unsigned short port) : _port(port)
+  {
+    auto& io_pool = IO::GetInstance();
+    auto pool_size = io_pool.GetPoolSize();
+
+    _workers.reserve(pool_size);
+
+    // 每个 io_context 创建一个 acceptor
+    for (std::size_t i = 0; i < pool_size; ++i)
+    {
+      _workers.emplace_back(std::make_unique<AcceptorWorker>(io_pool.GetIOContextAt(i), _port));
+    }
+
+    tools::Logger::getInstance().info("Gateway started on port {} with {} acceptors", _port, pool_size);
   }
 
   ~_impl()
@@ -61,7 +99,7 @@ struct Server::_impl
   }
 };
 
-Server::Server(boost::asio::io_context& ioc, unsigned short port) : _pimpl(std::make_unique<_impl>(ioc, port))
+Server::Server(unsigned short port) : _pimpl(std::make_unique<_impl>(port))
 {
 }
 

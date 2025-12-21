@@ -41,7 +41,8 @@ struct Connection::_impl
     if (errc)
     {
       // 读取请求出错，记录日志并关闭连接
-      if (errc == boost::beast::http::error::end_of_stream)
+      if (errc == boost::beast::http::error::end_of_stream || errc == boost::asio::error::connection_reset ||
+          errc == boost::asio::error::broken_pipe)
       {
         tools::Logger::getInstance().debug("Client closed connection");
       }
@@ -93,6 +94,15 @@ struct Connection::_impl
 
   void handle_request(const std::shared_ptr<Connection>& self)
   {
+    // 处理健康检查请求
+    if (_request.target() == utils::HEALTH_CHECK_ROUTE && _request.method() == boost::beast::http::verb::get)
+    {
+      _response.result(boost::beast::http::status::ok);
+      boost::beast::ostream(_response.body()) << R"({"status": "ok"})";
+      send_response(self);
+      return;
+    }
+
     // 获取 logger 实例
     const auto& logger = tools::Logger::getInstance();
 

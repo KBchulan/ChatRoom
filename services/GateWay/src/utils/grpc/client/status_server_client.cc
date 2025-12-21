@@ -1,7 +1,5 @@
 #include "status_server_client.hpp"
 
-#include "utils/grpc/client/verify_code_client.hpp"
-
 namespace utils
 {
 

@@ -16,14 +16,18 @@
 
 namespace utils
 {
+
+#define UTILS_API_V1_PREFIX "/api/v1"
+#define UTILS_ROUTE(path) UTILS_API_V1_PREFIX path
+
 // ================
 // user 模块路由
 // ================
-constexpr const char* HEALTH_CHECK_ROUTE = "/health-check";
-constexpr const char* USER_SEND_CODE_ROUTE = "/user/send-code";
-constexpr const char* USER_REGISTER_ROUTE = "/user/register";
-constexpr const char* USER_RESET_PASS_ROUTE = "/user/reset";
-constexpr const char* USER_LOGIN_ROUTE = "/user/login";
+constexpr const char* HEALTH_CHECK_ROUTE = UTILS_ROUTE("/health-check");
+constexpr const char* USER_SEND_CODE_ROUTE = UTILS_ROUTE("/user/send-code");
+constexpr const char* USER_REGISTER_ROUTE = UTILS_ROUTE("/user/register");
+constexpr const char* USER_RESET_PASS_ROUTE = UTILS_ROUTE("/user/reset");
+constexpr const char* USER_LOGIN_ROUTE = UTILS_ROUTE("/user/login");
 
 inline const std::unordered_set<std::string> NO_AUTH_ROUTES = {
     HEALTH_CHECK_ROUTE, USER_SEND_CODE_ROUTE, USER_REGISTER_ROUTE, USER_RESET_PASS_ROUTE, USER_LOGIN_ROUTE};
