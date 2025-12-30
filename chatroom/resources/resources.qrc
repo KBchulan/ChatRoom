@@ -2,10 +2,22 @@
     <qresource prefix="/">
         <file>chatroom.png</file>
         <file>avatar/avatar.ico</file>
+
         <file>icons/eye_open.png</file>
         <file>icons/eye_close.png</file>
+        <file>icons/friend_add.png</file>
+        <file>icons/friend_add_fill.png</file>
+        <file>icons/search.png</file>
+        <file>icons/chahao.png</file>
+
+        <file>avatar/head_1.jpg</file>
+        <file>avatar/head_2.jpg</file>
+        <file>avatar/head_3.jpg</file>
+
+        <file>style/main.qss</file>
         <file>style/login_window.qss</file>
         <file>style/register_window.qss</file>
         <file>style/reset_pass_window.qss</file>
+        <file>style/chat_window.qss</file>
     </qresource>
 </RCC>

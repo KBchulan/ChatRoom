@@ -33,12 +33,14 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         registerdialog.hpp registerdialog.cc registerdialog.ui
         resetpassworddialog.hpp resetpassworddialog.cc resetpassworddialog.ui
         chatdialog.hpp chatdialog.cc chatdialog.ui
+        chatuseritem.hpp chatuseritem.cc chatuseritem.ui
         global.hpp  global.cc
         timerbutton.hpp timerbutton.cc
         httpmanager.hpp httpmanager.cc
         serverinfo.hpp serverinfo.cc
         tcpmanager.hpp tcpmanager.cc
         userinfo.hpp userinfo.cc
+        chatuserlist.hpp chatuserlist.cc
         Defer.hpp config.ini
     )
 # Define target properties for Android with Qt 6 as:
@@ -53,12 +55,14 @@ else()
             registerdialog.hpp registerdialog.cc registerdialog.ui
             resetpassworddialog.hpp resetpassworddialog.cc resetpassworddialog.ui
             chatdialog.hpp chatdialog.cc chatdialog.ui
+            chatuseritem.hpp chatuseritem.cc chatuseritem.ui
             global.hpp  global.cc
             timerbutton.hpp timerbutton.cc
             httpmanager.hpp httpmanager.cc
             serverinfo.hpp serverinfo.cc
             tcpmanager.hpp tcpmanager.cc
             userinfo.hpp userinfo.cc
+            chatuserlist.hpp chatuserlist.cc
             Defer.hpp config.ini
         )
 # Define properties for Android with Qt 5 after find_package() calls as:
@@ -70,12 +74,14 @@ else()
             registerdialog.hpp registerdialog.cc registerdialog.ui
             resetpassworddialog.hpp resetpassworddialog.cc resetpassworddialog.ui
             chatdialog.hpp chatdialog.cc chatdialog.ui
+            chatuseritem.hpp chatuseritem.cc chatuseritem.ui
             global.hpp  global.cc
             timerbutton.hpp timerbutton.cc
             httpmanager.hpp httpmanager.cc
             serverinfo.hpp serverinfo.cc
             tcpmanager.hpp tcpmanager.cc
             userinfo.hpp userinfo.cc
+            chatuserlist.hpp chatuserlist.cc
             Defer.hpp config.ini
         )
     endif()

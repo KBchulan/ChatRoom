@@ -41,4 +41,16 @@ enum class ErrorCode
   NETWORK_ERROR = 1,     // 网络错误
 };
 
+namespace UIConstants
+{
+// mainwindow.hpp
+constexpr int WindowLoginWidth = 380;
+constexpr int WindowLoginHeight = 570;
+constexpr int WindowChatWidth = 1080;
+constexpr int WindowChatHeight = 720;
+
+// chatdialog.hpp
+constexpr int ChatUserItemHeight = 65;
+}
+
 #endif  // GLOBAL_HPP

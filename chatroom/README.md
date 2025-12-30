@@ -59,7 +59,9 @@ chatroom/
 ├── logindialog.*           # 登录页面
 ├── registerdialog.*        # 注册页面
 ├── resetpassworddialog.*   # 重置密码页面
-├── chatdialog.*            # 聊天页面（开发中）
+├── chatdialog.*            # 聊天页面
+├── chatuseritem.*          # 聊天用户列表项组件
+├── chatuserlist.*          # 聊天用户列表组件
 ├── httpmanager.*           # HTTP 请求管理器
 ├── tcpmanager.*            # TCP 长连接管理器
 ├── userinfo.*              # 用户信息存储
@@ -82,13 +84,15 @@ chatroom/
 | **LoginDialog** | 登录页面，处理用户登录逻辑 |
 | **RegisterDialog** | 注册页面，包含邮箱验证码校验 |
 | **ResetPasswordDialog** | 重置密码页面，流程与注册类似 |
-| **ChatDialog** | 聊天页面（开发中） |
+| **ChatDialog** | 聊天页面，包含侧边栏、用户列表和聊天区域 |
+| **ChatUserItem** | 聊天用户列表项组件，显示头像、昵称、消息预览和时间 |
+| **ChatUserList** | 聊天用户列表组件，支持滚动加载和悬停显示滚动条 |
 | **HttpManager** | 封装 Qt Network，处理与网关的 HTTP 通信，目前支持 POST 请求 |
 | **TcpManager** | 管理与聊天服务器的 TCP 长连接 |
 | **UserInfo** | 存储当前登录用户的信息（uuid、昵称、头像等） |
 | **ServerInfo** | 存储聊天服务器连接信息（host、port、分布式校验 token） |
 | **TimerButton** | 可复用的倒计时按钮，用于验证码发送 |
-| **global** | 全局定义，包含请求 ID、模块枚举、错误码等 |
+| **global** | 全局定义，包含请求 ID、模块枚举、错误码、UI 常量等 |
 | **Defer** | RAII 工具类，模仿 Go 的 defer 关键字 |
 
 ### 使用说明
@@ -105,11 +109,15 @@ chatroom/
 |:----:|:----:|:--------:|
 | ![登录](../imgs/client-login.png) | ![注册](../imgs/client-register.png) | ![重置密码](../imgs/client-resetpass.png) |
 
+| 聊天页面 |
+|:--------:|
+| ![聊天页面](../imgs/client-chat.png) |
+
 ## 开发文档
 
 详细的开发进度和变更记录请参考 [docs/develop.md](docs/develop.md)。
 
 ## TODO
 
-- [ ] 完善聊天界面 UI
+- [ ] 完善聊天界面功能（消息发送、接收、历史记录等）
 - [ ] 实现 https 支持

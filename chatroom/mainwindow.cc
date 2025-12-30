@@ -1,4 +1,5 @@
 #include "mainwindow.hpp"
+#include "global.hpp"
 #include "logindialog.hpp"
 #include "registerdialog.hpp"
 #include "resetpassworddialog.hpp"
@@ -25,9 +26,10 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::MainWi
   _stacked_widget->addWidget(_reset_password_dialog);
   _stacked_widget->addWidget(_chat_dialog);
 
-  // 设置中心窗口
+  // 设置中心窗口及大小
   setCentralWidget(_stacked_widget);
   _stacked_widget->setCurrentWidget(_login_dialog);
+  resize(UIConstants::WindowLoginWidth, UIConstants::WindowLoginHeight);
 
   // 连接信号槽
   connect(_login_dialog, &LoginDialog::SigSwitchRegister, this, &MainWindow::SlotSwitchRegister);
@@ -51,6 +53,7 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::MainWi
 
 
   // FIXME: 这里是模拟，聊天页面开发完成需要删除
+  // emit TcpManager::GetInstance().sig_switch_chat_dialog();
 }
 
 MainWindow::~MainWindow()
@@ -79,6 +82,7 @@ void MainWindow::SlotSwitchResetPassword()
 
 void MainWindow::SlotSwitchChat()
 {
+  resize(UIConstants::WindowChatWidth, UIConstants::WindowChatHeight);
   _stacked_widget->setCurrentWidget(_chat_dialog);
   _login_dialog->Reset();
 }

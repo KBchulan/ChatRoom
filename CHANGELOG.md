@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [2025-12-30]
+
+### ✨ Features
+- **[client]** 新增 `ChatUserItem` 组件，用于显示聊天用户列表项（头像、昵称、消息预览、时间)，新增 `ChatUserList` 组件，继承 `QListWidget`，支持滚动到底部加载更多、鼠标悬停显示滚动条，完善 `ChatDialog` 聊天界面布局：左侧边栏（头像、联系人入口）中间用户列表区（搜索框 + 添加按钮 + 用户列表）右侧聊天区（标题栏 + 消息区 + 工具栏 + 输入框 + 发送按钮），新增 `UIConstants` 命名空间，集中管理 UI 常量（窗口尺寸、组件高度等），新增 `main.qss` 全局样式和 `chat_window.qss` 聊天界面样式，修改原有样式为详细设计，新增资源文件：测试头像（head_1/2/3.jpg）、搜索图标、清除图标、添加好友图标，主窗口切换到聊天界面时自动调整窗口尺寸
+- **[client]** 新增 `ChatUserItem` 组件，用于显示聊天用户列表项（头像、昵称、消息预览、时间)，新增 `ChatUserList` 组件，继承 `QListWidget`，支持滚动到底部加载更多、鼠标悬停显示滚动条，完善 `ChatDialog` 聊天界面布局：左侧边栏（头像、联系人入口）中间用户列表区（搜索框 + 添加按钮 + 用户列表）右侧聊天区（标题栏 + 消息区 + 工具栏 + 输入框 + 发送按钮），新增 `UIConstants` 命名空间，集中管理 UI 常量（窗口尺寸、组件高度等），新增 `main.qss` 全局样式和 `chat_window.qss` 聊天界面样式，修改原有样式为详细设计，新增资源文件：测试头像（head_1/2/3.jpg）、搜索图标、清除图标、添加好友图标，主窗口切换到聊天界面时自动调整窗口尺寸
+
 ## [2025-12-22]
 
 ### 🐛 Bug Fixes

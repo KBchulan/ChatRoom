@@ -1,7 +1,7 @@
 /* Reset Password Window Style */
 
-/* Main Window and Dialog Background */
-QMainWindow, QDialog, QWidget {
+/* Reset Password Window and Dialog Background */
+#ResetPasswordDialog {
     background-color: #f8f6f1;
 }
 

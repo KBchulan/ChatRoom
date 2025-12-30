@@ -23,6 +23,13 @@ void loadResources(QApplication &app)
   // 界面样式
   QString styleSheet;
 
+  QFile main_qss(":/style/main.qss");
+  if (main_qss.open(QFile::ReadOnly))
+  {
+    styleSheet += QLatin1String(main_qss.readAll());
+    main_qss.close();
+  }
+
   QFile login_qss(":/style/login_window.qss");
   if (login_qss.open(QFile::ReadOnly))
   {
@@ -42,6 +49,13 @@ void loadResources(QApplication &app)
   {
     styleSheet += QLatin1String(reset_qss.readAll());
     reset_qss.close();
+  }
+
+  QFile chat_qss(":/style/chat_window.qss");
+  if (chat_qss.open(QFile::ReadOnly))
+  {
+    styleSheet += QLatin1String(chat_qss.readAll());
+    chat_qss.close();
   }
 
   app.setStyleSheet(styleSheet);

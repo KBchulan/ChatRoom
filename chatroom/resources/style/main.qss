@@ -1,0 +1,5 @@
+/* Main Window Style */
+
+QMainWindow, QDialog, QWidget {
+    background-color: #f8f6f1;
+}
