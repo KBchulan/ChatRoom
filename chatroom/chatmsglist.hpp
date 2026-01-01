@@ -1,27 +1,28 @@
 /******************************************************************************
  *
- * @file       chatuserlist.hpp
- * @brief      自定义 QListWidget 用于显示聊天用户列表
+ * @file       chatmsglist.hpp
+ * @brief      聊天信息列表，自定义QListWidget，用于显示聊天消息
  *
  * @author     KBchulan
  * @date       2026/01/01
  * @history
  ******************************************************************************/
 
-#ifndef CHATUSERLIST_HPP
-#define CHATUSERLIST_HPP
+#ifndef CHATMSGLIST_HPP
+#define CHATMSGLIST_HPP
 
+#include <QTimer>
 #include <QEnterEvent>
 #include <QEvent>
 #include <QListWidget>
 #include <QShowEvent>
-#include <QTimer>
 
-class ChatUserList : public QListWidget
+class ChatMsgList : public QListWidget
 {
   Q_OBJECT
+
 public:
-  explicit ChatUserList(QWidget* parent = nullptr);
+  explicit ChatMsgList(QWidget* parent = nullptr);
 
 protected:
   void enterEvent(QEnterEvent* event) override;
@@ -32,7 +33,7 @@ private:
   QTimer* _debounce_timer;
 
 signals:
-  void sig_load_chat_user();
+  void sig_load_more_msg();
 };
 
-#endif  // CHATUSERLIST_HPP
+#endif  // CHATMSGLIST_HPP

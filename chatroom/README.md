@@ -60,8 +60,13 @@ chatroom/
 ├── registerdialog.*        # 注册页面
 ├── resetpassworddialog.*   # 重置密码页面
 ├── chatdialog.*            # 聊天页面
+├── chatpage.*              # 聊天主体区域组件
+├── chatmsglist.*           # 聊天消息列表组件
+├── chatmsgitem.*           # 聊天消息气泡组件
+├── chattextedit.*          # 聊天输入框组件
 ├── chatuseritem.*          # 聊天用户列表项组件
 ├── chatuserlist.*          # 聊天用户列表组件
+├── loadingitem.*           # 加载动画组件
 ├── httpmanager.*           # HTTP 请求管理器
 ├── tcpmanager.*            # TCP 长连接管理器
 ├── userinfo.*              # 用户信息存储
@@ -85,8 +90,13 @@ chatroom/
 | **RegisterDialog** | 注册页面，包含邮箱验证码校验 |
 | **ResetPasswordDialog** | 重置密码页面，流程与注册类似 |
 | **ChatDialog** | 聊天页面，包含侧边栏、用户列表和聊天区域 |
+| **ChatPage** | 聊天主体区域组件，包含标题栏、消息列表、工具栏、输入框和发送按钮 |
+| **ChatMsgList** | 聊天消息列表组件，支持滚动加载历史消息和悬停显示滚动条 |
+| **ChatMsgItem** | 聊天消息气泡组件，显示单条消息内容 |
+| **ChatTextEdit** | 聊天输入框组件，自定义文本编辑器 |
 | **ChatUserItem** | 聊天用户列表项组件，显示头像、昵称、消息预览和时间 |
 | **ChatUserList** | 聊天用户列表组件，支持滚动加载和悬停显示滚动条 |
+| **LoadingItem** | 加载动画组件，用于列表加载时显示 |
 | **HttpManager** | 封装 Qt Network，处理与网关的 HTTP 通信，目前支持 POST 请求 |
 | **TcpManager** | 管理与聊天服务器的 TCP 长连接 |
 | **UserInfo** | 存储当前登录用户的信息（uuid、昵称、头像等） |

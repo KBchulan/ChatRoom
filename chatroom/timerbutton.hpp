@@ -1,9 +1,19 @@
+/******************************************************************************
+ *
+ * @file       timerbutton.hpp
+ * @brief      实现一个带倒计时功能的按钮
+ *
+ * @author     KBchulan
+ * @date       2026/01/01
+ * @history
+ ******************************************************************************/
+
 #ifndef TIMERBUTTON_HPP
 #define TIMERBUTTON_HPP
 
-#include <QTimer>
-#include <QPushButton>
 #include <QObject>
+#include <QPushButton>
+#include <QTimer>
 
 class TimerButton final : public QPushButton
 {
@@ -12,13 +22,13 @@ class TimerButton final : public QPushButton
   static constexpr int kDefaultCountdown = 60;
 
 public:
-  TimerButton(QWidget *parent = nullptr);
+  TimerButton(QWidget* parent = nullptr);
   ~TimerButton() = default;
 
   void Reset();
 
 protected:
-  void mouseReleaseEvent(QMouseEvent *e) override;
+  void mouseReleaseEvent(QMouseEvent* event) override;
 
 private:
   void reset_timer();

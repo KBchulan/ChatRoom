@@ -1,9 +1,8 @@
 #include "logindialog.hpp"
-#include "httpmanager.hpp"
-#include "tcpmanager.hpp"
-#include "userinfo.hpp"
 
 #include <QAction>
+#include <QJsonDocument>
+#include <QJsonObject>
 #include <QLabel>
 #include <QPainter>
 #include <QPainterPath>
@@ -11,10 +10,11 @@
 #include <QPixmap>
 #include <QPushButton>
 #include <QToolButton>
-#include <QJsonObject>
-#include <QJsonDocument>
 
+#include "httpmanager.hpp"
+#include "tcpmanager.hpp"
 #include "ui_logindialog.h"
+#include "userinfo.hpp"
 
 LoginDialog::LoginDialog(QWidget* parent) : QDialog(parent), ui(new Ui::LoginDialog), _server_info("", 0, "")
 {
@@ -37,14 +37,13 @@ LoginDialog::LoginDialog(QWidget* parent) : QDialog(parent), ui(new Ui::LoginDia
   ui->password_edit->installEventFilter(this);
 
   // 密码的眼睛图标，可以切换密码样式
-  _toggle_password = ui->password_edit->addAction(
-    QIcon(":/icons/eye_close.png"),
-    QLineEdit::TrailingPosition
-  );
+  _toggle_password = ui->password_edit->addAction(QIcon(":/icons/eye_close.png"), QLineEdit::TrailingPosition);
 
   // 设置眼睛图标按钮的鼠标悬停光标为小手
   for (auto* btn : ui->password_edit->findChildren<QToolButton*>())
+  {
     btn->setCursor(Qt::PointingHandCursor);
+  }
 
   // 忘记密码 - 设置悬浮效果和点击
   ui->forget_password_label->setCursor(Qt::PointingHandCursor);
@@ -57,19 +56,20 @@ LoginDialog::LoginDialog(QWidget* parent) : QDialog(parent), ui(new Ui::LoginDia
   connect(&TcpManager::GetInstance(), &TcpManager::sig_conn_finish, this, &LoginDialog::slot_tcp_conn_finish);
   connect(&TcpManager::GetInstance(), &TcpManager::sig_login_failed, this, &LoginDialog::slot_login_failed);
 
-  connect(_toggle_password, &QAction::triggered, this, [this]() -> void
-  {
-    if (ui->password_edit->echoMode() == QLineEdit::Password)
-    {
-      ui->password_edit->setEchoMode(QLineEdit::Normal);
-      _toggle_password->setIcon(QIcon(":/icons/eye_open.png"));
-    }
-    else
-    {
-      ui->password_edit->setEchoMode(QLineEdit::Password);
-      _toggle_password->setIcon(QIcon(":/icons/eye_close.png"));
-    }
-  });
+  connect(_toggle_password, &QAction::triggered, this,
+          [this]() -> void
+          {
+            if (ui->password_edit->echoMode() == QLineEdit::Password)
+            {
+              ui->password_edit->setEchoMode(QLineEdit::Normal);
+              _toggle_password->setIcon(QIcon(":/icons/eye_open.png"));
+            }
+            else
+            {
+              ui->password_edit->setEchoMode(QLineEdit::Password);
+              _toggle_password->setIcon(QIcon(":/icons/eye_close.png"));
+            }
+          });
 }
 
 LoginDialog::~LoginDialog()
@@ -89,9 +89,9 @@ void LoginDialog::Reset()
   _toggle_password->setIcon(QIcon(":/icons/eye_close.png"));
 }
 
-void LoginDialog::show_tip(const QString &str, bool ok)
+void LoginDialog::show_tip(const QString& str, bool is_ok)
 {
-  if (ok)
+  if (is_ok)
   {
     ui->err_msg_label->setProperty("state", "normal");
   }
@@ -106,32 +106,33 @@ void LoginDialog::show_tip(const QString &str, bool ok)
 
 void LoginDialog::init_handlers()
 {
-  _handlers.insert(ReqID::ID_LOGIN, [this](const QJsonObject& obj) -> void
-  {
-    // 根据定义结构解析
-    auto code = obj["code"].toInt();
-    auto message = obj["message"].toString();
-    auto uuid = obj["data"]["uuid"].toString();
-    auto host = obj["data"]["host"].toString();
-    auto port = obj["data"]["port"].toInt();
-    auto token = obj["data"]["token"].toString();
-    auto jwt_token = obj["data"]["jwt_token"].toString();
+  _handlers.insert(ReqID::ID_LOGIN,
+                   [this](const QJsonObject& obj) -> void
+                   {
+                     // 根据定义结构解析
+                     auto code = obj["code"].toInt();
+                     auto message = obj["message"].toString();
+                     auto uuid = obj["data"]["uuid"].toString();
+                     auto host = obj["data"]["host"].toString();
+                     auto port = obj["data"]["port"].toInt();
+                     auto token = obj["data"]["token"].toString();
+                     auto jwt_token = obj["data"]["jwt_token"].toString();
 
-    if (code != 0)
-    {
-      show_tip(message, false);
-      return;
-    }
+                     if (code != 0)
+                     {
+                       show_tip(message, false);
+                       return;
+                     }
 
-    ServerInfo server_info(host, static_cast<uint16_t>(port), token);
-    _server_info = std::move(server_info);
+                     ServerInfo server_info(host, static_cast<uint16_t>(port), token);
+                     _server_info = std::move(server_info);
 
-    UserInfo::GetInstance().SetUUID(uuid);
-    UserInfo::GetInstance().SetJwtToken(jwt_token);
+                     UserInfo::GetInstance().SetUUID(uuid);
+                     UserInfo::GetInstance().SetJwtToken(jwt_token);
 
-    show_tip("登录成功，正在连接服务器", true);
-    emit SigConnectTcp(server_info);
-  });
+                     show_tip("登录成功，正在连接服务器", true);
+                     emit SigConnectTcp(server_info);
+                   });
 }
 
 void LoginDialog::init_header()
@@ -226,8 +227,14 @@ bool LoginDialog::eventFilter(QObject* watched, QEvent* event)
 
   if (event->type() == QEvent::FocusOut)
   {
-    if (watched == ui->user_edit) check_user_valid();
-    else if (watched == ui->password_edit) check_password_valid();
+    if (watched == ui->user_edit)
+    {
+      check_user_valid();
+    }
+    else if (watched == ui->password_edit)
+    {
+      check_password_valid();
+    }
   }
 
   return QDialog::eventFilter(watched, event);
@@ -266,10 +273,11 @@ void LoginDialog::on_login_button_clicked()
   dto["user"] = user;
   dto["password"] = password;
 
-  HttpManager::GetInstance().PostHttpReq(QUrl(CHATROOM_API_BASE_URL + "/user/login"), dto, ReqID::ID_LOGIN, Module::LOGIN);
+  HttpManager::GetInstance().PostHttpReq(QUrl(CHATROOM_API_BASE_URL + "/user/login"), dto, ReqID::ID_LOGIN,
+                                         Module::LOGIN);
 }
 
-void LoginDialog::slot_login_mod_finish(QString str, ErrorCode err, ReqID id)
+void LoginDialog::slot_login_mod_finish(const QString& str, ErrorCode err, ReqID rid)
 {
   if (err != ErrorCode::SUCCESS)
   {
@@ -290,7 +298,7 @@ void LoginDialog::slot_login_mod_finish(QString str, ErrorCode err, ReqID id)
   }
 
   // 都正常解析就可以处理了
-  _handlers[id](jsonDoc.object());
+  _handlers[rid](jsonDoc.object());
 }
 
 void LoginDialog::slot_tcp_conn_finish(bool success)

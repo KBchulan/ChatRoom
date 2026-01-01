@@ -17,9 +17,8 @@ template <typename F>
 class [[nodiscard]] Defer
 {
 public:
-  constexpr explicit Defer(F f) : func(std::move(f))
+  constexpr explicit Defer(F func) : func(std::move(func))
   {
-
   }
 
   constexpr ~Defer()
@@ -27,8 +26,8 @@ public:
     func();
   }
 
-  Defer(const Defer &) = delete;
-  Defer &operator=(const Defer&) = delete;
+  Defer(const Defer&) = delete;
+  Defer& operator=(const Defer&) = delete;
 
 private:
   F func;

@@ -9,6 +9,11 @@
         <file>icons/friend_add_fill.png</file>
         <file>icons/search.png</file>
         <file>icons/chahao.png</file>
+        <file>icons/loading.gif</file>
+        <file>icons/smile_idle.png</file>
+        <file>icons/smile_hover.png</file>
+        <file>icons/folder_idle.png</file>
+        <file>icons/folder_hover.png</file>
 
         <file>avatar/head_1.jpg</file>
         <file>avatar/head_2.jpg</file>

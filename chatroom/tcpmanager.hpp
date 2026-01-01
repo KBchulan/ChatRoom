@@ -1,13 +1,23 @@
+/******************************************************************************
+ *
+ * @file       tcpmanager.hpp
+ * @brief      全局的 TCP 连接管理器, 负责与服务器的通信
+ *
+ * @author     KBchulan
+ * @date       2026/01/01
+ * @history
+ ******************************************************************************/
+
 #ifndef TCPMANAGER_HPP
 #define TCPMANAGER_HPP
 
-#include <QObject>
 #include <QByteArray>
+#include <QMap>
+#include <QObject>
+#include <QString>
+#include <QTcpSocket>
 #include <cstdint>
 #include <functional>
-#include <QMap>
-#include <QTcpSocket>
-#include <QString>
 
 #include "global.hpp"
 #include "serverinfo.hpp"
@@ -39,11 +49,11 @@ private:
   quint16 _message_len;
   QByteArray _buffer;
 
-  QMap<ReqID, std::function<void(ReqID id, int len, QByteArray data)>> _handlers;
+  QMap<ReqID, std::function<void(ReqID rid, int len, const QByteArray& data)>> _handlers;
 
 public slots:
   void SlotTcpConnect(const ServerInfo&);
-  void SlotSendData(ReqID reqId, QString data);
+  void SlotSendData(ReqID reqId, const QString& data);
 
 signals:
   void sig_conn_finish(bool success);

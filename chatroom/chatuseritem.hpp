@@ -1,8 +1,18 @@
+/******************************************************************************
+ *
+ * @file       chatuseritem.hpp
+ * @brief      单个聊天用户项，用于设计 ui
+ *
+ * @author     KBchulan
+ * @date       2026/01/01
+ * @history
+ ******************************************************************************/
+
 #ifndef CHATUSERITEM_HPP
 #define CHATUSERITEM_HPP
 
-#include <QWidget>
 #include <QString>
+#include <QWidget>
 
 namespace Ui
 {

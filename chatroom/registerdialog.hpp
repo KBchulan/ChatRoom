@@ -11,13 +11,13 @@
 #ifndef REGISTERDIALOG_HPP
 #define REGISTERDIALOG_HPP
 
-#include <QTimer>
-#include <QMap>
-#include <QDialog>
-#include <QString>
 #include <QAction>
+#include <QDialog>
 #include <QJsonObject>
+#include <QMap>
 #include <QRegularExpression>
+#include <QString>
+#include <QTimer>
 
 #include "global.hpp"
 
@@ -46,13 +46,13 @@ private slots:
   void on_confirm_btn_clicked();
   void on_return_button_clicked();
   void on_cancel_btn_clicked();
-  void slot_reg_mod_finish(QString str, ErrorCode err, ReqID id);
+  void slot_reg_mod_finish(const QString& str, ErrorCode err, ReqID rid);
 
 protected:
   bool eventFilter(QObject* obj, QEvent* event) override;
 
 private:
-  void show_tip(const QString& str, bool ok);
+  void show_tip(const QString& str, bool is_ok);
   void init_handlers();
   void check_user_valid();
   void check_email_valid();

@@ -2,125 +2,298 @@
 
 /* ========== Window and Dialog Background ========== */
 #ChatDialog {
-    background-color: #f8f6f1;
+  background-color: #f8f6f1;
 }
 
 /* ========== Side Bar ========== */
 #chat_side_bar_widget {
-    background-color: #e0ded9;
+  background-color: #e0ded9;
 }
 
 /* ========== Search Widget ========== */
 #search_widget {
-    border-right: 1px solid #cccccc;
-    border-bottom: 1px solid #cccccc;
+  border-right: 1px solid #cccccc;
+  border-bottom: 1px solid #cccccc;
 }
 
 /* search edit */
 #search_edit {
-    border: 1px solid #c4c0c0;
-    border-radius: 4px;
-    background-color: #ffffff;
+  border: 1px solid #c4c0c0;
+  border-radius: 4px;
+  background-color: #ffffff;
 }
 
 /* add button */
 #add_button {
-    border: none;
-    background-color: transparent;
-    border-image: url(:/icons/friend_add.png);
+  border: none;
+  background-color: transparent;
+  border-image: url(:/icons/friend_add.png);
 }
 
-#add_button:hover, #add_button:pressed {
-    border-image: url(:/icons/friend_add_fill.png);
+#add_button:hover,
+#add_button:pressed {
+  border-image: url(:/icons/friend_add_fill.png);
 }
 
-/* ========== Stack Widget ========== */
-#stack_widget {
-    border-right: 1px solid #cccccc;
+/* ========== Mid Stack Widget ========== */
+#mid_stack_widget {
+  border-right: 1px solid #cccccc;
 }
 
 /* ========== ChatUserList 样式 ========== */
 ChatUserList {
-    border: none;
-    outline: none;
+  border: none;
+  outline: none;
 }
 
 /* 列表项样式 */
 ChatUserList::item {
-    border-bottom: 1px solid #e8e8e8;
+  border-bottom: 1px solid #e8e8e8;
 }
 
 ChatUserList::item:hover {
-    background-color: #e9e9e9;
+  background-color: #e9e9e9;
 }
 
 ChatUserList::item:selected {
-    background-color: #d4d4d4;
-    color: #333333;
+  background-color: #d4d4d4;
+  color: #333333;
 }
 
 ChatUserList::item:selected:hover {
-    background-color: #c8c8c8;
+  background-color: #c8c8c8;
 }
 
 /* 滚动条样式 */
 ChatUserList QScrollBar:vertical {
-    background-color: transparent;
-    width: 8px;
-    margin: 0px;
+  background-color: transparent;
+  width: 8px;
+  margin: 0px;
 }
 
 ChatUserList QScrollBar::handle:vertical {
-    background-color: #c1c1c1;
-    min-height: 30px;
-    border-radius: 4px;
+  background-color: #c1c1c1;
+  min-height: 30px;
+  border-radius: 4px;
 }
 
 ChatUserList QScrollBar::handle:vertical:hover {
-    background-color: #a8a8a8;
+  background-color: #a8a8a8;
 }
 
 ChatUserList QScrollBar::handle:vertical:pressed {
-    background-color: #787878;
+  background-color: #787878;
 }
 
 ChatUserList QScrollBar::add-line:vertical,
 ChatUserList QScrollBar::sub-line:vertical {
-    height: 0px;
+  height: 0px;
 }
 
 ChatUserList QScrollBar::add-page:vertical,
 ChatUserList QScrollBar::sub-page:vertical {
-    background-color: transparent;
+  background-color: transparent;
+}
+
+/* ========== LoadingItem 自定义项样式 ========== */
+LoadingItem,
+LoadingItem QLabel {
+  background-color: transparent;
+}
+
+LoadingItem #tip_label {
+  font-size: 12px;
+  color: #888888;
 }
 
 /* ========== ChatUserItem 自定义项样式 ========== */
 ChatUserItem,
 ChatUserItem QWidget,
 ChatUserItem QLabel {
-    background-color: transparent;
+  background-color: transparent;
 }
 
 /* 头像样式 */
 ChatUserItem #avatar_label {
-    border-radius: 22px;
+  border-radius: 22px;
 }
 
 /* 用户名样式 */
 ChatUserItem #user_name_label {
-    font-size: 14px;
-    font-weight: 500;
-    color: #1a1a1a;
+  font-size: 14px;
+  font-weight: 500;
+  color: #1a1a1a;
 }
 
 /* 消息预览样式 */
 ChatUserItem #user_chat_msg_label {
-    font-size: 12px;
-    color: #888888;
+  font-size: 12px;
+  color: #888888;
 }
 
 /* 时间标签样式 */
 ChatUserItem #time_label {
-    font-size: 11px;
-    color: #888888;
+  font-size: 11px;
+  color: #888888;
+}
+
+/* ========== ChatPage 自定义样式 ========== */
+ChatPage {
+  border: none;
+  outline: none;
+}
+
+/* ========== 标题栏容器 ========== */
+#title_widget {
+  background-color: transparent;
+  border-bottom: 1px solid #cccccc;
+}
+
+/* 标题文字 */
+#title_label {
+  font-size: 16px;
+  font-weight: 500;
+  color: #1a1a1a;
+}
+
+/* ========== ChatMsgList 样式 ========== */
+ChatMsgList {
+  border: none;
+  outline: none;
+}
+
+/* 滚动条样式 */
+ChatMsgList QScrollBar:vertical {
+  background-color: transparent;
+  width: 8px;
+  margin: 0px;
+}
+
+ChatMsgList QScrollBar::handle:vertical {
+  background-color: #c1c1c1;
+  min-height: 30px;
+  border-radius: 4px;
+}
+
+ChatMsgList QScrollBar::handle:vertical:hover {
+  background-color: #a8a8a8;
+}
+
+ChatMsgList QScrollBar::handle:vertical:pressed {
+  background-color: #787878;
+}
+
+ChatMsgList QScrollBar::add-line:vertical,
+ChatMsgList QScrollBar::sub-line:vertical {
+  height: 0px;
+}
+
+ChatMsgList QScrollBar::add-page:vertical,
+ChatMsgList QScrollBar::sub-page:vertical {
+  background-color: transparent;
+}
+
+/* ========== 工具栏容器 ========== */
+#tools_widget {
+  background-color: transparent;
+  border-top: 1px solid #cccccc;
+}
+
+/* 表情按钮 */
+#emoji_label {
+  border: none;
+  background-color: transparent;
+  image: url(:/icons/smile_idle.png);
+}
+
+#emoji_label:hover {
+  image: url(:/icons/smile_hover.png);
+}
+
+/* 文件按钮 */
+#file_label {
+  border: none;
+  background-color: transparent;
+  image: url(:/icons/folder_idle.png);
+}
+
+#file_label:hover {
+  image: url(:/icons/folder_hover.png);
+}
+
+/* ========== ChatTextEdit ========== */
+ChatTextEdit {
+  border: none;
+  padding: 4px 8px;
+  font-size: 14px;
+  color: #1a1a1a;
+}
+
+ChatTextEdit QScrollBar:vertical {
+  background-color: transparent;
+  width: 8px;
+  margin: 0px;
+}
+
+ChatTextEdit QScrollBar::handle:vertical {
+  background-color: #c1c1c1;
+  min-height: 30px;
+  border-radius: 4px;
+}
+
+ChatTextEdit QScrollBar::handle:vertical:hover {
+  background-color: #a8a8a8;
+}
+
+ChatTextEdit QScrollBar::handle:vertical:pressed {
+  background-color: #787878;
+}
+
+ChatTextEdit QScrollBar::add-line:vertical,
+ChatTextEdit QScrollBar::sub-line:vertical {
+  height: 0px;
+}
+
+ChatTextEdit QScrollBar::add-page:vertical,
+ChatTextEdit QScrollBar::sub-page:vertical {
+  background-color: transparent;
+}
+
+/* ========== 底部按钮容器 ========== */
+#botton_widget {
+  background-color: transparent;
+}
+
+/* 发送按钮 - 主要 */
+#send_button {
+  background-color: transparent;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #1a1a1a;
+}
+
+#send_button:hover {
+  background-color: #e8e8e8;
+}
+
+#send_button:pressed {
+  background-color: #d4d4d4;
+}
+
+/* 接收按钮 - 次要 */
+#receive_button {
+  background-color: transparent;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #1a1a1a;
+}
+
+#receive_button:hover {
+  background-color: #e8e8e8;
+}
+
+#receive_button:pressed {
+  background-color: #d4d4d4;
 }

@@ -8,7 +8,6 @@
  * @history
  *****************************************************************************/
 
-
 #ifndef LOGINDIALOG_HPP
 #define LOGINDIALOG_HPP
 
@@ -35,8 +34,11 @@ public:
 
   void Reset();
 
+protected:
+  bool eventFilter(QObject* watched, QEvent* event) override;
+
 private:
-  void show_tip(const QString& str, bool ok);
+  void show_tip(const QString& str, bool is_ok);
   void init_handlers();
   void init_header();
   void check_user_valid();
@@ -51,9 +53,6 @@ private:
   inline static const QRegularExpression email_regex{R"(^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$)"};
   inline static const QRegularExpression password_regex{R"((?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,})"};
 
-protected:
-  bool eventFilter(QObject* watched, QEvent* event) override;
-
 signals:
   void SigSwitchRegister();
   void SigForgetPassword();
@@ -61,7 +60,7 @@ signals:
 
 private slots:
   void on_login_button_clicked();
-  void slot_login_mod_finish(QString str, ErrorCode err, ReqID id);
+  void slot_login_mod_finish(const QString& str, ErrorCode err, ReqID rid);
   void slot_tcp_conn_finish(bool);
   void slot_login_failed(int);
 };

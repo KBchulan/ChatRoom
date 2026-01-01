@@ -1,3 +1,13 @@
+/******************************************************************************
+ *
+ * @file       userinfo.hpp
+ * @brief      存储用户信息的单例类
+ *
+ * @author     KBchulan
+ * @date       2026/01/01
+ * @history
+ ******************************************************************************/
+
 #ifndef USERINFO_HPP
 #define USERINFO_HPP
 
@@ -6,19 +16,19 @@
 class UserInfo
 {
 public:
-  static UserInfo &GetInstance();
+  static UserInfo& GetInstance();
 
-  void SetUUID(const QString &uuid);
-  void SetNickname(const QString &nickname);
-  void SetEmail(const QString &email);
-  void SetAvatar(const QString &avatar);
-  void SetJwtToken(const QString &jwt_token);
+  void SetUUID(const QString& uuid);
+  void SetNickname(const QString& nickname);
+  void SetEmail(const QString& email);
+  void SetAvatar(const QString& avatar);
+  void SetJwtToken(const QString& jwt_token);
 
-  [[nodiscard]] const QString &GetUUID() const;
-  [[nodiscard]] const QString &GetNickname() const;
-  [[nodiscard]] const QString &GetEmail() const;
-  [[nodiscard]] const QString &GetAvatar() const;
-  [[nodiscard]] const QString &GetJwtToken() const;
+  [[nodiscard]] const QString& GetUUID() const;
+  [[nodiscard]] const QString& GetNickname() const;
+  [[nodiscard]] const QString& GetEmail() const;
+  [[nodiscard]] const QString& GetAvatar() const;
+  [[nodiscard]] const QString& GetJwtToken() const;
 
   UserInfo(const UserInfo&) = delete;
   UserInfo& operator=(const UserInfo&) = delete;

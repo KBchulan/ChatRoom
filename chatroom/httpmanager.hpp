@@ -12,10 +12,10 @@
 #define HTTPMANAGER_HPP
 
 #include <QJsonObject>
-#include <QUrl>
+#include <QNetworkAccessManager>
 #include <QObject>
 #include <QString>
-#include <QNetworkAccessManager>
+#include <QUrl>
 
 #include "global.hpp"
 
@@ -33,7 +33,7 @@ public:
     return instance;
   }
 
-  void PostHttpReq(const QUrl& url, const QJsonObject& json, ReqID id, Module mod);
+  void PostHttpReq(const QUrl& url, const QJsonObject& json, ReqID rid, Module mod);
 
 private:
   HttpManager();
@@ -44,13 +44,13 @@ private:
   QNetworkAccessManager _manager;
 
 private slots:
-  void slot_post_http_finish(QString str, ErrorCode err, ReqID id, Module mod);
+  void slot_post_http_finish(const QString& str, ErrorCode err, ReqID rid, Module mod);
 
 signals:
-  void sig_post_http_finish(QString str, ErrorCode err, ReqID id, Module mod);
-  void sig_register_mod_finish(QString str, ErrorCode err, ReqID id);
-  void sig_reset_mod_finish(QString str, ErrorCode err, ReqID id);
-  void sig_login_mod_finish(QString str, ErrorCode err, ReqID id);
+  void sig_post_http_finish(QString str, ErrorCode err, ReqID rid, Module mod);
+  void sig_register_mod_finish(QString str, ErrorCode err, ReqID rid);
+  void sig_reset_mod_finish(QString str, ErrorCode err, ReqID rid);
+  void sig_login_mod_finish(QString str, ErrorCode err, ReqID rid);
 };
 
 #endif  // HTTPMANAGER_HPP

@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [2026-01-02]
+
+### ✨ Features
+- **[client]** 新增 `ChatPage` 组件，将聊天主体区域从 `ChatDialog` 中抽离，包含标题栏、消息列表、工具栏、输入框和发送按钮，新增 `ChatMsgList` 组件，继承 `QListWidget`，支持滚动到顶部加载历史消息、鼠标悬停显示滚动条、防抖处理，新增 `ChatMsgItem` 组件（占位），用于显示单条聊天消息气泡，暂未实现具体内容显示，新增 `ChatTextEdit` 组件，自定义聊天输入框，新增 `LoadingItem` 组件，用于显示加载动画，完善 `ChatUserList`，增加滚动到底部加载更多用户的防抖处理，新增资源文件：加载动画（loading.gif）、表情图标（smile_idle/hover.png）、文件图标（folder_idle/hover.png），完善 `chat_window.qss` 样式表，新增 ChatPage、ChatMsgList、ChatTextEdit、LoadingItem 等组件样式，代码重构：全面应用 clang-format 格式化、信号槽参数改为 const 引用传递、变量命名规范化
+
 ## [2025-12-30]
 
 ### ✨ Features

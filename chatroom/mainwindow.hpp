@@ -11,8 +11,8 @@
 #ifndef MAINWINDOW_HPP
 #define MAINWINDOW_HPP
 
-#include <QMainWindow>
 #include <QAction>
+#include <QMainWindow>
 #include <QStackedWidget>
 
 QT_BEGIN_NAMESPACE
@@ -21,7 +21,6 @@ namespace Ui
 class MainWindow;
 }
 QT_END_NAMESPACE
-
 
 class LoginDialog;
 class RegisterDialog;
@@ -51,4 +50,5 @@ private:
   ResetPasswordDialog* _reset_password_dialog;
   ChatDialog* _chat_dialog;
 };
+
 #endif  // MAINWINDOW_HPP

@@ -1,14 +1,14 @@
 #include "mainwindow.hpp"
+
+#include <QKeySequence>
+
+#include "ui_mainwindow.h"
+#include "chatdialog.hpp"
 #include "global.hpp"
 #include "logindialog.hpp"
 #include "registerdialog.hpp"
 #include "resetpassworddialog.hpp"
-#include "chatdialog.hpp"
 #include "tcpmanager.hpp"
-
-#include <QKeySequence>
-
-#include "./ui_mainwindow.h"
 
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
@@ -43,14 +43,14 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::MainWi
 
   // ctrl + q 退出
   _action->setShortcut(QKeySequence::Quit);
-  connect(_action, &QAction::triggered, this, [this]()
-  {
-    TcpManager::GetInstance().Disconnect();
-    close();
-  });
+  connect(_action, &QAction::triggered, this,
+          [this]()
+          {
+            TcpManager::GetInstance().Disconnect();
+            close();
+          });
 
   addAction(_action);
-
 
   // FIXME: 这里是模拟，聊天页面开发完成需要删除
   // emit TcpManager::GetInstance().sig_switch_chat_dialog();

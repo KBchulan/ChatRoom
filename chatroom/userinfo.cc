@@ -1,12 +1,12 @@
 #include "userinfo.hpp"
 
-UserInfo &UserInfo::GetInstance()
+UserInfo& UserInfo::GetInstance()
 {
   static UserInfo instance;
   return instance;
 }
 
-void UserInfo::SetUUID(const QString &uuid)
+void UserInfo::SetUUID(const QString& uuid)
 {
   _uuid = uuid;
 }
@@ -26,7 +26,7 @@ void UserInfo::SetAvatar(const QString& avatar)
   _avatar = avatar;
 }
 
-void UserInfo::SetJwtToken(const QString &jwt_token)
+void UserInfo::SetJwtToken(const QString& jwt_token)
 {
   _jwt_token = jwt_token;
 }

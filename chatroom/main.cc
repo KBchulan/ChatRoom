@@ -1,13 +1,13 @@
 #include <QApplication>
-#include <QIcon>
-#include <QFile>
-#include <QSettings>
 #include <QCoreApplication>
+#include <QFile>
+#include <QIcon>
+#include <QSettings>
 
 #include "global.hpp"
 #include "mainwindow.hpp"
 
-void loadResources(QApplication &app)
+void loadResources(QApplication& app)
 {
   // config.ini
   QString configPath = QCoreApplication::applicationDirPath() + "/config.ini";
@@ -18,7 +18,7 @@ void loadResources(QApplication &app)
   CHATROOM_API_BASE_URL = QString("http://%1:%2/api/v1").arg(host).arg(port);
 
   // 项目 icon
-  app.setWindowIcon(QIcon(":/chatroom.png"));
+  QApplication::setWindowIcon(QIcon(":/chatroom.png"));
 
   // 界面样式
   QString styleSheet;
@@ -63,14 +63,14 @@ void loadResources(QApplication &app)
 
 int main(int argc, char* argv[])
 {
-  QApplication a(argc, argv);
+  QApplication app(argc, argv);
 
   // 加载资源文件
-  loadResources(a);
+  loadResources(app);
 
   // 设置主窗口
-  MainWindow w;
-  w.show();
+  MainWindow main_window;
+  main_window.show();
 
-  return a.exec();
+  return QApplication::exec();
 }

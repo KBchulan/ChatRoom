@@ -4,8 +4,7 @@
 
 #include "ui_chatuseritem.h"
 
-ChatUserItem::ChatUserItem(QWidget* parent)
-  : QWidget(parent), ui(new Ui::ChatUserItem)
+ChatUserItem::ChatUserItem(QWidget* parent) : QWidget(parent), ui(new Ui::ChatUserItem)
 {
   ui->setupUi(this);
 }

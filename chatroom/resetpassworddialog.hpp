@@ -11,8 +11,8 @@
 #ifndef RESETPASSWORDDIALOG_HPP
 #define RESETPASSWORDDIALOG_HPP
 
-#include <QDialog>
 #include <QAction>
+#include <QDialog>
 #include <QRegularExpression>
 
 #include "global.hpp"
@@ -42,10 +42,10 @@ private slots:
   void on_return_btn_clicked();
   void on_verify_code_btn_clicked();
   void on_confirm_btn_clicked();
-  void slot_reset_mod_finish(QString str, ErrorCode err, ReqID id);
+  void slot_reset_mod_finish(const QString& str, ErrorCode err, ReqID rid);
 
 private:
-  void show_tip(const QString& str, bool ok);
+  void show_tip(const QString& str, bool is_ok);
   void init_handler();
   void check_email_valid();
   void check_password_valid();

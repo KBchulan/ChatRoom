@@ -2,10 +2,10 @@
 
 #include <QStyle>
 
-std::function<void(QWidget*)> repolish = [](QWidget* w) -> void
+std::function<void(QWidget*)> repolish = [](QWidget* widget) -> void
 {
-  w->style()->unpolish(w);
-  w->style()->polish(w);
+  widget->style()->unpolish(widget);
+  widget->style()->polish(widget);
 };
 
 QString CHATROOM_API_BASE_URL = "";

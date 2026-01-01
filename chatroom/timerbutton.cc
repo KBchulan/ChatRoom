@@ -2,20 +2,21 @@
 
 #include <QMouseEvent>
 
-TimerButton::TimerButton(QWidget *parent) : QPushButton(parent), _counter(kDefaultCountdown)
+TimerButton::TimerButton(QWidget* parent) : QPushButton(parent), _counter(kDefaultCountdown)
 {
   _timer = new QTimer(this);
 
-  connect(_timer, &QTimer::timeout, this, [this]() -> void
-  {
-    --_counter;
-    if (_counter <= 0)
-    {
-      reset_timer();
-      return;
-    }
-    this->setText(QString::number(_counter));
-  });
+  connect(_timer, &QTimer::timeout, this,
+          [this]() -> void
+          {
+            --_counter;
+            if (_counter <= 0)
+            {
+              reset_timer();
+              return;
+            }
+            this->setText(QString::number(_counter));
+          });
 }
 
 void TimerButton::Reset()
@@ -23,9 +24,9 @@ void TimerButton::Reset()
   reset_timer();
 }
 
-void TimerButton::mouseReleaseEvent(QMouseEvent *e)
+void TimerButton::mouseReleaseEvent(QMouseEvent* event)
 {
-  if (e->button() == Qt::LeftButton)
+  if (event->button() == Qt::LeftButton)
   {
     this->setEnabled(false);
     this->setText(QString::number(_counter));

@@ -1,11 +1,9 @@
-#include "chatuserlist.hpp"
+#include "chatmsglist.hpp"
 
 #include <QScrollBar>
-#include <QShowEvent>
 
-ChatUserList::ChatUserList(QWidget* parent) : QListWidget(parent)
+ChatMsgList::ChatMsgList(QWidget* parent) : QListWidget(parent)
 {
-  // 默认隐藏滚动条
   setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
@@ -13,13 +11,13 @@ ChatUserList::ChatUserList(QWidget* parent) : QListWidget(parent)
   _debounce_timer->setSingleShot(true);
   _debounce_timer->setInterval(200);
 
-  connect(_debounce_timer, &QTimer::timeout, this, [this]() { emit sig_load_chat_user(); });
+  connect(_debounce_timer, &QTimer::timeout, this, [this]() { emit sig_load_more_msg(); });
 
-  // 滚动到底部时发送信号
+  // 滚动到顶部时发送信号，加载历史消息
   connect(verticalScrollBar(), &QScrollBar::valueChanged,
           [this](int value)
           {
-            if (value == verticalScrollBar()->maximum())
+            if (value == verticalScrollBar()->minimum())
             {
               if (!_debounce_timer->isActive())
               {
@@ -29,19 +27,19 @@ ChatUserList::ChatUserList(QWidget* parent) : QListWidget(parent)
           });
 }
 
-void ChatUserList::enterEvent(QEnterEvent* event)
+void ChatMsgList::enterEvent(QEnterEvent* event)
 {
   setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
   QListWidget::enterEvent(event);
 }
 
-void ChatUserList::leaveEvent(QEvent* event)
+void ChatMsgList::leaveEvent(QEvent* event)
 {
   setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   QListWidget::leaveEvent(event);
 }
 
-void ChatUserList::showEvent(QShowEvent* event)
+void ChatMsgList::showEvent(QShowEvent* event)
 {
   QListWidget::showEvent(event);
   // 刷新布局，此为必要项，不要删除

@@ -8,6 +8,39 @@ set(CMAKE_AUTORCC ON)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+# AddressSanitizer
+option(ENABLE_ASAN "Enable AddressSanitizer" OFF)
+
+# UndefinedBehaviorSanitizer
+option(ENABLE_UBSAN "Enable UndefinedBehaviorSanitizer" OFF)
+
+if(ENABLE_ASAN)
+  add_compile_options(-fsanitize=address -fno-omit-frame-pointer)
+  add_link_options(-fsanitize=address)
+
+  # 生成 LSAN 抑制文件
+  file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/lsan_suppressions.txt
+    "leak:libFcitx5Qt6DBusAddons.so\n"
+    "leak:libfcitx5platforminputcontextplugin.so\n"
+  )
+
+  # 生成带抑制配置的启动脚本
+  file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/run_with_asan.sh
+    "#!/bin/bash\n"
+    "LSAN_OPTIONS=suppressions=${CMAKE_CURRENT_BINARY_DIR}/lsan_suppressions.txt "
+    "exec ${CMAKE_CURRENT_BINARY_DIR}/chatroom \"$@\"\n"
+  )
+  file(CHMOD ${CMAKE_CURRENT_BINARY_DIR}/run_with_asan.sh
+    PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE
+  )
+endif()
+
+if(ENABLE_UBSAN)
+  add_compile_options(-fsanitize=undefined)
+  add_link_options(-fsanitize=undefined)
+endif()
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets Network)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Network)
@@ -34,6 +67,9 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         resetpassworddialog.hpp resetpassworddialog.cc resetpassworddialog.ui
         chatdialog.hpp chatdialog.cc chatdialog.ui
         chatuseritem.hpp chatuseritem.cc chatuseritem.ui
+        loadingitem.hpp loadingitem.cc loadingitem.ui
+        chatpage.hpp chatpage.cc chatpage.ui
+        chatmsgitem.hpp chatmsgitem.cc chatmsgitem.ui
         global.hpp  global.cc
         timerbutton.hpp timerbutton.cc
         httpmanager.hpp httpmanager.cc
@@ -41,6 +77,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         tcpmanager.hpp tcpmanager.cc
         userinfo.hpp userinfo.cc
         chatuserlist.hpp chatuserlist.cc
+        chatmsglist.hpp chatmsglist.cc
+        chattextedit.hpp chattextedit.cc
         Defer.hpp config.ini
     )
 # Define target properties for Android with Qt 6 as:
@@ -56,6 +94,9 @@ else()
             resetpassworddialog.hpp resetpassworddialog.cc resetpassworddialog.ui
             chatdialog.hpp chatdialog.cc chatdialog.ui
             chatuseritem.hpp chatuseritem.cc chatuseritem.ui
+            loadingitem.hpp loadingitem.cc loadingitem.ui
+            chatpage.hpp chatpage.cc chatpage.ui
+            chatmsgitem.hpp chatmsgitem.cc chatmsgitem.ui
             global.hpp  global.cc
             timerbutton.hpp timerbutton.cc
             httpmanager.hpp httpmanager.cc
@@ -63,6 +104,8 @@ else()
             tcpmanager.hpp tcpmanager.cc
             userinfo.hpp userinfo.cc
             chatuserlist.hpp chatuserlist.cc
+            chatmsglist.hpp chatmsglist.cc
+            chattextedit.hpp chattextedit.cc
             Defer.hpp config.ini
         )
 # Define properties for Android with Qt 5 after find_package() calls as:
@@ -75,6 +118,9 @@ else()
             resetpassworddialog.hpp resetpassworddialog.cc resetpassworddialog.ui
             chatdialog.hpp chatdialog.cc chatdialog.ui
             chatuseritem.hpp chatuseritem.cc chatuseritem.ui
+            loadingitem.hpp loadingitem.cc loadingitem.ui
+            chatpage.hpp chatpage.cc chatpage.ui
+            chatmsgitem.hpp chatmsgitem.cc chatmsgitem.ui
             global.hpp  global.cc
             timerbutton.hpp timerbutton.cc
             httpmanager.hpp httpmanager.cc
@@ -82,6 +128,8 @@ else()
             tcpmanager.hpp tcpmanager.cc
             userinfo.hpp userinfo.cc
             chatuserlist.hpp chatuserlist.cc
+            chatmsglist.hpp chatmsglist.cc
+            chattextedit.hpp chattextedit.cc
             Defer.hpp config.ini
         )
     endif()

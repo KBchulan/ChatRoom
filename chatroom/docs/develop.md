@@ -84,3 +84,15 @@
 - 新增 `main.qss` 全局样式和 `chat_window.qss` 聊天界面样式
 - 新增资源文件：测试头像（head_1/2/3.jpg）、搜索图标、清除图标、添加好友图标
 - 主窗口切换到聊天界面时自动调整窗口尺寸
+
+### [2026-01-01]
+
+- 新增 `ChatPage` 组件，将聊天主体区域从 `ChatDialog` 中抽离，包含标题栏、消息列表、工具栏、输入框和发送按钮
+- 新增 `ChatMsgList` 组件，继承 `QListWidget`，支持滚动到顶部加载历史消息、鼠标悬停显示滚动条、防抖处理
+- 新增 `ChatMsgItem` 组件（占位），用于显示单条聊天消息气泡，暂未实现具体内容显示
+- 新增 `ChatTextEdit` 组件，自定义聊天输入框
+- 新增 `LoadingItem` 组件，用于显示加载动画
+- 完善 `ChatUserList`，增加滚动到底部加载更多用户的防抖处理
+- 新增资源文件：加载动画（loading.gif）、表情图标（smile_idle/hover.png）、文件图标（folder_idle/hover.png）
+- 完善 `chat_window.qss` 样式表，新增 ChatPage、ChatMsgList、ChatTextEdit、LoadingItem 等组件样式
+- 代码重构：全面应用 clang-format 格式化、信号槽参数改为 const 引用传递、变量命名规范化

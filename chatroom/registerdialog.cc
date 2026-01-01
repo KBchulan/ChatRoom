@@ -1,13 +1,14 @@
 #include "registerdialog.hpp"
-#include "httpmanager.hpp"
 
+#include <QJsonDocument>
 #include <QLineEdit>
 #include <QToolButton>
-#include <QJsonDocument>
 
+#include "httpmanager.hpp"
 #include "ui_registerdialog.h"
 
-RegisterDialog::RegisterDialog(QWidget* parent) : QDialog(parent), ui(new Ui::RegisterDialog), _counter(kDefaultReturnCount)
+RegisterDialog::RegisterDialog(QWidget* parent)
+    : QDialog(parent), ui(new Ui::RegisterDialog), _counter(kDefaultReturnCount)
 {
   ui->setupUi(this);
 
@@ -34,67 +35,70 @@ RegisterDialog::RegisterDialog(QWidget* parent) : QDialog(parent), ui(new Ui::Re
   ui->verify_code_edit->installEventFilter(this);
 
   // 密码与确认密码的眼睛图标，可以切换密码样式
-  _toggle_password = ui->password_edit->addAction(
-    QIcon(":/icons/eye_close.png"),
-    QLineEdit::TrailingPosition
-  );
+  _toggle_password = ui->password_edit->addAction(QIcon(":/icons/eye_close.png"), QLineEdit::TrailingPosition);
 
-  _toggle_confirm_password = ui->confirm_edit->addAction(
-    QIcon(":/icons/eye_close.png"),
-    QLineEdit::TrailingPosition
-  );
+  _toggle_confirm_password = ui->confirm_edit->addAction(QIcon(":/icons/eye_close.png"), QLineEdit::TrailingPosition);
 
   // 设置眼睛图标按钮的鼠标悬停光标为小手
   for (auto* btn : ui->password_edit->findChildren<QToolButton*>())
+  {
     btn->setCursor(Qt::PointingHandCursor);
+  }
   for (auto* btn : ui->confirm_edit->findChildren<QToolButton*>())
+  {
     btn->setCursor(Qt::PointingHandCursor);
+  }
 
   // 设置返回定时器
   _return_timer = new QTimer(this);
 
   // 连接槽信息
-  connect(&HttpManager::GetInstance(), &HttpManager::sig_register_mod_finish, this, &RegisterDialog::slot_reg_mod_finish);
-  connect(_toggle_password, &QAction::triggered, this, [this]() -> void
-  {
-    if (ui->password_edit->echoMode() == QLineEdit::Password)
-    {
-      ui->password_edit->setEchoMode(QLineEdit::Normal);
-      _toggle_password->setIcon(QIcon(":/icons/eye_open.png"));
-    }
-    else
-    {
-      ui->password_edit->setEchoMode(QLineEdit::Password);
-      _toggle_password->setIcon(QIcon(":/icons/eye_close.png"));
-    }
-  });
+  connect(&HttpManager::GetInstance(), &HttpManager::sig_register_mod_finish, this,
+          &RegisterDialog::slot_reg_mod_finish);
 
-  connect(_toggle_confirm_password, &QAction::triggered, this, [this]() -> void
-  {
-    if (ui->confirm_edit->echoMode() == QLineEdit::Password)
-    {
-      ui->confirm_edit->setEchoMode(QLineEdit::Normal);
-      _toggle_confirm_password->setIcon(QIcon(":/icons/eye_open.png"));
-    }
-    else
-    {
-      ui->confirm_edit->setEchoMode(QLineEdit::Password);
-      _toggle_confirm_password->setIcon(QIcon(":/icons/eye_close.png"));
-    }
-  });
+  connect(_toggle_password, &QAction::triggered, this,
+          [this]() -> void
+          {
+            if (ui->password_edit->echoMode() == QLineEdit::Password)
+            {
+              ui->password_edit->setEchoMode(QLineEdit::Normal);
+              _toggle_password->setIcon(QIcon(":/icons/eye_open.png"));
+            }
+            else
+            {
+              ui->password_edit->setEchoMode(QLineEdit::Password);
+              _toggle_password->setIcon(QIcon(":/icons/eye_close.png"));
+            }
+          });
 
-  connect(_return_timer, &QTimer::timeout, this, [this]() -> void
-  {
-    --_counter;
-    if (_counter <= 0)
-    {
-      emit SigSwitchLogin();
-      return;
-    }
+  connect(_toggle_confirm_password, &QAction::triggered, this,
+          [this]() -> void
+          {
+            if (ui->confirm_edit->echoMode() == QLineEdit::Password)
+            {
+              ui->confirm_edit->setEchoMode(QLineEdit::Normal);
+              _toggle_confirm_password->setIcon(QIcon(":/icons/eye_open.png"));
+            }
+            else
+            {
+              ui->confirm_edit->setEchoMode(QLineEdit::Password);
+              _toggle_confirm_password->setIcon(QIcon(":/icons/eye_close.png"));
+            }
+          });
 
-    QString str = QString("注册成功, %1s 后返回登录").arg(_counter);
-    ui->return_label->setText(str);
-  });
+  connect(_return_timer, &QTimer::timeout, this,
+          [this]() -> void
+          {
+            --_counter;
+            if (_counter <= 0)
+            {
+              emit SigSwitchLogin();
+              return;
+            }
+
+            QString str = QString("注册成功, %1s 后返回登录").arg(_counter);
+            ui->return_label->setText(str);
+          });
 }
 
 RegisterDialog::~RegisterDialog()
@@ -146,7 +150,8 @@ void RegisterDialog::on_verify_code_btn_clicked()
   dto["email"] = email;
   dto["purpose"] = 1;
 
-  HttpManager::GetInstance().PostHttpReq(QUrl(CHATROOM_API_BASE_URL + "/user/send-code"), dto, ReqID::ID_GET_VERIFY_CODE, Module::REGISTER);
+  HttpManager::GetInstance().PostHttpReq(QUrl(CHATROOM_API_BASE_URL + "/user/send-code"), dto,
+                                         ReqID::ID_GET_VERIFY_CODE, Module::REGISTER);
 }
 
 void RegisterDialog::on_confirm_btn_clicked()
@@ -206,7 +211,8 @@ void RegisterDialog::on_confirm_btn_clicked()
   dto["verify_code"] = verify_code;
   dto["purpose"] = 1;
 
-  HttpManager::GetInstance().PostHttpReq(QUrl(CHATROOM_API_BASE_URL + "/user/register"), dto, ReqID::ID_REGISTER, Module::REGISTER);
+  HttpManager::GetInstance().PostHttpReq(QUrl(CHATROOM_API_BASE_URL + "/user/register"), dto, ReqID::ID_REGISTER,
+                                         Module::REGISTER);
 }
 
 void RegisterDialog::on_return_button_clicked()
@@ -219,7 +225,7 @@ void RegisterDialog::on_cancel_btn_clicked()
   emit SigSwitchLogin();
 }
 
-void RegisterDialog::slot_reg_mod_finish(QString str, ErrorCode err, ReqID id)
+void RegisterDialog::slot_reg_mod_finish(const QString& str, ErrorCode err, ReqID rid)
 {
   if (err != ErrorCode::SUCCESS)
   {
@@ -240,25 +246,40 @@ void RegisterDialog::slot_reg_mod_finish(QString str, ErrorCode err, ReqID id)
   }
 
   // 都正常解析就可以处理了
-  _handlers[id](jsonDoc.object());
+  _handlers[rid](jsonDoc.object());
 }
 
 bool RegisterDialog::eventFilter(QObject* obj, QEvent* event)
 {
   if (event->type() == QEvent::FocusOut)
   {
-    if (obj == ui->user_edit) check_user_valid();
-    else if (obj == ui->email_edit) check_email_valid();
-    else if (obj == ui->password_edit) check_password_valid();
-    else if (obj == ui->confirm_edit) check_confirm_password_valid();
-    else if (obj == ui->verify_code_edit) check_verify_code_valid();
+    if (obj == ui->user_edit)
+    {
+      check_user_valid();
+    }
+    else if (obj == ui->email_edit)
+    {
+      check_email_valid();
+    }
+    else if (obj == ui->password_edit)
+    {
+      check_password_valid();
+    }
+    else if (obj == ui->confirm_edit)
+    {
+      check_confirm_password_valid();
+    }
+    else if (obj == ui->verify_code_edit)
+    {
+      check_verify_code_valid();
+    }
   }
   return QDialog::eventFilter(obj, event);
 }
 
-void RegisterDialog::show_tip(const QString &str, bool ok)
+void RegisterDialog::show_tip(const QString& str, bool is_ok)
 {
-  if (ok)
+  if (is_ok)
   {
     ui->err_msg_label->setProperty("state", "normal");
   }
@@ -273,35 +294,37 @@ void RegisterDialog::show_tip(const QString &str, bool ok)
 
 void RegisterDialog::init_handlers()
 {
-  _handlers.insert(ReqID::ID_GET_VERIFY_CODE, [this](const QJsonObject& obj) -> void
-  {
-    auto code = obj["code"].toInt();
-    auto message = obj["message"].toString();
+  _handlers.insert(ReqID::ID_GET_VERIFY_CODE,
+                   [this](const QJsonObject& obj) -> void
+                   {
+                     auto code = obj["code"].toInt();
+                     auto message = obj["message"].toString();
 
-    if (code != 0)
-    {
-      show_tip(message, false);
-      return;
-    }
+                     if (code != 0)
+                     {
+                       show_tip(message, false);
+                       return;
+                     }
 
-    show_tip("验证码已发送至邮箱，请于1分钟内完成注册", true);
-  });
+                     show_tip("验证码已发送至邮箱，请于1分钟内完成注册", true);
+                   });
 
-  _handlers.insert(ReqID::ID_REGISTER, [this](const QJsonObject& obj) -> void
-  {
-    auto code = obj["code"].toInt();
-    auto message = obj["message"].toString();
+  _handlers.insert(ReqID::ID_REGISTER,
+                   [this](const QJsonObject& obj) -> void
+                   {
+                     auto code = obj["code"].toInt();
+                     auto message = obj["message"].toString();
 
-    if (code != 0)
-    {
-      show_tip(message, false);
-      return;
-    }
+                     if (code != 0)
+                     {
+                       show_tip(message, false);
+                       return;
+                     }
 
-    // 提示注册成功并实现跳转，使用 stack page 进行操作
-    ui->stackedWidget->setCurrentWidget(ui->page_2);
-    _return_timer->start(1000);
-  });
+                     // 提示注册成功并实现跳转，使用 stack page 进行操作
+                     ui->stackedWidget->setCurrentWidget(ui->page_2);
+                     _return_timer->start(1000);
+                   });
 }
 
 void RegisterDialog::check_user_valid()
