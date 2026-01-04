@@ -131,9 +131,11 @@ void ChatDialog::showLoading()
   _loading_item = new QListWidgetItem();
   _loading_item->setSizeHint(QSize(0, UIConstants::LoadingItemHeight));
 
-  auto* widget = new LoadingItem();
+  auto* widget = new LoadingItem("加载用户数据中...");
   _chat_user_list->addItem(_loading_item);
   _chat_user_list->setItemWidget(_loading_item, widget);
+
+  _chat_user_list->scrollToBottom();
 }
 
 void ChatDialog::hideLoading()

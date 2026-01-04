@@ -1,4 +1,5 @@
 #include "chatmsglist.hpp"
+#include "chatmsgitem.hpp"
 
 #include <QScrollBar>
 
@@ -6,6 +7,8 @@ ChatMsgList::ChatMsgList(QWidget* parent) : QListWidget(parent)
 {
   setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+  setSelectionMode(QAbstractItemView::NoSelection);
+  setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
 
   _debounce_timer = new QTimer(this);
   _debounce_timer->setSingleShot(true);
@@ -49,4 +52,13 @@ void ChatMsgList::showEvent(QShowEvent* event)
                        setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
                        setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
                      });
+}
+
+void ChatMsgList::appendChatItem(ChatMsgItem* item)
+{
+  auto* list_item = new QListWidgetItem(this);
+  list_item->setSizeHint(item->sizeHint());
+  addItem(list_item);
+  setItemWidget(list_item, item);
+  scrollToBottom();
 }

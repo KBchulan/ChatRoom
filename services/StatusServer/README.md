@@ -150,7 +150,7 @@ auto iter = std::ranges::min_element(_tcp_servers, {}, &TcpServerInfo::connectio
 
 #### 2. 两阶段 Token 验证
 
-防止重放攻击的安全机制：
+防止重放攻击的安全机制，同时支持**请求幂等性**（相同 uuid 重复请求返回相同结果）：
 
 ```
 ┌────────┐         ┌─────────┐         ┌──────────────┐         ┌────────────┐
@@ -161,7 +161,9 @@ auto iter = std::ranges::min_element(_tcp_servers, {}, &TcpServerInfo::connectio
     │─────────────────▶│                     │                       │
     │                   │   2. GetTcpServer   │                       │
     │                   │───────────────────▶│                       │
-    │                   │                     │  生成 Token           │
+    │                   │                     │  检查是否已分配        │
+    │                   │                     │  若已分配则直接返回    │
+    │                   │                     │  否则生成新 Token      │
     │                   │                     │  记录 uuid→token      │
     │                   │◀───────────────────│                       │
     │                   │   {host,port,token} │                       │

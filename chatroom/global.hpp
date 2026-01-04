@@ -17,6 +17,7 @@
 #include <functional>
 
 extern std::function<void(QWidget*)> repolish;
+extern QString encryPassword(const QString& password);
 extern QString CHATROOM_API_BASE_URL;
 
 enum class ReqID : std::uint16_t
@@ -42,17 +43,29 @@ enum class ErrorCode : std::uint8_t
   NETWORK_ERROR = 1,  // 网络错误
 };
 
+// 消息方向
+enum class MsgDirection : std::uint8_t
+{
+  Sent = 0,      // 自己发送
+  Received = 1,  // 收到的消息
+};
+
 namespace UIConstants
 {
 // mainwindow.hpp
-constexpr int WindowLoginWidth = 380;
-constexpr int WindowLoginHeight = 570;
-constexpr int WindowChatWidth = 1080;
-constexpr int WindowChatHeight = 720;
+constexpr int WindowLoginWidth = 380;   // 登录窗口宽度
+constexpr int WindowLoginHeight = 570;  // 登录窗口高度
+constexpr int WindowChatWidth = 1080;   // 聊天窗口宽度
+constexpr int WindowChatHeight = 720;   // 聊天窗口高度
 
 // chatdialog.hpp
-constexpr int ChatUserItemHeight = 65;
-constexpr int LoadingItemHeight = 65;
+constexpr int ChatUserItemHeight = 65;  // 联系人列表项高度
+constexpr int LoadingItemHeight = 65;   // 加载中列表项高度
+
+// chatmsgitem.hpp
+constexpr int ChatMsgItemAvatarSize = 50;       // 头像大小
+constexpr int ChatMsgItemTriangleWidth = 8;     // 小三角宽度
+constexpr int ChatMsgItemBubbleRadius = 6;      // 气泡圆角半径
 }  // namespace UIConstants
 
 #endif  // GLOBAL_HPP

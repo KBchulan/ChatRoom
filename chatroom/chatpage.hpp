@@ -13,6 +13,7 @@
 
 #include <QWidget>
 
+class QListWidgetItem;
 namespace Ui
 {
 class ChatPage;
@@ -26,10 +27,19 @@ public:
   explicit ChatPage(QWidget* parent = nullptr);
   ~ChatPage();
 
+private slots:
+  void on_send_button_clicked();
+  void on_receive_button_clicked();
+  void slot_load_more_msg();
+
 private:
-  void addTestData();
+  void showLoading();
+  void hideLoading();
+  void addTestHistoryData();
 
   Ui::ChatPage* ui;
+  bool _loading = false;
+  QListWidgetItem* _loading_item = nullptr;
 };
 
 #endif  // CHATPAGE_HPP

@@ -28,6 +28,28 @@ grpc::Status StatusServiceImpl::GetTcpServer([[maybe_unused]] grpc::ServerContex
 {
   const auto& uuid = request->uuid();
 
+  // 校验参数
+  if (uuid.empty())
+  {
+    return {grpc::StatusCode::INVALID_ARGUMENT, "Failed to get uuid from grpc client"};
+  }
+
+  // 先判断是否请求过，直接返回原来分配的，防止首次连接失败
+  {
+    std::lock_guard lock(_mutex);
+    if (_pending_connections.contains(uuid))
+    {
+      const auto& info = _pending_connections[uuid];
+      const auto& server = _tcp_servers[info.server_index];
+      response->set_code(0);
+      response->set_message("Get TCP server success");
+      response->mutable_data()->insert({"host", server.host});
+      response->mutable_data()->insert({"port", std::to_string(server.port)});
+      response->mutable_data()->insert({"token", info.token});
+      return grpc::Status::OK;
+    }
+  }
+
   // 生成 token
   const auto token = generate_token();
   if (token.empty())
@@ -58,7 +80,7 @@ grpc::Status StatusServiceImpl::GetTcpServer([[maybe_unused]] grpc::ServerContex
   response->mutable_data()->insert({"port", port});
   response->mutable_data()->insert({"token", token});
 
-  tools::Logger::getInstance().info("GetTcpServer: uuid = {}, token = {}", uuid, token);
+  tools::Logger::getInstance().info("GetTcpServer: uuid = {}, token = {}, address = {}:{}", uuid, token, host, port);
   return grpc::Status::OK;
 }
 

@@ -46,7 +46,7 @@ int main()
 
     // 创建服务器
     std::unique_ptr<grpc::Server> server(builder.BuildAndStart());
-    tools::Logger::getInstance().info("VerifyCode Server listening on {}", global::server::SERVER_ADDRESS);
+    tools::Logger::getInstance().info("Status Server listening on {}", global::server::SERVER_ADDRESS);
 
     std::thread shutdown_thread(
         [&server]()

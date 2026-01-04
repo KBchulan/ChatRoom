@@ -11,6 +11,7 @@
 #include <QPushButton>
 #include <QToolButton>
 
+#include "global.hpp"
 #include "httpmanager.hpp"
 #include "tcpmanager.hpp"
 #include "ui_logindialog.h"
@@ -131,7 +132,7 @@ void LoginDialog::init_handlers()
                      UserInfo::GetInstance().SetJwtToken(jwt_token);
 
                      show_tip("登录成功，正在连接服务器", true);
-                     emit SigConnectTcp(server_info);
+                     emit SigConnectTcp(_server_info);
                    });
 }
 
@@ -242,6 +243,9 @@ bool LoginDialog::eventFilter(QObject* watched, QEvent* event)
 
 void LoginDialog::on_login_button_clicked()
 {
+  // TODO: 这里是模拟，聊天页面开发完成需要删除，暂时请保留
+  emit TcpManager::GetInstance().sig_switch_chat_dialog();
+
   auto user = ui->user_edit->text();
   if (user.isEmpty())
   {
@@ -271,7 +275,7 @@ void LoginDialog::on_login_button_clicked()
 
   QJsonObject dto;
   dto["user"] = user;
-  dto["password"] = password;
+  dto["password"] = encryPassword(password);
 
   HttpManager::GetInstance().PostHttpReq(QUrl(CHATROOM_API_BASE_URL + "/user/login"), dto, ReqID::ID_LOGIN,
                                          Module::LOGIN);

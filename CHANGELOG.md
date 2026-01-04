@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [2026-01-04]
+
+### ✨ Features
+- **[all]** 新增聊天气泡组件体系与消息发送功能，GateWay 增加服务降级支持，StatusServer 增加请求幂等性，更新相关文档
+
 ## [2026-01-02]
 
 ### ✨ Features

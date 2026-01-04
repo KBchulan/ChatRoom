@@ -11,18 +11,21 @@
 #ifndef CHATMSGLIST_HPP
 #define CHATMSGLIST_HPP
 
-#include <QTimer>
 #include <QEnterEvent>
 #include <QEvent>
 #include <QListWidget>
 #include <QShowEvent>
+#include <QTimer>
 
+class ChatMsgItem;
 class ChatMsgList : public QListWidget
 {
   Q_OBJECT
 
 public:
   explicit ChatMsgList(QWidget* parent = nullptr);
+
+  void appendChatItem(ChatMsgItem* item);
 
 protected:
   void enterEvent(QEnterEvent* event) override;

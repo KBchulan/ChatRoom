@@ -89,3 +89,9 @@
 - 完善 README 文档，增加相关说明
 - 修改 server 层，从单 reactor 模型改为多 reactor 模型，及采用多 acceptor，每个 acceptor 绑定一个 io_context，同时绑定到同一个端口，依赖内核进行负载均衡
 - connection 中读回调修改了一下，把管道破裂和 peer 错误都当作正常关闭处理，输出 debug 日志
+
+### [2026-01-04] 服务降级支持
+
+- 新增 `AVAILABLE_ROUTES` 白名单，用于服务降级控制
+- 在请求处理入口增加路由可用性检查，不在白名单的路由返回 405 Method Not Allowed
+- 便于后续快速下线特定接口进行故障隔离

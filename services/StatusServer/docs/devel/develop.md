@@ -13,3 +13,10 @@
 ### [2025-12-20] 完善文档
 
 - 补充开发文档，完善项目说明，写了一下 README
+
+### [2026-01-04] 健壮性增强
+
+- `GetTcpServer` 增加 uuid 参数校验，为空时返回 INVALID_ARGUMENT 错误
+- `GetTcpServer` 增加请求幂等性支持：若 uuid 已在 pending 中，直接返回之前分配的服务器信息，防止首次连接失败后重试导致分配到不同服务器
+- 修复启动日志：从 "VerifyCode Server" 更正为 "Status Server"
+- 增强日志输出，GetTcpServer 成功时打印分配的服务器地址

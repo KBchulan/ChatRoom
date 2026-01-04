@@ -29,7 +29,12 @@ constexpr const char* USER_REGISTER_ROUTE = UTILS_ROUTE("/user/register");
 constexpr const char* USER_RESET_PASS_ROUTE = UTILS_ROUTE("/user/reset");
 constexpr const char* USER_LOGIN_ROUTE = UTILS_ROUTE("/user/login");
 
+// 用于 JWT 校验
 inline const std::unordered_set<std::string> NO_AUTH_ROUTES = {
+    HEALTH_CHECK_ROUTE, USER_SEND_CODE_ROUTE, USER_REGISTER_ROUTE, USER_RESET_PASS_ROUTE, USER_LOGIN_ROUTE};
+
+// 用于服务降级使用
+inline const std::unordered_set<std::string> AVAILABLE_ROUTES = {
     HEALTH_CHECK_ROUTE, USER_SEND_CODE_ROUTE, USER_REGISTER_ROUTE, USER_RESET_PASS_ROUTE, USER_LOGIN_ROUTE};
 
 }  // namespace utils

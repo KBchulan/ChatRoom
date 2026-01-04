@@ -96,3 +96,30 @@
 - 新增资源文件：加载动画（loading.gif）、表情图标（smile_idle/hover.png）、文件图标（folder_idle/hover.png）
 - 完善 `chat_window.qss` 样式表，新增 ChatPage、ChatMsgList、ChatTextEdit、LoadingItem 等组件样式
 - 代码重构：全面应用 clang-format 格式化、信号槽参数改为 const 引用传递、变量命名规范化
+
+### [2026-01-02 ~ 01-04] 消息气泡与发送功能
+
+- 新增气泡组件体系，采用模板方法模式：
+  - `BubbleBase`：气泡基类，绘制带小三角的圆角矩形外框，支持发送/接收两种方向
+  - `TextBubble`：文本消息气泡，支持自动换行和文字选中
+  - `PictureBubble`：图片消息气泡，支持自动缩放（最大 450x400）
+- 重构 `ChatMsgItem` 组件，从 UI 设计器改为纯代码实现：
+  - 支持设置圆形头像、昵称、气泡
+  - 根据消息方向自动调整布局（发送在右，接收在左）
+- 增强 `ChatTextEdit` 输入框：
+  - 支持图片拖放（dragEnterEvent/dropEvent）
+  - 支持图片粘贴（insertFromMimeData）
+  - 自动生成缩略图（最大 350x300）
+  - 滚动条透明方案：始终显示但通过 QSS 属性选择器控制透明度，避免布局抖动
+- 完善 `ChatPage` 聊天页面：
+  - 实现发送按钮点击事件，解析 QTextDocument 提取文本和图片
+  - 支持混合消息发送（文本 + 图片自动拆分为多条消息）
+  - 实现加载历史消息功能，滚动到顶部触发加载
+  - 加载时显示 LoadingItem 动画，保持滚动位置补偿
+- `LoadingItem` 组件支持自定义提示文本
+- 新增 `MsgDirection` 枚举区分消息方向
+- 新增 `UIConstants` 常量：头像尺寸、三角宽度、气泡圆角半径
+- 新增密码加密函数 `encryPassword()`，使用 SHA-256 + 固定盐值
+- 优化 `MainWindow` 窗口尺寸管理，切换页面时设置 minimumSize 避免窗口过小
+- 完善 `chat_window.qss` 样式表，新增气泡、昵称等组件样式
+- CMakeLists 更新：移除 chatmsgitem.ui，新增气泡组件源文件，增加 Qt Wayland 的 LSAN 抑制规则

@@ -5,6 +5,7 @@
 #include <boost/beast/core/bind_handler.hpp>
 #include <boost/beast/http.hpp>
 #include <boost/beast/http/field.hpp>
+#include <boost/beast/http/status.hpp>
 #include <boost/beast/http/verb.hpp>
 #include <core/business/business.hpp>
 #include <core/logic/logic.hpp>
@@ -94,6 +95,15 @@ struct Connection::_impl
 
   void handle_request(const std::shared_ptr<Connection>& self)
   {
+    // 先判断是否支持服务，用于服务降级使用
+    if (!utils::AVAILABLE_ROUTES.contains(_request.target()))
+    {
+      _response.result(boost::beast::http::status::method_not_allowed);
+      boost::beast::ostream(_response.body()) << R"({"code": 405, "message": "this request is not allowed"})";
+      send_response(self);
+      return;
+    }
+
     // 处理健康检查请求
     if (_request.target() == utils::HEALTH_CHECK_ROUTE && _request.method() == boost::beast::http::verb::get)
     {

@@ -62,8 +62,11 @@ chatroom/
 ├── chatdialog.*            # 聊天页面
 ├── chatpage.*              # 聊天主体区域组件
 ├── chatmsglist.*           # 聊天消息列表组件
-├── chatmsgitem.*           # 聊天消息气泡组件
-├── chattextedit.*          # 聊天输入框组件
+├── chatmsgitem.*           # 聊天消息项组件（头像 + 气泡）
+├── chattextedit.*          # 聊天输入框组件（支持图片拖放粘贴）
+├── bubblebase.*            # 气泡基类，绘制带小三角的气泡外形
+├── textbubble.*            # 文本消息气泡
+├── picturebubble.*         # 图片消息气泡
 ├── chatuseritem.*          # 聊天用户列表项组件
 ├── chatuserlist.*          # 聊天用户列表组件
 ├── loadingitem.*           # 加载动画组件
@@ -92,8 +95,11 @@ chatroom/
 | **ChatDialog** | 聊天页面，包含侧边栏、用户列表和聊天区域 |
 | **ChatPage** | 聊天主体区域组件，包含标题栏、消息列表、工具栏、输入框和发送按钮 |
 | **ChatMsgList** | 聊天消息列表组件，支持滚动加载历史消息和悬停显示滚动条 |
-| **ChatMsgItem** | 聊天消息气泡组件，显示单条消息内容 |
-| **ChatTextEdit** | 聊天输入框组件，自定义文本编辑器 |
+| **ChatMsgItem** | 聊天消息项组件，组合头像、昵称和气泡显示单条消息 |
+| **BubbleBase** | 气泡基类，负责绘制带小三角的气泡外形，子类实现具体内容 |
+| **TextBubble** | 文本消息气泡，继承 BubbleBase，显示可选中的文本内容 |
+| **PictureBubble** | 图片消息气泡，继承 BubbleBase，支持自动缩放显示图片 |
+| **ChatTextEdit** | 聊天输入框组件，支持富文本编辑、图片拖放和粘贴 |
 | **ChatUserItem** | 聊天用户列表项组件，显示头像、昵称、消息预览和时间 |
 | **ChatUserList** | 聊天用户列表组件，支持滚动加载和悬停显示滚动条 |
 | **LoadingItem** | 加载动画组件，用于列表加载时显示 |
@@ -102,7 +108,7 @@ chatroom/
 | **UserInfo** | 存储当前登录用户的信息（uuid、昵称、头像等） |
 | **ServerInfo** | 存储聊天服务器连接信息（host、port、分布式校验 token） |
 | **TimerButton** | 可复用的倒计时按钮，用于验证码发送 |
-| **global** | 全局定义，包含请求 ID、模块枚举、错误码、UI 常量等 |
+| **global** | 全局定义，包含请求 ID、模块枚举、错误码、UI 常量、密码加密等 |
 | **Defer** | RAII 工具类，模仿 Go 的 defer 关键字 |
 
 ### 使用说明
@@ -129,5 +135,5 @@ chatroom/
 
 ## TODO
 
-- [ ] 完善聊天界面功能（消息发送、接收、历史记录等）
+- [ ] 完善聊天界面功能（消息接收、历史记录获取等）
 - [ ] 实现 https 支持

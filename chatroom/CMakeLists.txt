@@ -22,8 +22,12 @@ if(ENABLE_ASAN)
 
   # 生成 LSAN 抑制文件
   file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/lsan_suppressions.txt
+    "# Fcitx5 输入法\n"
     "leak:libFcitx5Qt6DBusAddons.so\n"
     "leak:libfcitx5platforminputcontextplugin.so\n"
+    "# Qt Wayland 平台插件\n"
+    "leak:QtWaylandClient\n"
+    "leak:libQt6WaylandClient.so\n"
   )
 
   # 生成带抑制配置的启动脚本
@@ -69,7 +73,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         chatuseritem.hpp chatuseritem.cc chatuseritem.ui
         loadingitem.hpp loadingitem.cc loadingitem.ui
         chatpage.hpp chatpage.cc chatpage.ui
-        chatmsgitem.hpp chatmsgitem.cc chatmsgitem.ui
+        chatmsgitem.hpp chatmsgitem.cc
         global.hpp  global.cc
         timerbutton.hpp timerbutton.cc
         httpmanager.hpp httpmanager.cc
@@ -79,6 +83,9 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         chatuserlist.hpp chatuserlist.cc
         chatmsglist.hpp chatmsglist.cc
         chattextedit.hpp chattextedit.cc
+        bubblebase.hpp bubblebase.cc
+        textbubble.hpp textbubble.cc
+        picturebubble.hpp picturebubble.cc
         Defer.hpp config.ini
     )
 # Define target properties for Android with Qt 6 as:
@@ -96,7 +103,7 @@ else()
             chatuseritem.hpp chatuseritem.cc chatuseritem.ui
             loadingitem.hpp loadingitem.cc loadingitem.ui
             chatpage.hpp chatpage.cc chatpage.ui
-            chatmsgitem.hpp chatmsgitem.cc chatmsgitem.ui
+            chatmsgitem.hpp chatmsgitem.cc
             global.hpp  global.cc
             timerbutton.hpp timerbutton.cc
             httpmanager.hpp httpmanager.cc
@@ -106,6 +113,9 @@ else()
             chatuserlist.hpp chatuserlist.cc
             chatmsglist.hpp chatmsglist.cc
             chattextedit.hpp chattextedit.cc
+            bubblebase.hpp bubblebase.cc
+            textbubble.hpp textbubble.cc
+            picturebubble.hpp picturebubble.cc
             Defer.hpp config.ini
         )
 # Define properties for Android with Qt 5 after find_package() calls as:
@@ -120,7 +130,7 @@ else()
             chatuseritem.hpp chatuseritem.cc chatuseritem.ui
             loadingitem.hpp loadingitem.cc loadingitem.ui
             chatpage.hpp chatpage.cc chatpage.ui
-            chatmsgitem.hpp chatmsgitem.cc chatmsgitem.ui
+            chatmsgitem.hpp chatmsgitem.cc
             global.hpp  global.cc
             timerbutton.hpp timerbutton.cc
             httpmanager.hpp httpmanager.cc
@@ -130,6 +140,9 @@ else()
             chatuserlist.hpp chatuserlist.cc
             chatmsglist.hpp chatmsglist.cc
             chattextedit.hpp chattextedit.cc
+            bubblebase.hpp bubblebase.cc
+            textbubble.hpp textbubble.cc
+            picturebubble.hpp picturebubble.cc
             Defer.hpp config.ini
         )
     endif()

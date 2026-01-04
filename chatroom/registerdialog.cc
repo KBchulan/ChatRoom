@@ -4,6 +4,7 @@
 #include <QLineEdit>
 #include <QToolButton>
 
+#include "global.hpp"
 #include "httpmanager.hpp"
 #include "ui_registerdialog.h"
 
@@ -206,8 +207,8 @@ void RegisterDialog::on_confirm_btn_clicked()
   QJsonObject dto;
   dto["nickname"] = name;
   dto["email"] = email;
-  dto["password"] = password;
-  dto["confirm_password"] = confirm_pass;
+  dto["password"] = encryPassword(password);
+  dto["confirm_password"] = encryPassword(confirm_pass);
   dto["verify_code"] = verify_code;
   dto["purpose"] = 1;
 

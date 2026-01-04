@@ -1,7 +1,7 @@
 /******************************************************************************
  *
  * @file       chattextedit.hpp
- * @brief      聊天输入框，自定义QTextEdit，用于输入聊天内容，主要处理鼠标进入和离开事件
+ * @brief      聊天输入框，自定义QTextEdit，支持富文本编辑和图片拖放以及复制粘贴
  *
  * @author     KBchulan
  * @date       2026/01/01
@@ -15,6 +15,9 @@
 #include <QEvent>
 #include <QTextEdit>
 
+class QDragEnterEvent;
+class QDropEvent;
+class QMimeData;
 class ChatTextEdit : public QTextEdit
 {
   Q_OBJECT
@@ -25,6 +28,20 @@ public:
 protected:
   void enterEvent(QEnterEvent* event) override;
   void leaveEvent(QEvent* event) override;
+  void dragEnterEvent(QDragEnterEvent* event) override;
+  void dropEvent(QDropEvent* event) override;
+  void insertFromMimeData(const QMimeData* source) override;
+
+  // 插入图片
+  void insertImage(const QString& image_path);
+  void insertImage(const QImage& image);
+
+private:
+  // 缩略图最大尺寸
+  static constexpr int kMaxThumbnailWidth = 350;
+  static constexpr int kMaxThumbnailHeight = 300;
+
+  [[nodiscard]] static QImage scaledThumbnail(const QImage& image);
 };
 
 #endif  // CHATTEXTEDIT_HPP

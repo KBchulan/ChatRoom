@@ -12,6 +12,7 @@
 #define LOADINGITEM_HPP
 
 #include <QMovie>
+#include <QString>
 #include <QWidget>
 
 namespace Ui
@@ -24,7 +25,7 @@ class LoadingItem : public QWidget
   Q_OBJECT
 
 public:
-  explicit LoadingItem(QWidget* parent = nullptr);
+  explicit LoadingItem(const QString& tip, QWidget* parent = nullptr);
   ~LoadingItem();
 
 private:

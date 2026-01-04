@@ -235,17 +235,23 @@ ChatTextEdit QScrollBar:vertical {
   margin: 0px;
 }
 
+/* 默认状态：滚动条透明 */
 ChatTextEdit QScrollBar::handle:vertical {
-  background-color: #c1c1c1;
+  background-color: transparent;
   min-height: 30px;
   border-radius: 4px;
 }
 
-ChatTextEdit QScrollBar::handle:vertical:hover {
+/* hover 状态：显示滚动条 */
+ChatTextEdit QScrollBar::handle:vertical[hover="true"] {
+  background-color: #c1c1c1;
+}
+
+ChatTextEdit QScrollBar::handle:vertical[hover="true"]:hover {
   background-color: #a8a8a8;
 }
 
-ChatTextEdit QScrollBar::handle:vertical:pressed {
+ChatTextEdit QScrollBar::handle:vertical[hover="true"]:pressed {
   background-color: #787878;
 }
 
@@ -296,4 +302,32 @@ ChatTextEdit QScrollBar::sub-page:vertical {
 
 #receive_button:pressed {
   background-color: #d4d4d4;
+}
+
+/* ========== ChatMsgItem 消息项样式 ========== */
+ChatMsgItem,
+ChatMsgItem QWidget,
+ChatMsgItem QLabel {
+  background-color: transparent;
+}
+
+/* 昵称样式 */
+ChatMsgItem #msg_nickname {
+  font-size: 12px;
+  color: #888888;
+}
+
+/* 双方气泡基本样式 */
+#bubble_sent {
+  background-color: #d9d5d0;
+}
+
+#bubble_received {
+  background-color: #ffffff;
+}
+
+/* 文本气泡的样式 */
+#bubble_text {
+  font-size: 14px;
+  color: #1a1a1a;
 }
