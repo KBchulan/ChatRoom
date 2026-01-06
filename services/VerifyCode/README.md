@@ -38,6 +38,27 @@ cmake --build build
 ./build/bin/VerifyCode
 ```
 
+### 命令行参数
+
+VerifyCode 支持以下命令行参数：
+
+```bash
+Usage: VerifyCode [-h] [-p <port>]
+Options:
+  -h, --help         显示帮助信息
+  -p, --port <port>  服务器端口 (默认: 10002)
+```
+
+**示例**：
+
+```bash
+# 使用默认端口 10002 启动
+./build/bin/VerifyCode
+
+# 指定端口 10012 启动
+./build/bin/VerifyCode -p 10012
+```
+
 更多构建配置可以参考 [指引指南](./docs/guide/README.md)。
 
 ## 项目介绍

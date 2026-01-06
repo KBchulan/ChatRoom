@@ -45,7 +45,8 @@ constexpr std::chrono::microseconds FLUSH_INTERVAL{100};  // 刷新等待间隔
 // ================
 namespace server
 {
-constexpr const char* SERVER_ADDRESS = "0.0.0.0:10003";  // gRPC 服务器监听地址
+constexpr const char* SERVER_ADDRESS = "0.0.0.0";   // gRPC 服务器监听地址
+constexpr std::uint16_t DEFAULT_SERVER_PORT = 10003;  // gRPC 服务器监听端口
 
 constexpr const char* TCP_ADDRESS_1 = "127.0.0.1";  //  TCP 服务器 1 主机
 constexpr std::size_t TCP_PORT_1 = 10004;           //  TCP 服务器 1 端口

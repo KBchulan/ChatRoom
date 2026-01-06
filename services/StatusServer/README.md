@@ -33,6 +33,27 @@ cmake --build build
 ./build/bin/StatusServer
 ```
 
+### 命令行参数
+
+StatusServer 支持以下命令行参数：
+
+```bash
+Usage: StatusServer [-h] [-p <port>]
+Options:
+  -h, --help         显示帮助信息
+  -p, --port <port>  服务器端口 (默认: 10003)
+```
+
+**示例**：
+
+```bash
+# 使用默认端口 10003 启动
+./build/bin/StatusServer
+
+# 指定端口 10013 启动
+./build/bin/StatusServer -p 10013
+```
+
 更多构建配置可以参考 [指引指南](./docs/guide/README.md)。
 
 ## 项目介绍

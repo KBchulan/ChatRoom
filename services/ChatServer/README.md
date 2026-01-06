@@ -40,6 +40,27 @@ cmake --build build
 ./build/bin/ChatServer
 ```
 
+### 命令行参数
+
+ChatServer 支持以下命令行参数：
+
+```bash
+Usage: ChatServer [-h] [-p <port>]
+Options:
+  -h, --help         显示帮助信息
+  -p, --port <port>  服务器端口 (默认: 10004)
+```
+
+**示例**：
+
+```bash
+# 使用默认端口 10004 启动
+./build/bin/ChatServer
+
+# 指定端口 10006 启动（用于集群部署）
+./build/bin/ChatServer -p 10006
+```
+
 更多构建配置可以参考 [指引指南](./docs/guide/README.md)。
 
 ## 项目介绍

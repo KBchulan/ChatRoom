@@ -45,7 +45,8 @@ constexpr std::chrono::microseconds FLUSH_INTERVAL{100};  // 刷新等待间隔
 // ================
 namespace server
 {
-constexpr const char* SERVER_ADDRESS = "0.0.0.0:10002";               // gRPC 服务器监听地址
+constexpr const char* SERVER_ADDRESS = "0.0.0.0";                     // gRPC 服务器监听地址
+constexpr std::uint16_t DEFAULT_SERVER_PORT = 10002;                  // gRPC 服务器默认监听端口
 constexpr const char* SMTP_QQ_EMAIL_URL = "smtps://smtp.qq.com:465";  // QQ邮箱 SMTP 服务器地址
 constexpr const char* SMTP_QQ_EMAIL_USER = "2262317520@qq.com";       // QQ邮箱账号
 constexpr const char* SMTP_QQ_EMAIL_CODE = "cwkuekbiwcvlebdi";        // QQ邮箱 SMTP 授权码

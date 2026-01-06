@@ -3,3 +3,5 @@ logs
 back_data
 deploy
 temp
+backup
+.pids

@@ -20,3 +20,11 @@
 - `GetTcpServer` 增加请求幂等性支持：若 uuid 已在 pending 中，直接返回之前分配的服务器信息，防止首次连接失败后重试导致分配到不同服务器
 - 修复启动日志：从 "VerifyCode Server" 更正为 "Status Server"
 - 增强日志输出，GetTcpServer 成功时打印分配的服务器地址
+
+### [2026-01-06] 命令行参数支持
+
+- 新增 `tools/Cmd.hpp`，定义 `CmdOptions` 结构体用于存储命令行参数
+- 实现 `parse_cmd()` 函数，支持解析 `-h/--help` 和 `-p/--port` 参数
+- 实现 `print_usage()` 函数，打印使用说明
+- 将 `Global.hpp` 中的 `SERVER_ADDRESS` 拆分为主机地址和默认端口
+- 服务器端口现在可通过 `-p` 参数指定，便于灵活部署

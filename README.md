@@ -14,6 +14,15 @@ git clone https://github.com/KBchulan/ChatRoom.git && cd ChatRoom
 ./scripts/install-hooks.sh
 ```
 
+## 服务管理
+
+项目使用 [just](https://github.com/casey/just) 作为服务管理工具，提供编译、运行、停止、日志查看等功能，可以通过如下命令查看可用的任务：
+
+```bash
+# 查看详细帮助
+just help
+```
+
 ## 组件指南
 
 | 组件 | 指南 |

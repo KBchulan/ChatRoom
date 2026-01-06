@@ -110,3 +110,11 @@ ChatServer/
 - 完善README.md
 - 更新 server 到多 acceptor 版本
 
+### [2026-01-06] 命令行参数支持
+
+- 新增 `tools/Cmd.hpp`，定义 `CmdOptions` 结构体用于存储命令行参数
+- 实现 `parse_cmd()` 函数，支持解析 `-h/--help` 和 `-p/--port` 参数
+- 实现 `print_usage()` 函数，打印使用说明
+- 将 `init()` 重命名为 `init_components()`，语义更清晰
+- 服务器端口现在可通过 `-p` 参数指定，便于集群部署
+
