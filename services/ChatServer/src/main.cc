@@ -17,7 +17,7 @@ using namespace global::server;
 boost::asio::awaitable<void> signal_handler(boost::asio::signal_set& signals)
 {
   auto signal = co_await signals.async_wait(boost::asio::use_awaitable);
-  tools::Logger::getInstance().info("Received signal {}, stopping gateway", signal);
+  tools::Logger::getInstance().info("Received signal {}, stopping ChatServer", signal);
 
   auto& ioc = static_cast<boost::asio::io_context&>(signals.get_executor().context());
   ioc.stop();

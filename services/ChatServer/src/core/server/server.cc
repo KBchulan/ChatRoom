@@ -122,7 +122,7 @@ struct Server::_impl
                                                              }));
     }
 
-    tools::Logger::getInstance().info("ChatServer1 started on port {} with {} acceptors", _port, pool_size);
+    tools::Logger::getInstance().info("ChatServer started on port {} with {} acceptors", _port, pool_size);
   }
 
   explicit _impl(unsigned short port) : _port(port)
@@ -131,7 +131,7 @@ struct Server::_impl
 
   ~_impl()
   {
-    tools::Logger::getInstance().info("ChatServer1 is shutting down");
+    tools::Logger::getInstance().info("ChatServer is shutting down");
 
     std::lock_guard lock{_mutex};
     for (auto& [uuid, session] : _sessions)

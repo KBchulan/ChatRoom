@@ -7,7 +7,7 @@
 #### 整体架构
 
 ```
-ChatServer1/
+ChatServer/
 ├── include/global/          # 全局配置
 │   ├── Global.hpp           # 常量定义
 │   └── SuperQueue.hpp       # 无锁队列

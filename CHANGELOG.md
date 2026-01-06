@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [2026-01-06]
+
+### 🐛 Bug Fixes
+- **[server]** 重命名 chatserver，选择更为优雅的机制进行集群
+
 ## [2026-01-04]
 
 ### ✨ Features

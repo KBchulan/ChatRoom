@@ -75,7 +75,7 @@ target_link_libraries(
 # 安装库文件和头文件
 install(
   TARGETS core
-  EXPORT ChatServer1Targets
+  EXPORT ChatServerTargets
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
 )

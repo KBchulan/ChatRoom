@@ -144,7 +144,7 @@ ninja # 或者 cmake --build .
 这里我们介绍一下当前项目的已有内容，方便你能对此项目有更多认知。
 
 ```bash
-ChatServer1/
+ChatServer/
 |-- .github/           # Github Actions 工作流
 |-- benchmark/         # 基准测试
 |-- docs/              # 项目相关文档

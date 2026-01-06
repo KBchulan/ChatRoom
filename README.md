@@ -24,5 +24,5 @@ git clone https://github.com/KBchulan/ChatRoom.git && cd ChatRoom
 | 状态服务器 | [状态服务器指南](services/StatusServer/README.md) |
 | 邮箱验证码服务 | [验证码服务指南](services/VerifyCode/README.md) |
 | 网关服务 | [网关指南](services/GateWay/README.md) |
-| 聊天服务 | [聊天服务指南](services/ChatServer1/README.md) |
+| 聊天服务 | [聊天服务指南](services/ChatServer/README.md) |
 | 部署    | [部署指南](docs/deploy.md) |

@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.25)
 
 # 项目配置
 project(
-  ChatServer1
+  ChatServer
   VERSION 1.0.0
 )
 
@@ -378,23 +378,23 @@ install(
 
 # 安装导出目标
 install(
-  EXPORT ChatServer1Targets
-  FILE ChatServer1Targets.cmake
-  DESTINATION lib/cmake/ChatServer1
+  EXPORT ChatServerTargets
+  FILE ChatServerTargets.cmake
+  DESTINATION lib/cmake/ChatServer
 )
 
 # 配置包文件
 configure_package_config_file(
   ${PROJECT_SOURCE_DIR}/Config.cmake.in
-  ${CMAKE_BINARY_DIR}/ChatServer1Config.cmake
-  INSTALL_DESTINATION lib/cmake/ChatServer1
+  ${CMAKE_BINARY_DIR}/ChatServerConfig.cmake
+  INSTALL_DESTINATION lib/cmake/ChatServer
   NO_SET_AND_CHECK_MACRO
   NO_CHECK_REQUIRED_COMPONENTS_MACRO
 )
 
 # 配置版本文件
 write_basic_package_version_file(
-  ${CMAKE_BINARY_DIR}/ChatServer1ConfigVersion.cmake
+  ${CMAKE_BINARY_DIR}/ChatServerConfigVersion.cmake
   VERSION ${PROJECT_VERSION}
   COMPATIBILITY AnyNewerVersion
 )
@@ -402,9 +402,9 @@ write_basic_package_version_file(
 # 安装配置文件
 install(
   FILES
-  ${CMAKE_BINARY_DIR}/ChatServer1Config.cmake
-  ${CMAKE_BINARY_DIR}/ChatServer1ConfigVersion.cmake
-  DESTINATION lib/cmake/ChatServer1
+  ${CMAKE_BINARY_DIR}/ChatServerConfig.cmake
+  ${CMAKE_BINARY_DIR}/ChatServerConfigVersion.cmake
+  DESTINATION lib/cmake/ChatServer
 )
 
 # 打包配置

@@ -1,21 +1,21 @@
 # 模板文件，请修改 name，paths，working-directory 等字段
-name: ChatServer1 CI
+name: ChatServer CI
 
 on:
   push:
     paths:
-      - "services/ChatServer1/**"
-      - ".github/workflows/chat-server-1.yml"
+      - "services/ChatServer/**"
+      - ".github/workflows/chat-server.yml"
     branches: ["main"]
   pull_request:
     paths:
-      - "services/ChatServer1/**"
-      - ".github/workflows/chat-server-1.yml"
+      - "services/ChatServer/**"
+      - ".github/workflows/chat-server.yml"
     branches: ["main"]
 
 defaults:
   run:
-    working-directory: services/ChatServer1
+    working-directory: services/ChatServer
 
 jobs:
   build:

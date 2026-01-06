@@ -22,7 +22,7 @@
 | fmt          | 12.1+   | 格式化输出          |
 | JsonCpp      | 1.9+    | JSON 解析           |
 
-可以使用自带的包管理器安装，按照标准可以参考 [ci流程](../../.github/workflows/chat-server-1.yml) 中的安装步骤，该流程在 github actions 中已经通过 ubuntu:latest 的校验。
+可以使用自带的包管理器安装，按照标准可以参考 [ci流程](../../.github/workflows/chat-server.yml) 中的安装步骤，该流程在 github actions 中已经通过 ubuntu:latest 的校验。
 
 ### 修改配置
 
@@ -37,7 +37,7 @@ cmake -S . -B build
 cmake --build build
 
 # 确保 StatusServer、MariaDB 和 Redis 已启动
-./build/bin/ChatServer1
+./build/bin/ChatServer
 ```
 
 更多构建配置可以参考 [指引指南](./docs/guide/README.md)。
@@ -49,7 +49,7 @@ cmake --build build
 下面是本项目的目录结构说明，整体采用分层架构风格：
 
 ```
-ChatServer1/
+ChatServer/
 ├── src/
 │   ├── main.cc                     # 程序入口，初始化各组件
 │   ├── core/
