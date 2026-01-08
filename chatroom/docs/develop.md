@@ -123,3 +123,29 @@
 - 优化 `MainWindow` 窗口尺寸管理，切换页面时设置 minimumSize 避免窗口过小
 - 完善 `chat_window.qss` 样式表，新增气泡、昵称等组件样式
 - CMakeLists 更新：移除 chatmsgitem.ui，新增气泡组件源文件，增加 Qt Wayland 的 LSAN 抑制规则
+
+### [2026-01-08] 侧边栏与多页面导航
+
+- 新增侧边栏组件体系：
+  - `SideBarWidget`：侧边栏容器，包含头像、聊天/联系人/设置三个导航项
+  - `SideBarItem`：侧边栏导航项，支持 normal/hover/selected 三态图标切换和小红点提示
+  - `SideBarItemType` 枚举：定义侧边栏功能项类型
+- 新增联系人模块占位组件：
+  - `ContactList`：联系人列表，继承 `QListWidget`
+  - `ContactItem`：联系人列表项（占位）
+- 新增搜索模块占位组件：
+  - `SearchUserList`：搜索结果列表，继承 `QListWidget`
+  - `SearchUserItem`：搜索结果列表项（占位）
+- 新增 `SettingDialog` 设置对话框，支持 Ctrl+Q 快捷键关闭
+- 重构 `ChatDialog` 聊天页面：
+  - 将测试数据和加载逻辑下沉到 `ChatUserList`，遵循单一职责原则
+  - 使用 `QPointer<QWidget>` 管理搜索状态的返回页面，避免悬空指针
+  - 新增搜索状态切换逻辑：输入搜索时切换到搜索列表，清空时返回原页面
+  - 侧边栏切换时正确处理搜索状态下的返回目标
+- 完善 `ChatUserList`：
+  - 新增 `addUserItem()` 公共方法
+  - 内置测试数据和加载逻辑（showLoading/hideLoading）
+- 新增资源文件：侧边栏图标（chat/contact/setting 各三态）、小红点图标
+- 完善 `chat_window.qss` 样式表：
+  - 新增 SideBarWidget、SideBarItem 样式
+  - 统一 ChatUserList、SearchUserList、ContactList 三个列表的通用样式

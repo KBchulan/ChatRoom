@@ -60,6 +60,8 @@ chatroom/
 ├── registerdialog.*        # 注册页面
 ├── resetpassworddialog.*   # 重置密码页面
 ├── chatdialog.*            # 聊天页面
+├── sidebarwidget.*         # 侧边栏组件
+├── sidebaritem.*           # 侧边栏导航项组件
 ├── chatpage.*              # 聊天主体区域组件
 ├── chatmsglist.*           # 聊天消息列表组件
 ├── chatmsgitem.*           # 聊天消息项组件（头像 + 气泡）
@@ -69,6 +71,11 @@ chatroom/
 ├── picturebubble.*         # 图片消息气泡
 ├── chatuseritem.*          # 聊天用户列表项组件
 ├── chatuserlist.*          # 聊天用户列表组件
+├── contactlist.*           # 联系人列表组件
+├── contactitem.*           # 联系人列表项组件
+├── searchuserlist.*        # 搜索结果列表组件
+├── searchuseritem.*        # 搜索结果列表项组件
+├── settingdialog.*         # 设置对话框
 ├── loadingitem.*           # 加载动画组件
 ├── httpmanager.*           # HTTP 请求管理器
 ├── tcpmanager.*            # TCP 长连接管理器
@@ -92,7 +99,9 @@ chatroom/
 | **LoginDialog** | 登录页面，处理用户登录逻辑 |
 | **RegisterDialog** | 注册页面，包含邮箱验证码校验 |
 | **ResetPasswordDialog** | 重置密码页面，流程与注册类似 |
-| **ChatDialog** | 聊天页面，包含侧边栏、用户列表和聊天区域 |
+| **ChatDialog** | 聊天页面，管理侧边栏导航、中部列表切换和右侧聊天区域 |
+| **SideBarWidget** | 侧边栏组件，包含头像和聊天/联系人/设置导航项 |
+| **SideBarItem** | 侧边栏导航项，支持三态图标切换和小红点提示 |
 | **ChatPage** | 聊天主体区域组件，包含标题栏、消息列表、工具栏、输入框和发送按钮 |
 | **ChatMsgList** | 聊天消息列表组件，支持滚动加载历史消息和悬停显示滚动条 |
 | **ChatMsgItem** | 聊天消息项组件，组合头像、昵称和气泡显示单条消息 |
@@ -102,6 +111,11 @@ chatroom/
 | **ChatTextEdit** | 聊天输入框组件，支持富文本编辑、图片拖放和粘贴 |
 | **ChatUserItem** | 聊天用户列表项组件，显示头像、昵称、消息预览和时间 |
 | **ChatUserList** | 聊天用户列表组件，支持滚动加载和悬停显示滚动条 |
+| **ContactList** | 联系人列表组件（占位） |
+| **ContactItem** | 联系人列表项组件（占位） |
+| **SearchUserList** | 搜索结果列表组件（占位） |
+| **SearchUserItem** | 搜索结果列表项组件（占位） |
+| **SettingDialog** | 设置对话框，支持 Ctrl+Q 快捷键关闭（占位） |
 | **LoadingItem** | 加载动画组件，用于列表加载时显示 |
 | **HttpManager** | 封装 Qt Network，处理与网关的 HTTP 通信，目前支持 POST 请求 |
 | **TcpManager** | 管理与聊天服务器的 TCP 长连接 |

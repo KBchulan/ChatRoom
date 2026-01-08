@@ -73,6 +73,9 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         chatuseritem.hpp chatuseritem.cc chatuseritem.ui
         loadingitem.hpp loadingitem.cc loadingitem.ui
         chatpage.hpp chatpage.cc chatpage.ui
+        searchuseritem.hpp searchuseritem.cc searchuseritem.ui
+        contactitem.hpp contactitem.cc contactitem.ui
+        settingdialog.hpp settingdialog.cc settingdialog.ui
         chatmsgitem.hpp chatmsgitem.cc
         global.hpp  global.cc
         timerbutton.hpp timerbutton.cc
@@ -86,6 +89,10 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         bubblebase.hpp bubblebase.cc
         textbubble.hpp textbubble.cc
         picturebubble.hpp picturebubble.cc
+        sidebarwidget.hpp sidebarwidget.cc
+        sidebaritem.hpp sidebaritem.cc
+        searchuserlist.hpp searchuserlist.cc
+        contactlist.hpp contactlist.cc
         Defer.hpp config.ini
     )
 # Define target properties for Android with Qt 6 as:
@@ -103,6 +110,9 @@ else()
             chatuseritem.hpp chatuseritem.cc chatuseritem.ui
             loadingitem.hpp loadingitem.cc loadingitem.ui
             chatpage.hpp chatpage.cc chatpage.ui
+            searchuseritem.hpp searchuseritem.cc searchuseritem.ui
+            contactitem.hpp contactitem.cc contactitem.ui
+            settingdialog.hpp settingdialog.cc settingdialog.ui
             chatmsgitem.hpp chatmsgitem.cc
             global.hpp  global.cc
             timerbutton.hpp timerbutton.cc
@@ -116,6 +126,10 @@ else()
             bubblebase.hpp bubblebase.cc
             textbubble.hpp textbubble.cc
             picturebubble.hpp picturebubble.cc
+            sidebarwidget.hpp sidebarwidget.cc
+            sidebaritem.hpp sidebaritem.cc
+            searchuserlist.hpp searchuserlist.cc
+            contactlist.hpp contactlist.cc
             Defer.hpp config.ini
         )
 # Define properties for Android with Qt 5 after find_package() calls as:
@@ -130,6 +144,9 @@ else()
             chatuseritem.hpp chatuseritem.cc chatuseritem.ui
             loadingitem.hpp loadingitem.cc loadingitem.ui
             chatpage.hpp chatpage.cc chatpage.ui
+            searchuseritem.hpp searchuseritem.cc searchuseritem.ui
+            contactitem.hpp contactitem.cc contactitem.ui
+            settingdialog.hpp settingdialog.cc settingdialog.ui
             chatmsgitem.hpp chatmsgitem.cc
             global.hpp  global.cc
             timerbutton.hpp timerbutton.cc
@@ -143,6 +160,10 @@ else()
             bubblebase.hpp bubblebase.cc
             textbubble.hpp textbubble.cc
             picturebubble.hpp picturebubble.cc
+            sidebarwidget.hpp sidebarwidget.cc
+            sidebaritem.hpp sidebaritem.cc
+            searchuserlist.hpp searchuserlist.cc
+            contactlist.hpp contactlist.cc
             Defer.hpp config.ini
         )
     endif()

@@ -14,6 +14,16 @@
         <file>icons/smile_hover.png</file>
         <file>icons/folder_idle.png</file>
         <file>icons/folder_hover.png</file>
+        <file>icons/red_dot.png</file>
+        <file>icons/chat_normal.png</file>
+        <file>icons/chat_hover.png</file>
+        <file>icons/chat_selected.png</file>
+        <file>icons/contact_normal.png</file>
+        <file>icons/contact_hover.png</file>
+        <file>icons/contact_selected.png</file>
+        <file>icons/setting_normal.png</file>
+        <file>icons/setting_hover.png</file>
+        <file>icons/setting_selected.png</file>
 
         <file>avatar/head_1.jpg</file>
         <file>avatar/head_2.jpg</file>

@@ -32,31 +32,35 @@ help:
     @echo "  C++ 服务: gateway, status, verify, chat"
     @echo ""
     @echo "编译命令:"
-    @echo "  just build all                 编译所有服务"
-    @echo "  just build [service]           编译指定服务"
-    @echo "  just clean all                 清理构建目录"
-    @echo "  just clean [service]           清理指定服务构建目录"
+    @echo "  just build all                       编译所有服务"
+    @echo "  just build [service]                 编译指定服务"
+    @echo "  just clean all                       清理构建目录"
+    @echo "  just clean [service]                 清理指定服务构建目录"
     @echo ""
     @echo "运行命令:"
-    @echo "  just run client                运行客户端"
-    @echo "  just run all                   启动所有后端服务"
-    @echo "  just run [service]             启动指定服务，使用默认端口"
-    @echo "  just run [service] <port>      启动指定服务，使用指定端口"
-    @echo "  just stop all                  停止所有服务"
-    @echo "  just stop [service]            停止指定服务"
-    @echo "  just restart all               重启所有服务"
-    @echo "  just restart [service]         重启指定服务"
+    @echo "  just run client                      运行客户端"
+    @echo "  just run all                         启动所有后端服务"
+    @echo "  just run [service]                   启动指定服务，使用默认端口"
+    @echo "  just run [service] <port>            启动指定服务，使用指定端口"
+    @echo "  just stop all                        停止所有服务"
+    @echo "  just stop [service]                  停止指定服务"
+    @echo "  just restart all                     重启所有服务"
+    @echo "  just restart [service]               重启指定服务"
     @echo ""
     @echo "状态与日志:"
-    @echo "  just status                    查看服务状态"
-    @echo "  just logs [service]            查看指定服务日志"
-    @echo "  just logs [service] <line>     查看具体行数的指定服务日志"
-    @echo "  just logs-follow [services]    实时跟踪指定服务日志"
+    @echo "  just status                          查看服务状态"
+    @echo "  just logs [service]                  查看指定服务日志"
+    @echo "  just logs [service] <line>           查看具体行数的指定服务日志"
+    @echo "  just logs-follow [services]          实时跟踪指定服务日志"
     @echo ""
     @echo "开发命令:"
-    @echo "  just dev client                编译客户端并前台启动"
-    @echo "  just dev [service]             编译指定服务并前台启动"
-    @echo "  just dev [service] <port>      编译指定服务并前台启动，使用指定端口"
+    @echo "  just dev client                      编译客户端并前台启动"
+    @echo "  just dev [service]                   编译指定服务并前台启动"
+    @echo "  just dev [service] <port>            编译指定服务并前台启动，使用指定端口"
+    @echo ""
+    @echo "流水线模式:"
+    @echo "  just workflows all                   启动所有服务的流水线"
+    @echo "  just workflows [service]             启动指定服务的流水线"
     @echo ""
 
 
@@ -420,6 +424,42 @@ dev service port="":
             echo "启动 Client..."
             {{client_dir}}/build/chatroom
             ;;
+        *)
+            echo "未知服务: {{service}}"
+            exit 1
+            ;;
+    esac
+
+# ============== 流水线命令 ==============
+
+# 流水线模式: 启动某个服务的流水线
+workflows service="all":
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    start_workflow() {
+        local name=$1
+        local dir="{{services_dir}}/$name"
+        echo "启动 $name 流水线..."
+        (
+            cd "$dir"
+            ./scripts/workflow.sh
+        )
+        echo "$name 流水线完成"
+    }
+
+    case "{{service}}" in
+        all)
+            start_workflow "ChatServer"
+            start_workflow "GateWay"
+            start_workflow "StatusServer"
+            start_workflow "VerifyCode"
+            echo "所有服务流水线已完成！"
+            ;;
+        gateway)  start_workflow "GateWay" ;;
+        status)   start_workflow "StatusServer" ;;
+        verify)   start_workflow "VerifyCode" ;;
+        chat)     start_workflow "ChatServer" ;;
         *)
             echo "未知服务: {{service}}"
             exit 1

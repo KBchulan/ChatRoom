@@ -1,7 +1,8 @@
 #include "chatmsglist.hpp"
-#include "chatmsgitem.hpp"
 
 #include <QScrollBar>
+
+#include "chatmsgitem.hpp"
 
 ChatMsgList::ChatMsgList(QWidget* parent) : QListWidget(parent)
 {
@@ -20,12 +21,9 @@ ChatMsgList::ChatMsgList(QWidget* parent) : QListWidget(parent)
   connect(verticalScrollBar(), &QScrollBar::valueChanged,
           [this](int value)
           {
-            if (value == verticalScrollBar()->minimum())
+            if (value == verticalScrollBar()->minimum() && !_debounce_timer->isActive())
             {
-              if (!_debounce_timer->isActive())
-              {
-                _debounce_timer->start();
-              }
+              _debounce_timer->start();
             }
           });
 }

@@ -10,8 +10,31 @@
   background-color: #e0ded9;
 }
 
+/* 侧边栏头像 */
+SideBarWidget #sidebar_avatar {
+  background-color: transparent;
+}
+
+/* SideBarItem 侧边栏项样式 */
+SideBarItem {
+  background-color: transparent;
+}
+
+SideBarItem:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+SideBarItem #sidebar_icon {
+  background-color: transparent;
+}
+
+SideBarItem #sidebar_red_dot {
+  background-color: transparent;
+}
+
 /* ========== Search Widget ========== */
 #search_widget {
+  border-left: 1px solid #cccccc;
   border-right: 1px solid #cccccc;
   border-bottom: 1px solid #cccccc;
 }
@@ -37,61 +60,88 @@
 
 /* ========== Mid Stack Widget ========== */
 #mid_stack_widget {
+  border-left: 1px solid #cccccc;
   border-right: 1px solid #cccccc;
 }
 
-/* ========== ChatUserList 样式 ========== */
-ChatUserList {
+/* ========== 中部列表通用样式 ========== */
+ChatUserList,
+SearchUserList,
+ContactList {
   border: none;
   outline: none;
 }
 
 /* 列表项样式 */
-ChatUserList::item {
+ChatUserList::item,
+SearchUserList::item,
+ContactList::item {
   border-bottom: 1px solid #e8e8e8;
 }
 
-ChatUserList::item:hover {
+ChatUserList::item:hover,
+SearchUserList::item:hover,
+ContactList::item:hover {
   background-color: #e9e9e9;
 }
 
-ChatUserList::item:selected {
+ChatUserList::item:selected,
+SearchUserList::item:selected,
+ContactList::item:selected {
   background-color: #d4d4d4;
   color: #333333;
 }
 
-ChatUserList::item:selected:hover {
+ChatUserList::item:selected:hover,
+SearchUserList::item:selected:hover,
+ContactList::item:selected:hover {
   background-color: #c8c8c8;
 }
 
 /* 滚动条样式 */
-ChatUserList QScrollBar:vertical {
+ChatUserList QScrollBar:vertical,
+SearchUserList QScrollBar:vertical,
+ContactList QScrollBar:vertical {
   background-color: transparent;
   width: 8px;
   margin: 0px;
 }
 
-ChatUserList QScrollBar::handle:vertical {
+ChatUserList QScrollBar::handle:vertical,
+SearchUserList QScrollBar::handle:vertical,
+ContactList QScrollBar::handle:vertical {
   background-color: #c1c1c1;
   min-height: 30px;
   border-radius: 4px;
 }
 
-ChatUserList QScrollBar::handle:vertical:hover {
+ChatUserList QScrollBar::handle:vertical:hover,
+SearchUserList QScrollBar::handle:vertical:hover,
+ContactList QScrollBar::handle:vertical:hover {
   background-color: #a8a8a8;
 }
 
-ChatUserList QScrollBar::handle:vertical:pressed {
+ChatUserList QScrollBar::handle:vertical:pressed,
+SearchUserList QScrollBar::handle:vertical:pressed,
+ContactList QScrollBar::handle:vertical:pressed {
   background-color: #787878;
 }
 
 ChatUserList QScrollBar::add-line:vertical,
-ChatUserList QScrollBar::sub-line:vertical {
+ChatUserList QScrollBar::sub-line:vertical,
+SearchUserList QScrollBar::add-line:vertical,
+SearchUserList QScrollBar::sub-line:vertical,
+ContactList QScrollBar::add-line:vertical,
+ContactList QScrollBar::sub-line:vertical {
   height: 0px;
 }
 
 ChatUserList QScrollBar::add-page:vertical,
-ChatUserList QScrollBar::sub-page:vertical {
+ChatUserList QScrollBar::sub-page:vertical,
+SearchUserList QScrollBar::add-page:vertical,
+SearchUserList QScrollBar::sub-page:vertical,
+ContactList QScrollBar::add-page:vertical,
+ContactList QScrollBar::sub-page:vertical {
   background-color: transparent;
 }
 

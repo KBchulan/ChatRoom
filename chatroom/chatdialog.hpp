@@ -13,8 +13,10 @@
 
 #include <QAction>
 #include <QDialog>
-#include <QListWidgetItem>
+#include <QPointer>
 #include <QStackedWidget>
+
+#include "sidebarwidget.hpp"
 
 namespace Ui
 {
@@ -23,6 +25,9 @@ class ChatDialog;
 
 class ChatPage;
 class ChatUserList;
+class ContactList;
+class SearchUserList;
+class SettingDialog;
 class ChatDialog : public QDialog
 {
   Q_OBJECT
@@ -32,25 +37,26 @@ public:
   ~ChatDialog();
 
 private:
-  void addTestData();
-  void showLoading();
-  void hideLoading();
+  void handleTextChange(const QString& text);
 
   Ui::ChatDialog* ui;
   QAction* _search_action;
   QAction* _clear_action;
 
+  QPointer<QWidget> _prev_mid_widget;
+
   QStackedWidget* _mid_stacked_widget;
   ChatUserList* _chat_user_list;
+  ContactList* _contact_list;
+  SearchUserList* _search_user_list;
 
   QStackedWidget* _right_stacked_widget;
   ChatPage* _chat_page;
 
-  bool _loading;
-  QListWidgetItem* _loading_item;
+  SettingDialog* _setting_dialog;
 
 private slots:
-  void slot_load_chat_user();
+  void slot_item_changed(SideBarItemType type);
 };
 
 #endif  // CHATDIALOG_HPP

@@ -126,7 +126,7 @@ struct Logic::_impl
       user_info["avatar"] = user.avatar;
       user_info["email"] = user.email;
 
-      // 存入 redis，按照 prefix + email 作为 key
+      // 存入 redis，按照 prefix + uuid 作为 key
       auto redis_conn = utils::RedisPool::GetInstance().GetConnection();
       auto key = global::server::USER_INFO_PREFIX + uuid;
       auto pipeline = redis_conn.NewPipeLine();
