@@ -59,13 +59,14 @@ constexpr int WindowChatWidth = 1080;   // 聊天窗口宽度
 constexpr int WindowChatHeight = 720;   // 聊天窗口高度
 
 // chatdialog.hpp
-constexpr int ChatUserItemHeight = 65;  // 联系人列表项高度
-constexpr int LoadingItemHeight = 65;   // 加载中列表项高度
+constexpr int ChatUserItemHeight = 65;    // 联系人列表项高度
+constexpr int SearchUserItemHeight = 65;  // 搜索用户列表项高度
+constexpr int LoadingItemHeight = 65;     // 加载中列表项高度
 
 // chatmsgitem.hpp
-constexpr int ChatMsgItemAvatarSize = 50;       // 头像大小
-constexpr int ChatMsgItemTriangleWidth = 8;     // 小三角宽度
-constexpr int ChatMsgItemBubbleRadius = 6;      // 气泡圆角半径
+constexpr int ChatMsgItemAvatarSize = 50;    // 头像大小
+constexpr int ChatMsgItemTriangleWidth = 8;  // 小三角宽度
+constexpr int ChatMsgItemBubbleRadius = 6;   // 气泡圆角半径
 }  // namespace UIConstants
 
 #endif  // GLOBAL_HPP

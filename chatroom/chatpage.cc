@@ -25,6 +25,7 @@ ChatPage::ChatPage(QWidget* parent) : QWidget(parent), ui(new Ui::ChatPage)
   ui->file_label->setAttribute(Qt::WA_Hover, true);
 
   connect(ui->chat_msg_list, &ChatMsgList::sig_load_more_msg, this, &ChatPage::slot_load_more_msg);
+  connect(ui->chat_msg_list, &ChatMsgList::sig_clicked, this, &ChatPage::sig_clicked);
 }
 
 ChatPage::~ChatPage()

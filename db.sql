@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `nickname` VARCHAR(64) NOT NULL UNIQUE COMMENT '用户昵称',
   `avatar` VARCHAR(128) NOT NULL COMMENT '用户头像',
   `email` VARCHAR(255) NOT NULL UNIQUE COMMENT '用户邮箱',
+  `brief` varchar(255) DEFAULT NULL COMMENT '用户简介',
   `password_hash` VARCHAR(255) NOT NULL COMMENT 'Argon2id加密密码',
   `last_login` DATETIME DEFAULT NULL COMMENT '上次登录的时间',
   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '账号创建时间',

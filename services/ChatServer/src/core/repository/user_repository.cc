@@ -33,4 +33,12 @@ UserDO UserRepository::getUserById(const std::string& userId)
   return {};
 }
 
+bool UserRepository::updateLastLogin(const std::string& userId)
+{
+  auto conn = utils::DBPool::GetInstance().GetConnection();
+  const char* sql = "UPDATE users SET last_login = NOW() WHERE uuid = ?";
+  auto params = utils::MakeParams(userId);
+  return conn.Execute(sql, params);
+}
+
 }  // namespace core

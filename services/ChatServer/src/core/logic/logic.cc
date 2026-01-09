@@ -118,6 +118,16 @@ struct Logic::_impl
         return;
       }
 
+      // 更新登录时间
+      if (UserRepository::updateLastLogin(uuid))
+      {
+        tools::Logger::getInstance().info("Updated last login time for user {}", uuid);
+      }
+      else
+      {
+        tools::Logger::getInstance().error("Failed to update last login time for user {}", uuid);
+      }
+
       // 查询用户基本信息
       UserDO user = UserRepository::getUserById(uuid);
 

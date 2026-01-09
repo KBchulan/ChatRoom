@@ -149,3 +149,28 @@
 - 完善 `chat_window.qss` 样式表：
   - 新增 SideBarWidget、SideBarItem 样式
   - 统一 ChatUserList、SearchUserList、ContactList 三个列表的通用样式
+
+### [2026-01-09] 搜索用户交互
+
+- 新增查找结果对话框组件：
+  - `FindSuccessDialog`：查找成功对话框，显示用户头像和昵称，支持添加到通讯录
+  - `FindFailedDialog`：查找失败对话框，显示错误提示
+  - 两个对话框均支持 Ctrl+Q 快捷键关闭，采用无边框样式
+- 完善 `SearchUserItem` 搜索用户列表项组件：
+  - 新增 `SetHead/SetName/SetDesc/SetUuid` 方法设置用户信息
+  - 新增 `UpdateItem()` 批量更新方法
+  - 新增 `GetUuid()` 获取用户唯一标识
+- 完善 `SearchUserList` 搜索结果列表组件：
+  - 新增 `addSearchItem()` 添加搜索结果项
+  - 新增 `clearResults()` 清空搜索结果
+  - 新增 `sig_item_clicked(uuid)` 信号，点击时发送用户 UUID
+  - 支持鼠标悬停显示滚动条
+- 完善 `ChatDialog` 聊天页面：
+  - 新增事件过滤器，点击非搜索区域时自动清空搜索框并失去焦点
+  - 新增 `slot_search_item_clicked()` 槽函数处理搜索项点击事件
+  - 点击聊天区域时同步清空搜索状态
+- 完善 `ChatMsgList` 和 `ChatPage`：
+  - 新增 `sig_clicked()` 信号，用于通知父组件点击事件
+- 新增 `UIConstants::SearchUserItemHeight` 常量
+- 完善 `chat_window.qss` 样式表，新增 SearchUserItem 组件样式
+- CMakeLists 更新：新增 static 资源目录复制

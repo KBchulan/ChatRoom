@@ -52,6 +52,12 @@ void ChatMsgList::showEvent(QShowEvent* event)
                      });
 }
 
+void ChatMsgList::mousePressEvent(QMouseEvent* event)
+{
+  emit sig_clicked();
+  QListWidget::mousePressEvent(event);
+}
+
 void ChatMsgList::appendChatItem(ChatMsgItem* item)
 {
   auto* list_item = new QListWidgetItem(this);

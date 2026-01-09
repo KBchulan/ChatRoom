@@ -40,6 +40,9 @@ private:
   Ui::ChatPage* ui;
   bool _loading = false;
   QListWidgetItem* _loading_item = nullptr;
+
+signals:
+  void sig_clicked();
 };
 
 #endif  // CHATPAGE_HPP

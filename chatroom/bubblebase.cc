@@ -3,8 +3,7 @@
 #include <QPainter>
 #include <QPainterPath>
 
-BubbleBase::BubbleBase(MsgDirection direction, QWidget* parent)
-    : QFrame(parent), _direction(direction)
+BubbleBase::BubbleBase(MsgDirection direction, QWidget* parent) : QFrame(parent), _direction(direction)
 {
   setObjectName(_direction == MsgDirection::Sent ? "bubble_sent" : "bubble_received");
   setAttribute(Qt::WA_StyledBackground, true);

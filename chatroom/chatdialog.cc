@@ -1,16 +1,20 @@
 #include "chatdialog.hpp"
 
+#include <QMouseEvent>
 #include <QToolButton>
 #include <QVBoxLayout>
+#include <random>
 
 #include "chatpage.hpp"
 #include "chatuserlist.hpp"
 #include "contactlist.hpp"
+#include "findfaileddialog.hpp"
+#include "findsuccessdialog.hpp"
 #include "searchuserlist.hpp"
 #include "settingdialog.hpp"
 #include "ui_chatdialog.h"
 
-ChatDialog::ChatDialog(QWidget* parent) : QDialog(parent), ui(new Ui::ChatDialog)
+ChatDialog::ChatDialog(QWidget* parent) : QDialog(parent), ui(new Ui::ChatDialog), _find_dialog(nullptr)
 {
   ui->setupUi(this);
   _setting_dialog = new SettingDialog(this);
@@ -74,11 +78,49 @@ ChatDialog::ChatDialog(QWidget* parent) : QDialog(parent), ui(new Ui::ChatDialog
 
   /* 连接信号和槽 */
   connect(ui->chat_side_bar_widget, &SideBarWidget::itemChanged, this, &ChatDialog::slot_item_changed);
+  connect(_search_user_list, &SearchUserList::sig_item_clicked, this, &ChatDialog::slot_search_item_clicked);
+  connect(_chat_page, &ChatPage::sig_clicked, this,
+          [this]()
+          {
+            ui->search_edit->clear();
+            ui->search_edit->clearFocus();
+          });
+
+  // 安装事件过滤器
+  this->installEventFilter(this);
 }
 
 ChatDialog::~ChatDialog()
 {
   delete ui;
+
+  if (_find_dialog != nullptr)
+  {
+    delete _find_dialog;
+    _find_dialog = nullptr;
+  }
+}
+
+bool ChatDialog::eventFilter(QObject* watched, QEvent* event)
+{
+  if (event->type() == QEvent::MouseButtonPress)
+  {
+    auto* mouse_event = static_cast<QMouseEvent*>(event);
+    auto click_pos = mouse_event->globalPosition().toPoint();
+
+    // 获取 chat_user_widget 的全局区域
+    auto user_rect = ui->chat_user_widget->rect();
+    auto user_global_rect = QRect(ui->chat_user_widget->mapToGlobal(user_rect.topLeft()), user_rect.size());
+
+    // 如果点击位置不在 chat_user_widget 区域内，清空输入框
+    if (!user_global_rect.contains(click_pos))
+    {
+      ui->search_edit->clear();
+      ui->search_edit->clearFocus();
+    }
+  }
+
+  return QDialog::eventFilter(watched, event);
 }
 
 void ChatDialog::handleTextChange(const QString& text)
@@ -131,4 +173,39 @@ void ChatDialog::slot_item_changed(SideBarItemType type)
   {
     _mid_stacked_widget->setCurrentWidget(target);
   }
+}
+
+void ChatDialog::slot_search_item_clicked(const QString& uuid)
+{
+  // TODO: 根据 uuid 获取用户信息并显示为发现成功，这里模拟随机成功或失败
+  std::random_device ran;
+  std::mt19937 gen(ran());
+  std::uniform_int_distribution<> dis(0, 1);
+  int result = dis(gen);
+
+  if (_find_dialog != nullptr)
+  {
+    delete _find_dialog;
+    _find_dialog = nullptr;
+  }
+
+  if (result == 0)
+  {
+    // 显示添加失败对话框
+    auto* dialog = new FindFailedDialog(this);
+    _find_dialog = dialog;
+  }
+  else
+  {
+    // 显示添加成功对话框
+    auto* dialog = new FindSuccessDialog(this);
+    dialog->SetName("test_user_" + uuid);
+    _find_dialog = dialog;
+  }
+
+  _find_dialog->exec();
+}
+void ChatDialog::on_add_button_clicked()
+{
+  // TODO: 发起搜索好友请求
 }

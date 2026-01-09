@@ -21,6 +21,7 @@ class CORE_EXPORT UserRepository
 {
 public:
   static UserDO getUserById(const std::string& userId);
+  static bool updateLastLogin(const std::string& userId);
 };
 
 }  // namespace core

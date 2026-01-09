@@ -118,3 +118,8 @@ ChatServer/
 - 将 `init()` 重命名为 `init_components()`，语义更清晰
 - 服务器端口现在可通过 `-p` 参数指定，便于集群部署
 
+### [2026-01-09] 用户登录时间记录
+
+- `UserRepository` 新增 `updateLastLogin()` 方法，更新用户最后登录时间
+- 用户登录成功后自动更新 `last_login` 字段
+- 数据库 `users` 表新增 `brief` 字段，用于存储用户简介

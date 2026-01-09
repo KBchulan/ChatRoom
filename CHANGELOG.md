@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [2026-01-09]
+
+### ✨ Features
+- **[all]** 客户端增加 find 成功与失败的展示，完善 searchlist 相关的展示，实现点击其他部分清除对话框，服务器修改 chatserver，登录时记录登录时间
+
 ## [2026-01-08]
 
 ### ✨ Features

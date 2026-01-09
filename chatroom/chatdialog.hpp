@@ -36,6 +36,9 @@ public:
   explicit ChatDialog(QWidget* parent = nullptr);
   ~ChatDialog();
 
+protected:
+  bool eventFilter(QObject* watched, QEvent* event) override;
+
 private:
   void handleTextChange(const QString& text);
 
@@ -55,8 +58,13 @@ private:
 
   SettingDialog* _setting_dialog;
 
+  // 查找成功或失败的会话框
+  QDialog* _find_dialog;
+
 private slots:
   void slot_item_changed(SideBarItemType type);
+  void slot_search_item_clicked(const QString& uuid);
+  void on_add_button_clicked();
 };
 
 #endif  // CHATDIALOG_HPP

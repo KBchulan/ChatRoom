@@ -14,6 +14,7 @@ SideBarWidget::SideBarWidget(QWidget* parent)
       _setting_item(nullptr),
       _current_type(SideBarItemType::Chat)
 {
+  setAttribute(Qt::WA_StyledBackground, true);
   init_ui();
 }
 

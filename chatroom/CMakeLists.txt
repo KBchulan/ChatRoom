@@ -76,6 +76,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         searchuseritem.hpp searchuseritem.cc searchuseritem.ui
         contactitem.hpp contactitem.cc contactitem.ui
         settingdialog.hpp settingdialog.cc settingdialog.ui
+        findsuccessdialog.hpp findsuccessdialog.cc findsuccessdialog.ui
+        findfaileddialog.hpp findfaileddialog.cc findfaileddialog.ui
         chatmsgitem.hpp chatmsgitem.cc
         global.hpp  global.cc
         timerbutton.hpp timerbutton.cc
@@ -113,6 +115,8 @@ else()
             searchuseritem.hpp searchuseritem.cc searchuseritem.ui
             contactitem.hpp contactitem.cc contactitem.ui
             settingdialog.hpp settingdialog.cc settingdialog.ui
+            findsuccessdialog.hpp findsuccessdialog.cc findsuccessdialog.ui
+            findfaileddialog.hpp findfaileddialog.cc findfaileddialog.ui
             chatmsgitem.hpp chatmsgitem.cc
             global.hpp  global.cc
             timerbutton.hpp timerbutton.cc
@@ -147,6 +151,8 @@ else()
             searchuseritem.hpp searchuseritem.cc searchuseritem.ui
             contactitem.hpp contactitem.cc contactitem.ui
             settingdialog.hpp settingdialog.cc settingdialog.ui
+            findsuccessdialog.hpp findsuccessdialog.cc findsuccessdialog.ui
+            findfaileddialog.hpp findfaileddialog.cc findfaileddialog.ui
             chatmsgitem.hpp chatmsgitem.cc
             global.hpp  global.cc
             timerbutton.hpp timerbutton.cc
@@ -197,8 +203,11 @@ install(TARGETS chatroom
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
-# 复制配置文件到构建目录
+# 复制文件到构建目录
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/config.ini
+     DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/static
      DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 if(QT_VERSION_MAJOR EQUAL 6)

@@ -14,6 +14,7 @@
 #include <QEnterEvent>
 #include <QEvent>
 #include <QListWidget>
+#include <QMouseEvent>
 #include <QShowEvent>
 #include <QTimer>
 
@@ -31,12 +32,14 @@ protected:
   void enterEvent(QEnterEvent* event) override;
   void leaveEvent(QEvent* event) override;
   void showEvent(QShowEvent* event) override;
+  void mousePressEvent(QMouseEvent* event) override;
 
 private:
   QTimer* _debounce_timer;
 
 signals:
   void sig_load_more_msg();
+  void sig_clicked();
 };
 
 #endif  // CHATMSGLIST_HPP
