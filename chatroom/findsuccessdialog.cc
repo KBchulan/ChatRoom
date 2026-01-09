@@ -6,6 +6,7 @@
 #include <QShortcut>
 #include <QString>
 
+// #include "applyfrienddialog.hpp"
 #include "ui_findsuccessdialog.h"
 
 FindSuccessDialog::FindSuccessDialog(QWidget* parent) : QDialog(parent), ui(new Ui::FindSuccessDialog)
@@ -48,5 +49,8 @@ void FindSuccessDialog::SetName(const QString& name)
 
 void FindSuccessDialog::on_confirm_button_clicked()
 {
-  // TODO: 添加好友逻辑
+  // auto* dialog = new ApplyFriendDialog(this);
+  // dialog->setAttribute(Qt::WA_DeleteOnClose);
+  // connect(dialog, &QDialog::finished, this, &QDialog::close);
+  // dialog->open();
 }

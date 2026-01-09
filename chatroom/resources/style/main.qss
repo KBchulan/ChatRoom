@@ -1,7 +1,9 @@
 /* Main Window Style */
+/* ============================================================
+ * 全局基础样式
+ * ============================================================ */
 
-QMainWindow,
-QDialog,
-QWidget {
+/* MainWindow 主窗口 */
+MainWindow {
   background-color: #f8f6f1;
 }

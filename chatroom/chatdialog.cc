@@ -205,7 +205,8 @@ void ChatDialog::slot_search_item_clicked(const QString& uuid)
 
   _find_dialog->exec();
 }
+
 void ChatDialog::on_add_button_clicked()
 {
-  // TODO: 发起搜索好友请求
+  // TODO: 发起搜索好友请求，把搜索结果显示在 SearchUserList 中
 }

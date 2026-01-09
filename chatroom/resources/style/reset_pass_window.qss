@@ -1,14 +1,16 @@
 /* Reset Password Window Style */
+/* ============================================================
+ * ResetPasswordDialog - 重置密码对话框
+ * ============================================================ */
 
-/* Reset Password Window and Dialog Background */
 #ResetPasswordDialog {
   background-color: #f8f6f1;
 }
 
-#err_msg_label[state="normal"] {
+#ResetPasswordDialog #err_msg_label[state="normal"] {
   color: green;
 }
 
-#err_msg_label[state="error"] {
+#ResetPasswordDialog #err_msg_label[state="error"] {
   color: red;
 }

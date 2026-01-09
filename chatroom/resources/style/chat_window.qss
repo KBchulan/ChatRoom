@@ -1,12 +1,12 @@
-/* Chat Window Style */
-
-/* ========== Window and Dialog Background ========== */
+/* ==========================================================
+ * ChatDialog - 主聊天窗口
+ * ========================================================== */
 #ChatDialog {
   background-color: #f8f6f1;
 }
 
-/* ========== Side Bar ========== */
-#chat_side_bar_widget {
+/* ---------- 侧边栏 ---------- */
+ChatDialog #chat_side_bar_widget {
   background-color: #e0ded9;
 }
 
@@ -32,42 +32,43 @@ SideBarItem #sidebar_red_dot {
   background-color: transparent;
 }
 
-/* ========== Search Widget ========== */
-#search_widget {
+/* ---------- 搜索区域 ---------- */
+ChatDialog #search_widget {
   border-left: 1px solid #cccccc;
   border-right: 1px solid #cccccc;
   border-bottom: 1px solid #cccccc;
 }
 
-/* search edit */
-#search_edit {
+ChatDialog #search_edit {
   border: 1px solid #c4c0c0;
   border-radius: 4px;
   background-color: #ffffff;
 }
 
-/* add button */
-#add_button {
+ChatDialog #add_button {
   border: none;
   background-color: transparent;
   border-image: url(:/icons/friend_add.png);
 }
 
-#add_button:hover,
-#add_button:pressed {
+ChatDialog #add_button:hover,
+ChatDialog #add_button:pressed {
   border-image: url(:/icons/friend_add_fill.png);
 }
 
-/* ========== Mid Stack Widget ========== */
-#mid_stack_widget {
+/* ---------- 中部列表容器 ---------- */
+ChatDialog #mid_stack_widget {
   border-left: 1px solid #cccccc;
   border-right: 1px solid #cccccc;
 }
 
-/* ========== 中部列表通用样式 ========== */
+/* ==========================================================
+ * 中部列表通用样式 (ChatUserList / SearchUserList / ContactList)
+ * ========================================================== */
 ChatUserList,
 SearchUserList,
 ContactList {
+  background-color: #f8f6f1;
   border: none;
   outline: none;
 }
@@ -145,7 +146,9 @@ ContactList QScrollBar::sub-page:vertical {
   background-color: transparent;
 }
 
-/* ========== LoadingItem 自定义项样式 ========== */
+/* ==========================================================
+ * LoadingItem - 加载提示项
+ * ========================================================== */
 LoadingItem,
 LoadingItem QLabel {
   background-color: transparent;
@@ -156,88 +159,86 @@ LoadingItem #tip_label {
   color: #888888;
 }
 
-/* ========== ChatUserItem 自定义项样式 ========== */
+/* ==========================================================
+ * ChatUserItem - 聊天用户项
+ * ========================================================== */
 ChatUserItem,
 ChatUserItem QWidget,
 ChatUserItem QLabel {
   background-color: transparent;
 }
 
-/* 头像样式 */
 ChatUserItem #avatar_label {
   border-radius: 22px;
 }
 
-/* 用户名样式 */
 ChatUserItem #user_name_label {
   font-size: 14px;
   font-weight: 500;
   color: #1a1a1a;
 }
 
-/* 消息预览样式 */
 ChatUserItem #user_chat_msg_label {
   font-size: 12px;
   color: #888888;
 }
 
-/* 时间标签样式 */
 ChatUserItem #time_label {
   font-size: 11px;
   color: #888888;
 }
 
-/* ========== SearchUserItem 自定义项样式 ========== */
+/* ==========================================================
+ * SearchUserItem - 搜索用户项
+ * ========================================================== */
 SearchUserItem,
 SearchUserItem QWidget,
 SearchUserItem QLabel {
   background-color: transparent;
 }
 
-/* 头像样式 */
 SearchUserItem #avatar_label {
   border-radius: 22px;
 }
 
-/* 用户名样式 */
 SearchUserItem #name_label {
   font-size: 14px;
   font-weight: 500;
   color: #1a1a1a;
 }
 
-/* 简介样式 */
 SearchUserItem #desc_label {
   font-size: 12px;
   color: #888888;
 }
 
-/* ========== ChatPage 自定义样式 ========== */
+/* ==========================================================
+ * ChatPage - 聊天页面
+ * ========================================================== */
 ChatPage {
   border: none;
   outline: none;
 }
 
-/* ========== 标题栏容器 ========== */
-#title_widget {
+/* ---------- 标题栏 ---------- */
+ChatPage #title_widget {
   background-color: transparent;
   border-bottom: 1px solid #cccccc;
 }
 
-/* 标题文字 */
-#title_label {
+ChatPage #title_label {
   font-size: 16px;
   font-weight: 500;
   color: #1a1a1a;
 }
 
-/* ========== ChatMsgList 样式 ========== */
+/* ---------- 消息列表 ---------- */
 ChatMsgList {
+  background-color: #f8f6f1;
   border: none;
   outline: none;
 }
 
-/* 滚动条样式 */
 ChatMsgList QScrollBar:vertical {
   background-color: transparent;
   width: 8px;
@@ -268,36 +269,61 @@ ChatMsgList QScrollBar::sub-page:vertical {
   background-color: transparent;
 }
 
-/* ========== 工具栏容器 ========== */
-#tools_widget {
+/* ---------- 消息项 ---------- */
+ChatMsgItem,
+ChatMsgItem QWidget,
+ChatMsgItem QLabel {
+  background-color: transparent;
+}
+
+ChatMsgItem #msg_nickname {
+  font-size: 12px;
+  color: #888888;
+}
+
+/* ---------- 气泡样式 ---------- */
+#bubble_sent {
+  background-color: #d9d5d0;
+}
+
+#bubble_received {
+  background-color: #ffffff;
+}
+
+#bubble_text {
+  font-size: 14px;
+  color: #1a1a1a;
+}
+
+/* ---------- 工具栏 ---------- */
+ChatPage #tools_widget {
   background-color: transparent;
   border-top: 1px solid #cccccc;
 }
 
-/* 表情按钮 */
-#emoji_label {
+ChatPage #emoji_label {
   border: none;
   background-color: transparent;
   image: url(:/icons/smile_idle.png);
 }
 
-#emoji_label:hover {
+ChatPage #emoji_label:hover {
   image: url(:/icons/smile_hover.png);
 }
 
-/* 文件按钮 */
-#file_label {
+ChatPage #file_label {
   border: none;
   background-color: transparent;
   image: url(:/icons/folder_idle.png);
 }
 
-#file_label:hover {
+ChatPage #file_label:hover {
   image: url(:/icons/folder_hover.png);
 }
 
-/* ========== ChatTextEdit ========== */
+/* ---------- 输入框 ---------- */
 ChatTextEdit {
+  background-color: #f8f6f1;
   border: none;
   padding: 4px 8px;
   font-size: 14px;
@@ -310,14 +336,12 @@ ChatTextEdit QScrollBar:vertical {
   margin: 0px;
 }
 
-/* 默认状态：滚动条透明 */
 ChatTextEdit QScrollBar::handle:vertical {
   background-color: transparent;
   min-height: 30px;
   border-radius: 4px;
 }
 
-/* hover 状态：显示滚动条 */
 ChatTextEdit QScrollBar::handle:vertical[hover="true"] {
   background-color: #c1c1c1;
 }
@@ -340,30 +364,12 @@ ChatTextEdit QScrollBar::sub-page:vertical {
   background-color: transparent;
 }
 
-/* ========== 底部按钮容器 ========== */
-#botton_widget {
+/* ---------- 底部按钮栏 ---------- */
+ChatPage #botton_widget {
   background-color: transparent;
 }
 
-/* 发送按钮 - 主要 */
-#send_button {
-  background-color: transparent;
-  border: 1px solid #cccccc;
-  border-radius: 4px;
-  font-size: 14px;
-  color: #1a1a1a;
-}
-
-#send_button:hover {
-  background-color: #e8e8e8;
-}
-
-#send_button:pressed {
-  background-color: #d4d4d4;
-}
-
-/* 接收按钮 - 次要 */
-#receive_button {
+ChatPage #send_button {
   background-color: transparent;
   border: 1px solid #cccccc;
   border-radius: 4px;
@@ -371,38 +377,26 @@ ChatTextEdit QScrollBar::sub-page:vertical {
   color: #1a1a1a;
 }
 
-#receive_button:hover {
+ChatPage #send_button:hover {
   background-color: #e8e8e8;
 }
 
-#receive_button:pressed {
+ChatPage #send_button:pressed {
   background-color: #d4d4d4;
 }
 
-/* ========== ChatMsgItem 消息项样式 ========== */
-ChatMsgItem,
-ChatMsgItem QWidget,
-ChatMsgItem QLabel {
+ChatPage #receive_button {
   background-color: transparent;
-}
-
-/* 昵称样式 */
-ChatMsgItem #msg_nickname {
-  font-size: 12px;
-  color: #888888;
-}
-
-/* 双方气泡基本样式 */
-#bubble_sent {
-  background-color: #d9d5d0;
-}
-
-#bubble_received {
-  background-color: #ffffff;
-}
-
-/* 文本气泡的样式 */
-#bubble_text {
+  border: 1px solid #cccccc;
+  border-radius: 4px;
   font-size: 14px;
   color: #1a1a1a;
+}
+
+ChatPage #receive_button:hover {
+  background-color: #e8e8e8;
+}
+
+ChatPage #receive_button:pressed {
+  background-color: #d4d4d4;
 }

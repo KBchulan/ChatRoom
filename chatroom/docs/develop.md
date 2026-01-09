@@ -174,3 +174,4 @@
 - 新增 `UIConstants::SearchUserItemHeight` 常量
 - 完善 `chat_window.qss` 样式表，新增 SearchUserItem 组件样式
 - CMakeLists 更新：新增 static 资源目录复制
+- 重构 qss，使用类名 + 属性选择器统一管理列表组件样式
