@@ -1,12 +1,9 @@
 #include "findsuccessdialog.hpp"
 
-#include <QCoreApplication>
-#include <QDir>
 #include <QPixmap>
 #include <QShortcut>
-#include <QString>
 
-// #include "applyfrienddialog.hpp"
+#include "friendapplydialog.hpp"
 #include "ui_findsuccessdialog.h"
 
 FindSuccessDialog::FindSuccessDialog(QWidget* parent) : QDialog(parent), ui(new Ui::FindSuccessDialog)
@@ -21,20 +18,8 @@ FindSuccessDialog::FindSuccessDialog(QWidget* parent) : QDialog(parent), ui(new 
   this->setWindowTitle("添加");
   this->setWindowFlags(Qt::FramelessWindowHint | Qt::Dialog);
 
-  // 检查 static 目录是否存在，不存在则创建
-  QString app_dir = QCoreApplication::applicationDirPath();
-  QString static_dir = app_dir + QDir::separator() + "static";
-
-  if (!QDir(static_dir).exists())
-  {
-    QDir().mkdir(static_dir);
-  }
-
-  QString pix_path = static_dir + QDir::separator() + "test1.ico";
-
-  QPixmap pixmap(pix_path);
-  pixmap = pixmap.scaled(ui->head_label->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
-  ui->head_label->setPixmap(pixmap);
+  // 设置按钮为 小手 图标
+  ui->confirm_button->setCursor(Qt::PointingHandCursor);
 }
 
 FindSuccessDialog::~FindSuccessDialog()
@@ -42,15 +27,22 @@ FindSuccessDialog::~FindSuccessDialog()
   delete ui;
 }
 
-void FindSuccessDialog::SetName(const QString& name)
+void FindSuccessDialog::SetUserInfo(const QString& head, const QString& name)
 {
+  _head = head;
+  _name = name;
+
+  QPixmap pixmap(head);
+  pixmap = pixmap.scaled(ui->head_label->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+  ui->head_label->setPixmap(pixmap);
   ui->name_label->setText(name);
 }
 
 void FindSuccessDialog::on_confirm_button_clicked()
 {
-  // auto* dialog = new ApplyFriendDialog(this);
-  // dialog->setAttribute(Qt::WA_DeleteOnClose);
-  // connect(dialog, &QDialog::finished, this, &QDialog::close);
-  // dialog->open();
+  auto* dialog = new FriendApplyDialog(this);
+  dialog->setAttribute(Qt::WA_DeleteOnClose);
+  dialog->SetUserInfo(_head, _name);
+  connect(dialog, &QDialog::finished, this, &QDialog::close);
+  dialog->exec();
 }

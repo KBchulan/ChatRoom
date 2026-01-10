@@ -1,9 +1,10 @@
 #include "chatdialog.hpp"
 
+#include <QCoreApplication>
+#include <QDir>
 #include <QMouseEvent>
 #include <QToolButton>
 #include <QVBoxLayout>
-#include <random>
 
 #include "chatpage.hpp"
 #include "chatuserlist.hpp"
@@ -14,13 +15,17 @@
 #include "settingdialog.hpp"
 #include "ui_chatdialog.h"
 
-ChatDialog::ChatDialog(QWidget* parent) : QDialog(parent), ui(new Ui::ChatDialog), _find_dialog(nullptr)
+ChatDialog::ChatDialog(QWidget* parent) : QDialog(parent), ui(new Ui::ChatDialog)
 {
   ui->setupUi(this);
   _setting_dialog = new SettingDialog(this);
 
+  // 获取应用程序静态资源目录
+  QString app_dir = QCoreApplication::applicationDirPath();
+  _static_dir = app_dir + QDir::separator() + "static";
+
   /* 搜索框: 默认文本，最大长度，左侧搜索，右侧清除 */
-  ui->search_edit->setPlaceholderText("搜索");
+  ui->search_edit->setPlaceholderText("请输入用户名或邮箱搜索");
   ui->search_edit->setMaxLength(15);
 
   // 左侧搜索图标
@@ -35,6 +40,9 @@ ChatDialog::ChatDialog(QWidget* parent) : QDialog(parent), ui(new Ui::ChatDialog
   {
     btn->setCursor(Qt::PointingHandCursor);
   }
+
+  // 设置 add_button 为 小手 图标
+  ui->add_button->setCursor(Qt::PointingHandCursor);
 
   // 文本变化时切换清除按钮显示/隐藏
   connect(ui->search_edit, &QLineEdit::textChanged, [this](const QString& str) { handleTextChange(str); });
@@ -79,6 +87,7 @@ ChatDialog::ChatDialog(QWidget* parent) : QDialog(parent), ui(new Ui::ChatDialog
   /* 连接信号和槽 */
   connect(ui->chat_side_bar_widget, &SideBarWidget::itemChanged, this, &ChatDialog::slot_item_changed);
   connect(_search_user_list, &SearchUserList::sig_item_clicked, this, &ChatDialog::slot_search_item_clicked);
+  connect(_search_user_list, &SearchUserList::sig_search_failed, this, &ChatDialog::slot_search_failed);
   connect(_chat_page, &ChatPage::sig_clicked, this,
           [this]()
           {
@@ -93,12 +102,6 @@ ChatDialog::ChatDialog(QWidget* parent) : QDialog(parent), ui(new Ui::ChatDialog
 ChatDialog::~ChatDialog()
 {
   delete ui;
-
-  if (_find_dialog != nullptr)
-  {
-    delete _find_dialog;
-    _find_dialog = nullptr;
-  }
 }
 
 bool ChatDialog::eventFilter(QObject* watched, QEvent* event)
@@ -128,15 +131,8 @@ void ChatDialog::handleTextChange(const QString& text)
   auto is_search = !text.isEmpty();
   _clear_action->setVisible(is_search);
 
-  if (is_search)
-  {
-    if (_prev_mid_widget == nullptr)
-    {
-      _prev_mid_widget = _mid_stacked_widget->currentWidget();
-    }
-    _mid_stacked_widget->setCurrentWidget(_search_user_list);
-  }
-  else
+  // 只在清空文本时回到上一个页面
+  if (!is_search && _mid_stacked_widget->currentWidget() == _search_user_list)
   {
     _mid_stacked_widget->setCurrentWidget(_prev_mid_widget != nullptr ? _prev_mid_widget : _chat_user_list);
     _prev_mid_widget = nullptr;
@@ -177,36 +173,32 @@ void ChatDialog::slot_item_changed(SideBarItemType type)
 
 void ChatDialog::slot_search_item_clicked(const QString& uuid)
 {
-  // TODO: 根据 uuid 获取用户信息并显示为发现成功，这里模拟随机成功或失败
-  std::random_device ran;
-  std::mt19937 gen(ran());
-  std::uniform_int_distribution<> dis(0, 1);
-  int result = dis(gen);
+  // TODO: 根据 uuid 获取完整用户信息
+  auto* dialog = new FindSuccessDialog(this);
+  dialog->setAttribute(Qt::WA_DeleteOnClose);
+  auto head = _static_dir + QDir::separator() + "test1.ico";
+  dialog->SetUserInfo(head, "test_user_" + uuid);
+  dialog->exec();
+}
 
-  if (_find_dialog != nullptr)
-  {
-    delete _find_dialog;
-    _find_dialog = nullptr;
-  }
-
-  if (result == 0)
-  {
-    // 显示添加失败对话框
-    auto* dialog = new FindFailedDialog(this);
-    _find_dialog = dialog;
-  }
-  else
-  {
-    // 显示添加成功对话框
-    auto* dialog = new FindSuccessDialog(this);
-    dialog->SetName("test_user_" + uuid);
-    _find_dialog = dialog;
-  }
-
-  _find_dialog->exec();
+void ChatDialog::slot_search_failed()
+{
+  auto* dialog = new FindFailedDialog(this);
+  dialog->setAttribute(Qt::WA_DeleteOnClose);
+  dialog->exec();
+  ui->search_edit->clear();
+  ui->search_edit->clearFocus();
 }
 
 void ChatDialog::on_add_button_clicked()
 {
-  // TODO: 发起搜索好友请求，把搜索结果显示在 SearchUserList 中
+  // 记录当前页面并切换到搜索页面
+  if (_mid_stacked_widget->currentWidget() != _search_user_list)
+  {
+    _prev_mid_widget = _mid_stacked_widget->currentWidget();
+    _mid_stacked_widget->setCurrentWidget(_search_user_list);
+  }
+
+  // 发起搜索好友请求，把搜索结果显示在 SearchUserList 中
+  _search_user_list->StartSearch();
 }

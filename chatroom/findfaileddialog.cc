@@ -16,7 +16,9 @@ FindFailedDialog::FindFailedDialog(QWidget* parent) : QDialog(parent), ui(new Ui
   this->setWindowTitle("失败");
   this->setWindowFlags(Qt::FramelessWindowHint | Qt::Dialog);
 
-  ui->tip_label->setText("添加用户失败，请稍后重试！");
+  // 设置 ui 样式
+  ui->tip_label->setText("该用户不存在，请检查输入是否正确");
+  ui->confirm_button->setCursor(Qt::PointingHandCursor);
 }
 
 FindFailedDialog::~FindFailedDialog()

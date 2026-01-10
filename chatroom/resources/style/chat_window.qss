@@ -400,3 +400,130 @@ ChatPage #receive_button:hover {
 ChatPage #receive_button:pressed {
   background-color: #d4d4d4;
 }
+
+/* ==========================================================
+ * FindSuccessDialog / FindFailedDialog - 搜索结果对话框
+ * ========================================================== */
+FindSuccessDialog,
+FindFailedDialog {
+  background-color: #f8f6f1;
+  border: 1px solid #cccccc;
+  border-radius: 8px;
+}
+
+FindSuccessDialog QLabel,
+FindFailedDialog QLabel {
+  background-color: transparent;
+}
+
+FindSuccessDialog #head_label,
+FindFailedDialog #head_label {
+  border-radius: 25px;
+}
+
+FindSuccessDialog #name_label {
+  font-size: 16px;
+  font-weight: 500;
+  color: #1a1a1a;
+}
+
+FindFailedDialog #tip_label {
+  font-size: 14px;
+  color: #666666;
+}
+
+FindSuccessDialog #confirm_button,
+FindFailedDialog #confirm_button {
+  background-color: transparent;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #1a1a1a;
+}
+
+FindSuccessDialog #confirm_button:hover,
+FindFailedDialog #confirm_button:hover {
+  background-color: #e8e8e8;
+}
+
+FindSuccessDialog #confirm_button:pressed,
+FindFailedDialog #confirm_button:pressed {
+  background-color: #d4d4d4;
+}
+
+/* ==========================================================
+ * FriendApplyDialog - 好友申请对话框
+ * ========================================================== */
+FriendApplyDialog {
+  background-color: #f8f6f1;
+  border: 1px solid #cccccc;
+  border-radius: 8px;
+}
+
+FriendApplyDialog QWidget,
+FriendApplyDialog QLabel {
+  background-color: transparent;
+}
+
+FriendApplyDialog #head_label {
+  border-radius: 25px;
+}
+
+FriendApplyDialog #name_label {
+  font-size: 16px;
+  font-weight: 500;
+  color: #1a1a1a;
+}
+
+FriendApplyDialog #remark_label,
+FriendApplyDialog #apply_label {
+  font-size: 13px;
+  color: #666666;
+}
+
+FriendApplyDialog #remark_edit,
+FriendApplyDialog #apply_edit {
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 14px;
+  color: #1a1a1a;
+}
+
+FriendApplyDialog #remark_edit:focus,
+FriendApplyDialog #apply_edit:focus {
+  border: 1px solid #999999;
+}
+
+FriendApplyDialog #cancel_button {
+  background-color: transparent;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #666666;
+}
+
+FriendApplyDialog #cancel_button:hover {
+  background-color: #e8e8e8;
+}
+
+FriendApplyDialog #cancel_button:pressed {
+  background-color: #d4d4d4;
+}
+
+FriendApplyDialog #send_button {
+  background-color: transparent;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #1a1a1a;
+}
+
+FriendApplyDialog #send_button:hover {
+  background-color: #e8e8e8;
+}
+
+FriendApplyDialog #send_button:pressed {
+  background-color: #d4d4d4;
+}

@@ -95,15 +95,6 @@ struct Connection::_impl
 
   void handle_request(const std::shared_ptr<Connection>& self)
   {
-    // 先判断是否支持服务，用于服务降级使用
-    if (!utils::AVAILABLE_ROUTES.contains(_request.target()))
-    {
-      _response.result(boost::beast::http::status::method_not_allowed);
-      boost::beast::ostream(_response.body()) << R"({"code": 405, "message": "this request is not allowed"})";
-      send_response(self);
-      return;
-    }
-
     // 处理健康检查请求
     if (_request.target() == utils::HEALTH_CHECK_ROUTE && _request.method() == boost::beast::http::verb::get)
     {
@@ -145,6 +136,17 @@ struct Connection::_impl
       logger.error("| {} | {} | {} | {}", client_ip, _request.method_string(), status_code, _request.target());
       _response.result(boost::beast::http::status::internal_server_error);
       boost::beast::ostream(_response.body()) << R"({"code": 500, "message": "Invalid URL"})";
+      send_response(self);
+      return;
+    }
+
+    // 判断是否支持服务，用于服务降级使用
+    if (!utils::AVAILABLE_ROUTES.contains(url->path))
+    {
+      int status_code = static_cast<int>(boost::beast::http::status::method_not_allowed);
+      logger.error("| {} | {} | {} | {}", client_ip, _request.method_string(), status_code, _request.target());
+      _response.result(boost::beast::http::status::method_not_allowed);
+      boost::beast::ostream(_response.body()) << R"({"code": 405, "message": "this request is not allowed"})";
       send_response(self);
       return;
     }

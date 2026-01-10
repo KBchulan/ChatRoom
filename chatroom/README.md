@@ -77,6 +77,7 @@ chatroom/
 ├── searchuseritem.*        # 搜索结果列表项组件
 ├── findsuccessdialog.*     # 查找成功对话框
 ├── findfaileddialog.*      # 查找失败对话框
+├── friendapplydialog.*     # 好友申请对话框
 ├── settingdialog.*         # 设置对话框
 ├── loadingitem.*           # 加载动画组件
 ├── httpmanager.*           # HTTP 请求管理器
@@ -119,6 +120,7 @@ chatroom/
 | **SearchUserItem** | 搜索结果列表项组件，显示用户头像、昵称和简介 |
 | **FindSuccessDialog** | 查找成功对话框，显示用户信息和添加按钮 |
 | **FindFailedDialog** | 查找失败对话框，显示错误提示 |
+| **FriendApplyDialog** | 好友申请对话框，支持输入备注和申请消息 |
 | **SettingDialog** | 设置对话框，支持 Ctrl+Q 快捷键关闭（占位） |
 | **LoadingItem** | 加载动画组件，用于列表加载时显示 |
 | **HttpManager** | 封装 Qt Network，处理与网关的 HTTP 通信，目前支持 POST 请求 |

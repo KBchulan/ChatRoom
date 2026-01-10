@@ -24,12 +24,15 @@ class FindSuccessDialog : public QDialog
 
 public:
   explicit FindSuccessDialog(QWidget* parent = nullptr);
-  ~FindSuccessDialog();
+  ~FindSuccessDialog() override;
 
-  void SetName(const QString& name);
+  void SetUserInfo(const QString& head, const QString& name);
 
 private:
   Ui::FindSuccessDialog* ui;
+
+  QString _head;
+  QString _name;
 
 private slots:
   void on_confirm_button_clicked();

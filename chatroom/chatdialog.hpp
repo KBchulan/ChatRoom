@@ -58,12 +58,12 @@ private:
 
   SettingDialog* _setting_dialog;
 
-  // 查找成功或失败的会话框
-  QDialog* _find_dialog;
+  QString _static_dir;
 
 private slots:
   void slot_item_changed(SideBarItemType type);
   void slot_search_item_clicked(const QString& uuid);
+  void slot_search_failed();
   void on_add_button_clicked();
 };
 

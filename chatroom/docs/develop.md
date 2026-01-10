@@ -175,3 +175,27 @@
 - 完善 `chat_window.qss` 样式表，新增 SearchUserItem 组件样式
 - CMakeLists 更新：新增 static 资源目录复制
 - 重构 qss，使用类名 + 属性选择器统一管理列表组件样式
+
+### [2026-01-10] 好友申请功能
+
+- 新增 `FriendApplyDialog` 好友申请对话框组件：
+  - 显示目标用户头像和昵称
+  - 支持输入备注名称（可选）和申请消息（可选）
+  - 支持 Ctrl+Q 快捷键关闭，采用无边框样式
+- 完善 `SearchUserList` 搜索结果列表组件：
+  - 新增 `StartSearch()` 方法触发搜索流程
+  - 新增 `sig_search_failed()` 信号，搜索失败时通知父组件
+  - 新增加载状态管理（showLoading/hideLoading），搜索时显示加载动画
+- 完善 `FindSuccessDialog` 查找成功对话框：
+  - 重构 `SetUserInfo()` 方法，支持传递头像和名称
+  - 点击确认按钮打开 `FriendApplyDialog` 进行好友申请
+- 完善 `ChatDialog` 聊天页面：
+  - 重构搜索流程：点击添加按钮触发搜索，而非输入文本时
+  - 新增 `slot_search_failed()` 槽函数处理搜索失败
+  - 使用 `Qt::WA_DeleteOnClose` 管理对话框生命周期，移除手动内存管理
+  - 新增静态资源目录路径管理
+- 完善 `ChatPage`：发送/接收按钮添加小手光标样式
+- 完善 `FindFailedDialog`：更新失败提示文案，添加小手光标样式
+- 完善 `chat_window.qss` 样式表：
+  - 新增 `FindSuccessDialog`、`FindFailedDialog` 对话框样式
+  - 新增 `FriendApplyDialog` 好友申请对话框样式

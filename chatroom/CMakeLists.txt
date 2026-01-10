@@ -78,6 +78,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         settingdialog.hpp settingdialog.cc settingdialog.ui
         findsuccessdialog.hpp findsuccessdialog.cc findsuccessdialog.ui
         findfaileddialog.hpp findfaileddialog.cc findfaileddialog.ui
+        friendapplydialog.hpp friendapplydialog.cc friendapplydialog.ui
         chatmsgitem.hpp chatmsgitem.cc
         global.hpp  global.cc
         timerbutton.hpp timerbutton.cc
@@ -117,6 +118,7 @@ else()
             settingdialog.hpp settingdialog.cc settingdialog.ui
             findsuccessdialog.hpp findsuccessdialog.cc findsuccessdialog.ui
             findfaileddialog.hpp findfaileddialog.cc findfaileddialog.ui
+            friendapplydialog.hpp friendapplydialog.cc friendapplydialog.ui
             chatmsgitem.hpp chatmsgitem.cc
             global.hpp  global.cc
             timerbutton.hpp timerbutton.cc
@@ -153,6 +155,7 @@ else()
             settingdialog.hpp settingdialog.cc settingdialog.ui
             findsuccessdialog.hpp findsuccessdialog.cc findsuccessdialog.ui
             findfaileddialog.hpp findfaileddialog.cc findfaileddialog.ui
+            friendapplydialog.hpp friendapplydialog.cc friendapplydialog.ui
             chatmsgitem.hpp chatmsgitem.cc
             global.hpp  global.cc
             timerbutton.hpp timerbutton.cc
