@@ -13,12 +13,12 @@
 
 #include <QWidget>
 
-class QListWidgetItem;
 namespace Ui
 {
 class ChatPage;
 }
 
+class QListWidgetItem;
 class ChatPage : public QWidget
 {
   Q_OBJECT

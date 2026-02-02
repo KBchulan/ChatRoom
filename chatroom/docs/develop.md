@@ -199,3 +199,38 @@
 - 完善 `chat_window.qss` 样式表：
   - 新增 `FindSuccessDialog`、`FindFailedDialog` 对话框样式
   - 新增 `FriendApplyDialog` 好友申请对话框样式
+
+### [2026-02-02] 列表基类重构与联系人/好友申请功能
+
+- 新增 `CustomListWidget` 公共基类：
+  - 封装列表组件通用的滚动条显示/隐藏逻辑（enterEvent/leaveEvent/showEvent）
+  - 所有列表组件统一继承该基类，消除重复代码
+- 重构现有列表组件继承关系：
+  - `ChatMsgList`：改为继承 `CustomListWidget`
+  - `ChatUserList`：改为继承 `CustomListWidget`
+  - `SearchUserList`：改为继承 `CustomListWidget`
+  - `ContactList`：改为继承 `CustomListWidget`
+- 完善 `ContactList` 联系人列表组件：
+  - 实现按拼音首字母分组显示（A-Z 和 # 分组）
+  - 新增 `AddContactItem()` 方法自动插入到正确分组
+  - 新增"新的朋友"固定入口项
+- 新增 `ContactGroupItem` 联系人分组表头组件
+- 完善 `ContactItem` 联系人列表项组件：
+  - 新增 `SetName/SetHead` 方法设置用户信息
+- 新增好友申请功能模块：
+  - `FriendApplyPage`：好友申请页面容器
+  - `FriendApplyList`：好友申请列表，继承 `CustomListWidget`，支持按状态（Pending/Accepted）和时间排序
+  - `FriendApplyItem`：好友申请列表项，显示头像、昵称、申请消息和同意按钮
+  - `ApplyStatus` 枚举：定义申请状态（Pending/Accepted）
+- 新增 `PinyinUtils` 拼音工具命名空间：
+  - 内置汉字拼音首字母字典（Unicode 0x4E00-0x9FA5）
+  - `GetFirstPinyinLetter()` 函数获取汉字拼音首字母
+- 新增 `ContactGroup` 枚举：定义联系人分组类型（NewFriends/A-Z/Hash）
+- 新增 `UIConstants` 常量：ContactUserItemHeight、ContactGroupItemHeight、FriendApplyItemHeight
+- 完善 `ChatDialog` 聊天页面：
+  - 新增右侧 StackedWidget 支持多页面切换
+  - 点击"新的朋友"切换到好友申请页面
+- 完善 `chat_window.qss` 样式表：
+  - 新增 FriendApplyPage、FriendApplyList、FriendApplyItem 样式
+  - 新增 ContactItem、ContactGroupItem 样式
+- 新增资源文件：new_friend.png 图标

@@ -7,12 +7,8 @@
 #include "global.hpp"
 #include "loadingitem.hpp"
 
-ChatUserList::ChatUserList(QWidget* parent) : QListWidget(parent)
+ChatUserList::ChatUserList(QWidget* parent) : CustomListWidget(parent)
 {
-  // 默认隐藏滚动条
-  setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-  setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-
   _debounce_timer = new QTimer(this);
   _debounce_timer->setSingleShot(true);
   _debounce_timer->setInterval(200);
@@ -90,30 +86,6 @@ void ChatUserList::hideLoading()
     _loading_item = nullptr;
   }
   _loading = false;
-}
-
-void ChatUserList::enterEvent(QEnterEvent* event)
-{
-  setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-  QListWidget::enterEvent(event);
-}
-
-void ChatUserList::leaveEvent(QEvent* event)
-{
-  setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-  QListWidget::leaveEvent(event);
-}
-
-void ChatUserList::showEvent(QShowEvent* event)
-{
-  QListWidget::showEvent(event);
-  // 刷新布局，此为必要项，不要删除
-  QTimer::singleShot(0, this,
-                     [this]()
-                     {
-                       setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-                       setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-                     });
 }
 
 void ChatUserList::addTestData()

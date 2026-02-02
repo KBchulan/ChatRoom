@@ -26,6 +26,10 @@ public:
   explicit ContactItem(QWidget* parent = nullptr);
   ~ContactItem();
 
+  void SetName(const QString& name);
+  void SetHead(const QString& head);
+  void SetHead(const QString& head, QSize size);
+
 private:
   Ui::ContactItem* ui;
 };

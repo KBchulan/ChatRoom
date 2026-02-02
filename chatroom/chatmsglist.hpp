@@ -11,15 +11,14 @@
 #ifndef CHATMSGLIST_HPP
 #define CHATMSGLIST_HPP
 
-#include <QEnterEvent>
-#include <QEvent>
-#include <QListWidget>
 #include <QMouseEvent>
 #include <QShowEvent>
 #include <QTimer>
 
+#include "customlistwidget.hpp"
+
 class ChatMsgItem;
-class ChatMsgList : public QListWidget
+class ChatMsgList : public CustomListWidget
 {
   Q_OBJECT
 
@@ -29,9 +28,6 @@ public:
   void appendChatItem(ChatMsgItem* item);
 
 protected:
-  void enterEvent(QEnterEvent* event) override;
-  void leaveEvent(QEvent* event) override;
-  void showEvent(QShowEvent* event) override;
   void mousePressEvent(QMouseEvent* event) override;
 
 private:

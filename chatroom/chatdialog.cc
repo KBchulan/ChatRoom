@@ -11,11 +11,12 @@
 #include "contactlist.hpp"
 #include "findfaileddialog.hpp"
 #include "findsuccessdialog.hpp"
+#include "friendapplypage.hpp"
 #include "searchuserlist.hpp"
 #include "settingdialog.hpp"
 #include "ui_chatdialog.h"
 
-ChatDialog::ChatDialog(QWidget* parent) : QDialog(parent), ui(new Ui::ChatDialog)
+ChatDialog::ChatDialog(QWidget* parent) : QDialog(parent), ui(new Ui::ChatDialog), _friend_apply_page(nullptr)
 {
   ui->setupUi(this);
   _setting_dialog = new SettingDialog(this);
@@ -80,7 +81,9 @@ ChatDialog::ChatDialog(QWidget* parent) : QDialog(parent), ui(new Ui::ChatDialog
   // 加载所有可能的页面，并设置默认页面
   _right_stacked_widget = new QStackedWidget();
   _chat_page = new ChatPage();
+  _contact_page = new QWidget();
   _right_stacked_widget->addWidget(_chat_page);
+  _right_stacked_widget->addWidget(_contact_page);
   _right_stacked_widget->setCurrentWidget(_chat_page);
   stack_layout_2->addWidget(_right_stacked_widget);
 
@@ -88,6 +91,7 @@ ChatDialog::ChatDialog(QWidget* parent) : QDialog(parent), ui(new Ui::ChatDialog
   connect(ui->chat_side_bar_widget, &SideBarWidget::itemChanged, this, &ChatDialog::slot_item_changed);
   connect(_search_user_list, &SearchUserList::sig_item_clicked, this, &ChatDialog::slot_search_item_clicked);
   connect(_search_user_list, &SearchUserList::sig_search_failed, this, &ChatDialog::slot_search_failed);
+  connect(_contact_list, &ContactList::sig_new_friends_clicked, this, &ChatDialog::slot_new_friends_clicked);
   connect(_chat_page, &ChatPage::sig_clicked, this,
           [this]()
           {
@@ -152,9 +156,11 @@ void ChatDialog::slot_item_changed(SideBarItemType type)
   {
     case SideBarItemType::Chat:
       target = _chat_user_list;
+      _right_stacked_widget->setCurrentWidget(_chat_page);
       break;
     case SideBarItemType::Contact:
       target = _contact_list;
+      _right_stacked_widget->setCurrentWidget(_contact_page);
       break;
     default:
       return;
@@ -201,4 +207,16 @@ void ChatDialog::on_add_button_clicked()
 
   // 发起搜索好友请求，把搜索结果显示在 SearchUserList 中
   _search_user_list->StartSearch();
+}
+
+void ChatDialog::slot_new_friends_clicked()
+{
+  if (_friend_apply_page == nullptr)
+  {
+    _friend_apply_page = new FriendApplyPage();
+    _right_stacked_widget->addWidget(_friend_apply_page);
+  }
+
+  _contact_page = _friend_apply_page;
+  _right_stacked_widget->setCurrentWidget(_contact_page);
 }

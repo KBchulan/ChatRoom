@@ -17,9 +17,7 @@ ChatUserItem::~ChatUserItem()
 void ChatUserItem::SetHead(const QString& head)
 {
   QPixmap pixmap(head);
-
   ui->avatar_label->setPixmap(pixmap.scaled(ui->avatar_label->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
-  ui->avatar_label->setScaledContents(true);
 }
 
 void ChatUserItem::SetName(const QString& name)

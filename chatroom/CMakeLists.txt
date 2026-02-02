@@ -79,6 +79,9 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         findsuccessdialog.hpp findsuccessdialog.cc findsuccessdialog.ui
         findfaileddialog.hpp findfaileddialog.cc findfaileddialog.ui
         friendapplydialog.hpp friendapplydialog.cc friendapplydialog.ui
+        contactgroupitem.hpp contactgroupitem.cc contactgroupitem.ui
+        friendapplypage.hpp friendapplypage.cc friendapplypage.ui
+        friendapplyitem.hpp friendapplyitem.cc friendapplyitem.ui
         chatmsgitem.hpp chatmsgitem.cc
         global.hpp  global.cc
         timerbutton.hpp timerbutton.cc
@@ -96,6 +99,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         sidebaritem.hpp sidebaritem.cc
         searchuserlist.hpp searchuserlist.cc
         contactlist.hpp contactlist.cc
+        friendapplylist.hpp friendapplylist.cc
+        customlistwidget.hpp customlistwidget.cc
         Defer.hpp config.ini
     )
 # Define target properties for Android with Qt 6 as:
@@ -119,6 +124,9 @@ else()
             findsuccessdialog.hpp findsuccessdialog.cc findsuccessdialog.ui
             findfaileddialog.hpp findfaileddialog.cc findfaileddialog.ui
             friendapplydialog.hpp friendapplydialog.cc friendapplydialog.ui
+            contactgroupitem.hpp contactgroupitem.cc contactgroupitem.ui
+            friendapplypage.hpp friendapplypage.cc friendapplypage.ui
+            friendapplyitem.hpp friendapplyitem.cc friendapplyitem.ui
             chatmsgitem.hpp chatmsgitem.cc
             global.hpp  global.cc
             timerbutton.hpp timerbutton.cc
@@ -136,6 +144,8 @@ else()
             sidebaritem.hpp sidebaritem.cc
             searchuserlist.hpp searchuserlist.cc
             contactlist.hpp contactlist.cc
+            friendapplylist.hpp friendapplylist.cc
+            customlistwidget.hpp customlistwidget.cc
             Defer.hpp config.ini
         )
 # Define properties for Android with Qt 5 after find_package() calls as:
@@ -156,6 +166,9 @@ else()
             findsuccessdialog.hpp findsuccessdialog.cc findsuccessdialog.ui
             findfaileddialog.hpp findfaileddialog.cc findfaileddialog.ui
             friendapplydialog.hpp friendapplydialog.cc friendapplydialog.ui
+            contactgroupitem.hpp contactgroupitem.cc contactgroupitem.ui
+            friendapplypage.hpp friendapplypage.cc friendapplypage.ui
+            friendapplyitem.hpp friendapplyitem.cc friendapplyitem.ui
             chatmsgitem.hpp chatmsgitem.cc
             global.hpp  global.cc
             timerbutton.hpp timerbutton.cc
@@ -173,6 +186,8 @@ else()
             sidebaritem.hpp sidebaritem.cc
             searchuserlist.hpp searchuserlist.cc
             contactlist.hpp contactlist.cc
+            friendapplylist.hpp friendapplylist.cc
+            customlistwidget.hpp customlistwidget.cc
             Defer.hpp config.ini
         )
     endif()

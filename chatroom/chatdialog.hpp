@@ -24,6 +24,7 @@ class ChatDialog;
 }
 
 class ChatPage;
+class FriendApplyPage;
 class ChatUserList;
 class ContactList;
 class SearchUserList;
@@ -55,6 +56,10 @@ private:
 
   QStackedWidget* _right_stacked_widget;
   ChatPage* _chat_page;
+  QWidget* _contact_page;
+
+  // _contact_page 的子控件
+  FriendApplyPage* _friend_apply_page;
 
   SettingDialog* _setting_dialog;
 
@@ -65,6 +70,7 @@ private slots:
   void slot_search_item_clicked(const QString& uuid);
   void slot_search_failed();
   void on_add_button_clicked();
+  void slot_new_friends_clicked();
 };
 
 #endif  // CHATDIALOG_HPP

@@ -11,25 +11,18 @@
 #ifndef CHATUSERLIST_HPP
 #define CHATUSERLIST_HPP
 
-#include <QEnterEvent>
-#include <QEvent>
-#include <QListWidget>
-#include <QListWidgetItem>
 #include <QShowEvent>
 #include <QTimer>
 
-class ChatUserList : public QListWidget
+#include "customlistwidget.hpp"
+
+class ChatUserList : public CustomListWidget
 {
   Q_OBJECT
 public:
   explicit ChatUserList(QWidget* parent = nullptr);
 
   void addUserItem(const QString& head, const QString& name, const QString& msg, const QString& time);
-
-protected:
-  void enterEvent(QEnterEvent* event) override;
-  void leaveEvent(QEvent* event) override;
-  void showEvent(QShowEvent* event) override;
 
 private slots:
   void slot_load_more();

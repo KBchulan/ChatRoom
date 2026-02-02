@@ -4,12 +4,9 @@
 
 #include "chatmsgitem.hpp"
 
-ChatMsgList::ChatMsgList(QWidget* parent) : QListWidget(parent)
+ChatMsgList::ChatMsgList(QWidget* parent) : CustomListWidget(parent)
 {
-  setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-  setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   setSelectionMode(QAbstractItemView::NoSelection);
-  setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
 
   _debounce_timer = new QTimer(this);
   _debounce_timer->setSingleShot(true);
@@ -26,30 +23,6 @@ ChatMsgList::ChatMsgList(QWidget* parent) : QListWidget(parent)
               _debounce_timer->start();
             }
           });
-}
-
-void ChatMsgList::enterEvent(QEnterEvent* event)
-{
-  setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-  QListWidget::enterEvent(event);
-}
-
-void ChatMsgList::leaveEvent(QEvent* event)
-{
-  setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-  QListWidget::leaveEvent(event);
-}
-
-void ChatMsgList::showEvent(QShowEvent* event)
-{
-  QListWidget::showEvent(event);
-  // 刷新布局，此为必要项，不要删除
-  QTimer::singleShot(0, this,
-                     [this]()
-                     {
-                       setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-                       setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-                     });
 }
 
 void ChatMsgList::mousePressEvent(QMouseEvent* event)

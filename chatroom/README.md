@@ -71,15 +71,20 @@ chatroom/
 ├── picturebubble.*         # 图片消息气泡
 ├── chatuseritem.*          # 聊天用户列表项组件
 ├── chatuserlist.*          # 聊天用户列表组件
-├── contactlist.*           # 联系人列表组件
+├── contactlist.*           # 联系人列表组件（按拼音首字母分组）
 ├── contactitem.*           # 联系人列表项组件
+├── contactgroupitem.*      # 联系人分组表头组件
 ├── searchuserlist.*        # 搜索结果列表组件
 ├── searchuseritem.*        # 搜索结果列表项组件
+├── friendapplypage.*       # 好友申请页面
+├── friendapplylist.*       # 好友申请列表组件
+├── friendapplyitem.*       # 好友申请列表项组件
 ├── findsuccessdialog.*     # 查找成功对话框
 ├── findfaileddialog.*      # 查找失败对话框
 ├── friendapplydialog.*     # 好友申请对话框
 ├── settingdialog.*         # 设置对话框
 ├── loadingitem.*           # 加载动画组件
+├── customlistwidget.*      # 列表组件公共基类
 ├── httpmanager.*           # HTTP 请求管理器
 ├── tcpmanager.*            # TCP 长连接管理器
 ├── userinfo.*              # 用户信息存储
@@ -113,22 +118,27 @@ chatroom/
 | **PictureBubble** | 图片消息气泡，继承 BubbleBase，支持自动缩放显示图片 |
 | **ChatTextEdit** | 聊天输入框组件，支持富文本编辑、图片拖放和粘贴 |
 | **ChatUserItem** | 聊天用户列表项组件，显示头像、昵称、消息预览和时间 |
-| **ChatUserList** | 聊天用户列表组件，支持滚动加载和悬停显示滚动条 |
-| **ContactList** | 联系人列表组件（占位） |
-| **ContactItem** | 联系人列表项组件（占位） |
-| **SearchUserList** | 搜索结果列表组件，支持点击触发信号和悬停显示滚动条 |
+| **ChatUserList** | 聊天用户列表组件，继承 CustomListWidget，支持滚动加载和悬停显示滚动条 |
+| **ContactList** | 联系人列表组件，继承 CustomListWidget，支持按拼音首字母分组显示 |
+| **ContactItem** | 联系人列表项组件，显示头像和昵称 |
+| **ContactGroupItem** | 联系人分组表头组件，显示分组字母（A-Z 或 #） |
+| **SearchUserList** | 搜索结果列表组件，继承 CustomListWidget，支持点击触发信号和悬停显示滚动条 |
 | **SearchUserItem** | 搜索结果列表项组件，显示用户头像、昵称和简介 |
+| **FriendApplyPage** | 好友申请页面，显示新的好友申请列表 |
+| **FriendApplyList** | 好友申请列表组件，继承 CustomListWidget，支持按状态和时间排序 |
+| **FriendApplyItem** | 好友申请列表项组件，显示申请者信息和同意按钮 |
 | **FindSuccessDialog** | 查找成功对话框，显示用户信息和添加按钮 |
 | **FindFailedDialog** | 查找失败对话框，显示错误提示 |
 | **FriendApplyDialog** | 好友申请对话框，支持输入备注和申请消息 |
 | **SettingDialog** | 设置对话框，支持 Ctrl+Q 快捷键关闭（占位） |
 | **LoadingItem** | 加载动画组件，用于列表加载时显示 |
+| **CustomListWidget** | 列表组件公共基类，封装滚动条显示/隐藏逻辑 |
 | **HttpManager** | 封装 Qt Network，处理与网关的 HTTP 通信，目前支持 POST 请求 |
 | **TcpManager** | 管理与聊天服务器的 TCP 长连接 |
 | **UserInfo** | 存储当前登录用户的信息（uuid、昵称、头像等） |
 | **ServerInfo** | 存储聊天服务器连接信息（host、port、分布式校验 token） |
 | **TimerButton** | 可复用的倒计时按钮，用于验证码发送 |
-| **global** | 全局定义，包含请求 ID、模块枚举、错误码、UI 常量、密码加密等 |
+| **global** | 全局定义，包含请求 ID、模块枚举、错误码、UI 常量、密码加密、拼音工具等 |
 | **Defer** | RAII 工具类，模仿 Go 的 defer 关键字 |
 
 ### 使用说明

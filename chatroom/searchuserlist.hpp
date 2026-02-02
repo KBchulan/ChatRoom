@@ -11,12 +11,9 @@
 #ifndef SEARCHUSERLIST_HPP
 #define SEARCHUSERLIST_HPP
 
-#include <QEnterEvent>
-#include <QEvent>
-#include <QListWidget>
-#include <QListWidgetItem>
+#include "customlistwidget.hpp"
 
-class SearchUserList : public QListWidget
+class SearchUserList : public CustomListWidget
 {
   Q_OBJECT
 
@@ -30,10 +27,6 @@ public:
 signals:
   void sig_item_clicked(const QString& uuid);
   void sig_search_failed();
-
-protected:
-  void enterEvent(QEnterEvent* event) override;
-  void leaveEvent(QEvent* event) override;
 
 private:
   void showLoading();

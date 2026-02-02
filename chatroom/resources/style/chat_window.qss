@@ -402,6 +402,155 @@ ChatPage #receive_button:pressed {
 }
 
 /* ==========================================================
+ * FriendApplyPage - 新的好友申请项
+ * ========================================================== */
+
+FriendApplyPage #top_widget {
+  background-color: transparent;
+  border-bottom: 1px solid #cccccc;
+}
+
+FriendApplyPage #tip_label {
+  font-size: 16px;
+  font-weight: 500;
+  color: #1a1a1a;
+}
+
+/* ==========================================================
+ * FriendApplyList - 好友申请列表
+ * ========================================================== */
+FriendApplyList {
+  background-color: #f8f6f1;
+  border: none;
+  outline: none;
+}
+
+FriendApplyList::item {
+  border-bottom: 1px solid #e8e8e8;
+}
+
+FriendApplyList::item:hover {
+  background-color: #e9e9e9;
+}
+
+FriendApplyList::item:selected {
+  background-color: #d4d4d4;
+  color: #333333;
+}
+
+FriendApplyList::item:selected:hover {
+  background-color: #c8c8c8;
+}
+
+FriendApplyList QScrollBar:vertical {
+  background-color: transparent;
+  width: 8px;
+  margin: 0px;
+}
+
+FriendApplyList QScrollBar::handle:vertical {
+  background-color: #c1c1c1;
+  min-height: 30px;
+  border-radius: 4px;
+}
+
+FriendApplyList QScrollBar::handle:vertical:hover {
+  background-color: #a8a8a8;
+}
+
+FriendApplyList QScrollBar::handle:vertical:pressed {
+  background-color: #787878;
+}
+
+FriendApplyList QScrollBar::add-line:vertical,
+FriendApplyList QScrollBar::sub-line:vertical {
+  height: 0px;
+}
+
+FriendApplyList QScrollBar::add-page:vertical,
+FriendApplyList QScrollBar::sub-page:vertical {
+  background-color: transparent;
+}
+
+/* ==========================================================
+ * FriendApplyItem - 好友申请项
+ * ========================================================== */
+FriendApplyItem,
+FriendApplyItem QWidget,
+FriendApplyItem QLabel {
+  background-color: transparent;
+}
+
+FriendApplyItem #avatar_label {
+  border-radius: 22px;
+}
+
+FriendApplyItem #name_label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #1a1a1a;
+}
+
+FriendApplyItem #msg_label {
+  font-size: 12px;
+  color: #888888;
+}
+
+FriendApplyItem #accept_button {
+  background-color: transparent;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  font-size: 13px;
+  color: #1a1a1a;
+}
+
+FriendApplyItem #accept_button:hover {
+  background-color: #e8e8e8;
+}
+
+FriendApplyItem #accept_button:pressed {
+  background-color: #d4d4d4;
+}
+
+FriendApplyItem #added_label {
+  font-size: 13px;
+  color: #888888;
+}
+
+/* ==========================================================
+ * ContactItem - 联系人项
+ * ========================================================== */
+ContactItem,
+ContactItem QWidget,
+ContactItem QLabel {
+  background-color: transparent;
+}
+
+ContactItem #avatar_label {
+  border-radius: 22px;
+}
+
+ContactItem #name_label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #1a1a1a;
+}
+
+/* ==========================================================
+ * ContactGroupItem - 联系人分组表头
+ * ========================================================== */
+ContactGroupItem,
+ContactGroupItem QLabel {
+  background-color: #e8e6e1;
+}
+
+ContactGroupItem #group_name_label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #888888;
+}
+
+/* ==========================================================
  * FindSuccessDialog / FindFailedDialog - 搜索结果对话框
  * ========================================================== */
 FindSuccessDialog,

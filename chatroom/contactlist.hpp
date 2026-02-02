@@ -11,14 +11,31 @@
 #ifndef CONTACTLIST_HPP
 #define CONTACTLIST_HPP
 
-#include <QListWidget>
+#include <QMap>
 
-class ContactList : public QListWidget
+#include "customlistwidget.hpp"
+#include "global.hpp"
+
+class ContactList : public CustomListWidget
 {
   Q_OBJECT
 
 public:
   explicit ContactList(QWidget* parent = nullptr);
+
+  void AddContactItem(const QString& name, const QString& head);
+
+private:
+  void addNewFriendsItem();
+  void ensureGroupExists(ContactGroup group);
+  int getGroupEndRow(ContactGroup group);
+
+  void addTestData();
+
+  QMap<ContactGroup, QListWidgetItem*> _group_items;
+
+signals:
+  void sig_new_friends_clicked();
 };
 
 #endif  // CONTACTLIST_HPP

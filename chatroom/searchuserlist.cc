@@ -7,12 +7,8 @@
 #include "loadingitem.hpp"
 #include "searchuseritem.hpp"
 
-SearchUserList::SearchUserList(QWidget* parent) : QListWidget(parent)
+SearchUserList::SearchUserList(QWidget* parent) : CustomListWidget(parent)
 {
-  // 默认隐藏滚动条
-  setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-  setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-
   // 点击事件：获取 uuid 并发出信号
   connect(this, &QListWidget::itemClicked,
           [this](QListWidgetItem* item)
@@ -69,18 +65,6 @@ void SearchUserList::StartSearch()
 void SearchUserList::ClearResults()
 {
   clear();
-}
-
-void SearchUserList::enterEvent(QEnterEvent* event)
-{
-  setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-  QListWidget::enterEvent(event);
-}
-
-void SearchUserList::leaveEvent(QEvent* event)
-{
-  setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-  QListWidget::leaveEvent(event);
 }
 
 void SearchUserList::showLoading()
