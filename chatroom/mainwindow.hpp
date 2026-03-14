@@ -39,6 +39,8 @@ public slots:
   void SlotSwitchLogin();
   void SlotSwitchResetPassword();
   void SlotSwitchChat();
+  void SlotExitLoginSuccess();
+  void SlotExitLoginFailed(int code);
 
 private:
   Ui::MainWindow* ui;

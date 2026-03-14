@@ -79,13 +79,13 @@ ChatServer/
 │   │   ├── msg-node/               # 消息节点 (发送/接收)
 │   │   ├── logic/                  # 业务逻辑系统
 │   │   ├── io/                     # io_context 池
+│   │   ├── manager/                # 管理器 (用户管理等)
 │   │   ├── repository/             # 数据访问层
 │   │   └── model/                  # 领域模型
 │   └── utils/
 │       ├── common/                 # 通用工具 (错误码/消息ID)
-│       ├── db_params/              # MySQL 参数绑定辅助
 │       ├── pool/                   # 连接池 (MariaDB/Redis/gRPC)
-│       └── grpc/                   # gRPC 客户端和 IDL 生成代码
+│       └── grpc/                   # gRPC 客户端、服务端和 IDL 生成代码
 ├── include/
 │   ├── global/                     # 全局配置与无锁队列
 │   ├── tools/                      # 工具组件 (日志/ID生成/Defer)
@@ -285,6 +285,7 @@ if (!res) {
 | **Session**    | TCP 会话对象，协程读写 + 无锁发送队列    |
 | **MsgNode**    | 消息节点，RecvNode 和 SendNode           |
 | **Logic**      | 业务逻辑系统，无锁队列 + Handler 分发    |
+| **Manager**    | 管理器，如用户管理（踢人等后续逻辑）     |
 | **Repository** | 数据访问层，封装数据库操作               |
 | **Model**      | 领域模型，一些数据结构的定义             |
 
@@ -295,7 +296,7 @@ if (!res) {
 | **DBPool**      | MariaDB 连接池，预分配 + 原子操作      |
 | **RedisPool**   | Redis 连接池，支持全数据结构操作       |
 | **ChannelPool** | gRPC Channel 复用池，给 rpc 客户端使用 |
-| **gRPC**        | protobuf 代码生成与 rpc 客户端封装     |
+| **gRPC**        | protobuf 代码生成、rpc 客户端与服务端封装 |
 | **db_params**   | MySQL 参数绑定辅助，支持类型安全绑定   |
 | **common**      | 错误码和消息 ID 定义                   |
 
@@ -315,6 +316,8 @@ if (!res) {
 | ------- | ---------------------- | ------------ |
 | 1005    | ID_LOGIN_CHAT          | 逻辑登录请求 |
 | 1006    | ID_LOGIN_CHAT_RESPONSE | 逻辑登录响应 |
+| 1007    | ID_EXIT_LOGIN          | 退出登录请求 |
+| 1008    | ID_EXIT_LOGIN_RESPONSE | 退出登录响应 |
 
 ## 开发文档
 

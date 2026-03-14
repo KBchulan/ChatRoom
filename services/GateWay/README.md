@@ -87,8 +87,7 @@ GateWay/
 │   │   └── domain/                 # 领域模型 (DTO/VO/DO)
 │   └── utils/
 │       ├── common/                 # 通用工具 (错误码/通用函数/JWT/限流/路由)
-|       ├── db_params/              # 构造数据库参数
-│       ├── pool/                   # 连接池 (MariaDB/Redis/gRPC)
+│       ├── pool/                   # 连接池 (MariaDB/Redis/gRPC) 及数据库参数绑定
 │       ├── grpc/                   # gRPC 客户端和 IDL 生成代码
 |       ├── url/                    # URL 解析工具
 │       └── context/                # 请求上下文
@@ -337,7 +336,7 @@ conn.QueryOne(sql, params, results);
 | **RedisPool**   | Redis 连接池，支持全数据结构操作                   |
 | **ChannelPool** | gRPC Channel 复用池，给 rpc 客户端使用             |
 | **gRPC**        | protobuf 代码生成与 rpc 客户端封装                 |
-| **db_params**   | 数据库请求参数配置，实现对增删改查的优雅传参       |
+| **db_params**   | 数据库请求参数绑定，实现对增删改查的优雅传参       |
 | **URL**         | URL 解析工具，查询参数提取和路径保存               |
 
 其次是 `include` 目录下的全局配置与工具组件：

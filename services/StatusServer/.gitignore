@@ -6,4 +6,4 @@ UtilsExport.hpp
 Config.hpp
 compile_commands.json
 
-gen
+*.pb.*

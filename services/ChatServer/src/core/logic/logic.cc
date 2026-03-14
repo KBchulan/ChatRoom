@@ -152,6 +152,41 @@ struct Logic::_impl
       response["data"] = user_info;
       session->Send(std::make_shared<SendNode>(utils::ID_LOGIN_CHAT_RESPONSE, Json::writeString(writer, response)));
     };
+
+    _handlers[utils::ID_EXIT_LOGIN] = [](const Session::Ptr& session, const std::span<const char>& data)
+    {
+      Json::Value response;
+      Json::StreamWriterBuilder writer;
+
+      auto root = parse_json(std::string(data.data(), data.size()));
+      if (!root)
+      {
+        tools::Logger::getInstance().error("Failed to parse JSON");
+        response["code"] = utils::JSON_PARSE_ERROR;
+        response["message"] = "Failed to parse JSON";
+        session->Send(std::make_shared<SendNode>(utils::ID_EXIT_LOGIN_RESPONSE, Json::writeString(writer, response)));
+        return;
+      }
+
+      // 删除 redis 中的登录信息
+      auto uuid = root.value()["uuid"].asString();
+      auto key = global::server::USER_INFO_PREFIX + uuid;
+      auto redis_conn = utils::RedisPool::GetInstance().GetConnection();
+      auto reply = redis_conn.Del(key);
+      if (!reply.IsValid() || reply.IsError())
+      {
+        tools::Logger::getInstance().error("Failed to delete user info from Redis for user {}", uuid);
+        response["code"] = utils::REDIS_ERROR;
+        response["message"] = "Failed to delete user info from Redis";
+        session->Send(std::make_shared<SendNode>(utils::ID_EXIT_LOGIN_RESPONSE, Json::writeString(writer, response)));
+        return;
+      }
+
+      // 返回响应
+      response["code"] = utils::SUCCESS;
+      response["message"] = "Exit login successful";
+      session->Send(std::make_shared<SendNode>(utils::ID_EXIT_LOGIN_RESPONSE, Json::writeString(writer, response)));
+    };
   }
 
   _impl() : _thread([this] { run(); })

@@ -28,3 +28,10 @@
 - 实现 `print_usage()` 函数，打印使用说明
 - 将 `Global.hpp` 中的 `SERVER_ADDRESS` 拆分为主机地址和默认端口
 - 服务器端口现在可通过 `-p` 参数指定，便于灵活部署
+
+### [2026-03-14] 项目结构重构
+
+- proto 生成目录从 `gen/` 重构为 `grpc/status_server/` 和 `grpc/chat_server/` 分区结构
+- CMakeLists 重构为按 proto 分区组织，新增 `chat_server.proto` 代码生成，新增 `-Wno-unused-parameter` 抑制生成代码警告
+- `.gitignore` 从忽略 `gen` 目录改为忽略 `*.pb.*` 模式
+- `server.hpp/cc` 更新 include 路径适配新目录结构

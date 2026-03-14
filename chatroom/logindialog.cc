@@ -243,9 +243,6 @@ bool LoginDialog::eventFilter(QObject* watched, QEvent* event)
 
 void LoginDialog::on_login_button_clicked()
 {
-  // TODO: 这里是模拟，聊天页面开发完成需要删除，暂时请保留
-  emit TcpManager::GetInstance().sig_switch_chat_dialog();
-
   auto user = ui->user_edit->text();
   if (user.isEmpty())
   {
@@ -316,7 +313,7 @@ void LoginDialog::slot_tcp_conn_finish(bool success)
     obj["token"] = _server_info.GetToken();
 
     QJsonDocument doc{obj};
-    QString jsonStr = doc.toJson(QJsonDocument::Indented);
+    QString jsonStr = doc.toJson(QJsonDocument::Compact);
 
     TcpManager::GetInstance().sig_send_data(ReqID::ID_LOGIN_CHAT, jsonStr);
   }

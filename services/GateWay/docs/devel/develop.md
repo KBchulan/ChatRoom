@@ -107,3 +107,8 @@
 ### [2026-01-10] 修复小bug
 
 - 将路由可用性检查移至 URL 解析之后，使用解析后的 path 进行判断
+
+### [2026-03-14] 文件重组
+
+- `db_params` 从 `utils/db_params/` 迁移到 `utils/pool/mariadb/`，与 `db_pool` 共处
+- `db_pool.hpp` 更新 include 路径适配新位置

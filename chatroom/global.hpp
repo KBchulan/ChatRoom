@@ -28,6 +28,8 @@ enum class ReqID : std::uint16_t
   ID_LOGIN = 1004,                // 登录
   ID_LOGIN_CHAT = 1005,           // 逻辑登录
   ID_LOGIN_CHAT_RESPONSE = 1006,  // 登录回包
+  ID_EXIT_LOGIN = 1007,           // 退出登录
+  ID_EXIT_LOGIN_RESPONSE = 1008,  // 退出登录回包
 };
 
 enum class Module : std::uint8_t

@@ -130,11 +130,11 @@ chatroom/
 | **FindSuccessDialog** | 查找成功对话框，显示用户信息和添加按钮 |
 | **FindFailedDialog** | 查找失败对话框，显示错误提示 |
 | **FriendApplyDialog** | 好友申请对话框，支持输入备注和申请消息 |
-| **SettingDialog** | 设置对话框，支持 Ctrl+Q 快捷键关闭（占位） |
+| **SettingDialog** | 设置对话框，支持退出登录功能 |
 | **LoadingItem** | 加载动画组件，用于列表加载时显示 |
 | **CustomListWidget** | 列表组件公共基类，封装滚动条显示/隐藏逻辑 |
 | **HttpManager** | 封装 Qt Network，处理与网关的 HTTP 通信，目前支持 POST 请求 |
-| **TcpManager** | 管理与聊天服务器的 TCP 长连接 |
+| **TcpManager** | 管理与聊天服务器的 TCP 长连接，处理登录/退出登录等消息 |
 | **UserInfo** | 存储当前登录用户的信息（uuid、昵称、头像等） |
 | **ServerInfo** | 存储聊天服务器连接信息（host、port、分布式校验 token） |
 | **TimerButton** | 可复用的倒计时按钮，用于验证码发送 |

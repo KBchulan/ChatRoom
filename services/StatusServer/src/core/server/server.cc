@@ -67,7 +67,6 @@ grpc::Status StatusServiceImpl::GetTcpServer([[maybe_unused]] grpc::ServerContex
     auto server_index = static_cast<size_t>(std::distance(_tcp_servers.begin(), iter));
     const auto& server = *iter;
 
-    // 存储 uuid -> {token, server_index} 的映射
     _pending_connections[uuid] = {.token = token, .server_index = server_index};
 
     host = server.host;

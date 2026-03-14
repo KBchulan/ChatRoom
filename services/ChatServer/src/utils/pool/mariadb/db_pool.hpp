@@ -14,7 +14,7 @@
 #include <atomic>
 #include <cstring>
 #include <global/Global.hpp>
-#include <utils/db_params/db_params.hpp>
+#include <utils/pool/mariadb/db_params.hpp>
 
 namespace utils
 {

@@ -123,3 +123,17 @@ ChatServer/
 - `UserRepository` 新增 `updateLastLogin()` 方法，更新用户最后登录时间
 - 用户登录成功后自动更新 `last_login` 字段
 - 数据库 `users` 表新增 `brief` 字段，用于存储用户简介
+
+### [2026-03-14] 退出登录与项目结构重构
+
+- 新增退出登录功能：
+  - `code.hpp` 新增 `REDIS_ERROR`（2）错误码、`ID_EXIT_LOGIN`（1007）和 `ID_EXIT_LOGIN_RESPONSE`（1008）消息 ID
+  - `logic.cc` 新增 `ID_EXIT_LOGIN` handler，解析 JSON 获取 uuid，删除 Redis 中的用户登录信息并返回响应
+- 新增 `chat_server.proto` gRPC 服务定义（脚手架，方法暂未启用）
+- 新增 `ChatServiceImpl` gRPC 服务端（占位）
+- 新增 `ChatServerClient` gRPC 客户端，用于 ChatServer 间通信（占位）
+- 新增 `UserManager` 用户管理器（占位，用于后续踢人等逻辑）
+- 文件重组：
+  - `db_params` 从 `utils/db_params/` 迁移到 `utils/pool/mariadb/`，与 `db_pool` 共处
+  - proto 生成目录从 `grpc/` 细分为 `grpc/status_server/` 和 `grpc/chat_server/`
+  - CMakeLists 重构为按 proto 分区组织，新增 `-Wno-unused-parameter` 抑制生成代码警告

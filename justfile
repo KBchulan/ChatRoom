@@ -44,14 +44,18 @@ help:
     @echo "  just run [service] <port>            启动指定服务，使用指定端口"
     @echo "  just stop all                        停止所有服务"
     @echo "  just stop [service]                  停止指定服务"
+    @echo "  just stop [service] <port>           停止指定端口的服务实例"
     @echo "  just restart all                     重启所有服务"
     @echo "  just restart [service]               重启指定服务"
+    @echo "  just restart [service] <port>        重启指定端口的服务实例"
     @echo ""
     @echo "状态与日志:"
     @echo "  just status                          查看服务状态"
     @echo "  just logs [service]                  查看指定服务日志"
-    @echo "  just logs [service] <line>           查看具体行数的指定服务日志"
-    @echo "  just logs-follow [services]          实时跟踪指定服务日志"
+    @echo "  just logs [service] <line>           查看指定服务日志（自动选实例）"
+    @echo "  just logs [service] <line> <port>    查看指定端口实例日志"
+    @echo "  just logs-follow [service]           实时跟踪指定服务日志（自动选实例）"
+    @echo "  just logs-follow [service] <port>    实时跟踪指定端口实例日志"
     @echo ""
     @echo "开发命令:"
     @echo "  just dev client                      编译客户端并前台启动"
@@ -180,10 +184,12 @@ run service port="":
         local bin=$3
         local default_port=$4
         local port=${5:-$default_port}
-        local pid_file="{{pid_dir}}/${name}.pid"
+        local instance="${name}_${port}"
+        local pid_file="{{pid_dir}}/${instance}.pid"
+        local log_file="{{pid_dir}}/${instance}.log"
 
         if [ -f "$pid_file" ] && kill -0 $(cat "$pid_file") 2>/dev/null; then
-            echo "$name 已在运行 (PID: $(cat $pid_file))"
+            echo "$name 已在运行 (端口: $port, PID: $(cat $pid_file))"
             return
         fi
 
@@ -194,7 +200,7 @@ run service port="":
         fi
 
         echo "启动 $name (端口: $port)..."
-        nohup "$bin_path" -p "$port" > {{pid_dir}}/${name}.log 2>&1 &
+        nohup "$bin_path" -p "$port" > "$log_file" 2>&1 &
         echo $! > "$pid_file"
         echo "$name 已启动 (PID: $!)"
     }
@@ -257,27 +263,60 @@ run service port="":
     esac
 
 # 停止服务
-stop service="all":
+stop service="all" port="":
     #!/usr/bin/env bash
     set -euo pipefail
 
     stop_service() {
         local name=$1
-        local pid_file="{{pid_dir}}/${name}.pid"
+        local target_port=${2:-}
+        local found=0
 
-        if [ -f "$pid_file" ]; then
+        stop_by_pid_file() {
+            local pid_file=$1
             local pid=$(cat "$pid_file")
+            local instance=$(basename "$pid_file" .pid)
+
             if kill -0 "$pid" 2>/dev/null; then
-                echo "停止 $name (PID: $pid)..."
+                echo "停止 $instance (PID: $pid)..."
                 kill "$pid"
-                rm -f "$pid_file"
-                echo "$name 已停止"
+                echo "$instance 已停止"
             else
-                echo "$name 已经停止"
-                rm -f "$pid_file"
+                echo "$instance 已经停止"
+            fi
+
+            rm -f "$pid_file"
+        }
+
+        if [ -n "$target_port" ]; then
+            local pid_file="{{pid_dir}}/${name}_${target_port}.pid"
+            if [ -f "$pid_file" ]; then
+                found=1
+                stop_by_pid_file "$pid_file"
             fi
         else
-            echo "$name 未运行"
+            shopt -s nullglob
+            local pid_files=( {{pid_dir}}/${name}_*.pid )
+            shopt -u nullglob
+
+            if [ -f "{{pid_dir}}/${name}.pid" ]; then
+                pid_files+=( "{{pid_dir}}/${name}.pid" )
+            fi
+
+            if [ ${#pid_files[@]} -gt 0 ]; then
+                found=1
+                for pid_file in "${pid_files[@]}"; do
+                    stop_by_pid_file "$pid_file"
+                done
+            fi
+        fi
+
+        if [ "$found" -eq 0 ]; then
+            if [ -n "$target_port" ]; then
+                echo "$name 在端口 $target_port 未运行"
+            else
+                echo "$name 未运行"
+            fi
         fi
     }
 
@@ -290,10 +329,10 @@ stop service="all":
             stop_service "backup"
             echo "所有服务已停止"
             ;;
-        gateway)  stop_service "GateWay" ;;
-        status)   stop_service "StatusServer" ;;
-        verify)   stop_service "VerifyCode" ;;
-        chat)     stop_service "ChatServer" ;;
+        gateway)  stop_service "GateWay" "{{port}}" ;;
+        status)   stop_service "StatusServer" "{{port}}" ;;
+        verify)   stop_service "VerifyCode" "{{port}}" ;;
+        chat)     stop_service "ChatServer" "{{port}}" ;;
         backup)   stop_service "backup" ;;
         *)
             echo "未知服务: {{service}}"
@@ -302,10 +341,10 @@ stop service="all":
     esac
 
 # 重启服务
-restart service:
-    just stop {{service}}
+restart service port="":
+    just stop {{service}} {{port}}
     @sleep 1
-    just run {{service}}
+    just run {{service}} {{port}}
 
 # ============== 状态与日志 ==============
 
@@ -313,23 +352,46 @@ restart service:
 status:
     #!/usr/bin/env bash
     echo "服务状态"
-    echo "─────────────────────────────────────"
-    printf "%-15s %-8s %-10s\n" "服务" "状态" "PID"
-    echo "─────────────────────────────────────"
+    echo "────────────────────────────────────────────────────────"
+    printf "%-15s %-12s %-8s %-10s\n" "服务" "实例(端口)" "状态" "PID"
+    echo "────────────────────────────────────────────────────────"
 
     check_status() {
         local name=$1
-        local pid_file="{{pid_dir}}/${name}.pid"
+        local found=0
 
-        if [ -f "$pid_file" ]; then
+        shopt -s nullglob
+        local pid_files=( {{pid_dir}}/${name}_*.pid )
+        shopt -u nullglob
+
+        if [ -f "{{pid_dir}}/${name}.pid" ]; then
+            pid_files+=( "{{pid_dir}}/${name}.pid" )
+        fi
+
+        if [ ${#pid_files[@]} -eq 0 ]; then
+            printf "%-15s %-12s \033[33m%-8s\033[0m %-10s\n" "$name" "-" "未启动" "-"
+            return
+        fi
+
+        for pid_file in "${pid_files[@]}"; do
+            found=1
             local pid=$(cat "$pid_file")
-            if kill -0 "$pid" 2>/dev/null; then
-                printf "%-15s \033[32m%-8s\033[0m %-10s\n" "$name" "运行中" "$pid"
-            else
-                printf "%-15s \033[31m%-8s\033[0m %-10s\n" "$name" "已停止" "-"
+            local instance=$(basename "$pid_file" .pid)
+            local port="-"
+
+            if [[ "$instance" == "${name}_"* ]]; then
+                port="${instance#${name}_}"
             fi
-        else
-            printf "%-15s \033[33m%-8s\033[0m %-10s\n" "$name" "未启动" "-"
+
+            if kill -0 "$pid" 2>/dev/null; then
+                printf "%-15s %-12s \033[32m%-8s\033[0m %-10s\n" "$name" "$port" "运行中" "$pid"
+            else
+                printf "%-15s %-12s \033[31m%-8s\033[0m %-10s\n" "$name" "$port" "已停止" "-"
+            fi
+        done
+
+        if [ "$found" -eq 0 ]; then
+            printf "%-15s %-12s \033[33m%-8s\033[0m %-10s\n" "$name" "-" "未启动" "-"
         fi
     }
 
@@ -338,48 +400,102 @@ status:
     check_status "VerifyCode"
     check_status "ChatServer"
     check_status "backup"
-    echo "─────────────────────────────────────"
+    echo "────────────────────────────────────────────────────────"
 
 # 查看服务日志
-logs service lines="50":
+logs service lines="50" port="":
     #!/usr/bin/env bash
+    set -euo pipefail
+
     case "{{service}}" in
-        gateway)  log_file="GateWay.log" ;;
-        status)   log_file="StatusServer.log" ;;
-        verify)   log_file="VerifyCode.log" ;;
-        chat)     log_file="ChatServer.log" ;;
-        backup)   log_file="backup.log" ;;
+        gateway)  name="GateWay" ;;
+        status)   name="StatusServer" ;;
+        verify)   name="VerifyCode" ;;
+        chat)     name="ChatServer" ;;
+        backup)   name="backup" ;;
         *)
             echo "未知服务: {{service}}"
             exit 1
             ;;
     esac
 
-    if [ -f "{{pid_dir}}/$log_file" ]; then
-        tail -n {{lines}} "{{pid_dir}}/$log_file"
+    port="{{port}}"
+    if [ -n "$port" ]; then
+        log_file="{{pid_dir}}/${name}_${port}.log"
+        if [ -f "$log_file" ]; then
+            tail -n {{lines}} "$log_file"
+            exit 0
+        fi
+        echo "日志文件不存在: $log_file"
+        exit 1
+    fi
+
+    shopt -s nullglob
+    files=( {{pid_dir}}/${name}_*.log )
+    shopt -u nullglob
+
+    if [ ${#files[@]} -eq 1 ]; then
+        tail -n {{lines}} "${files[0]}"
+    elif [ ${#files[@]} -gt 1 ]; then
+        echo "检测到多个实例日志，请指定端口:"
+        for f in "${files[@]}"; do
+            instance=$(basename "$f" .log)
+            echo "  ${instance#${name}_}"
+        done
+        exit 1
+    elif [ -f "{{pid_dir}}/${name}.log" ]; then
+        tail -n {{lines}} "{{pid_dir}}/${name}.log"
     else
         echo "日志文件不存在"
+        exit 1
     fi
 
 # 实时查看日志
-logs-follow service:
+logs-follow service port="":
     #!/usr/bin/env bash
+    set -euo pipefail
+
     case "{{service}}" in
-        gateway)  log_file="GateWay.log" ;;
-        status)   log_file="StatusServer.log" ;;
-        verify)   log_file="VerifyCode.log" ;;
-        chat)     log_file="ChatServer.log" ;;
-        backup)   log_file="backup.log" ;;
+        gateway)  name="GateWay" ;;
+        status)   name="StatusServer" ;;
+        verify)   name="VerifyCode" ;;
+        chat)     name="ChatServer" ;;
+        backup)   name="backup" ;;
         *)
             echo "未知服务: {{service}}"
             exit 1
             ;;
     esac
 
-    if [ -f "{{pid_dir}}/$log_file" ]; then
-        tail -f "{{pid_dir}}/$log_file"
+    port="{{port}}"
+    if [ -n "$port" ]; then
+        log_file="{{pid_dir}}/${name}_${port}.log"
+        if [ -f "$log_file" ]; then
+            tail -f "$log_file"
+            exit 0
+        fi
+        echo "日志文件不存在: $log_file"
+        exit 1
+    fi
+
+    shopt -s nullglob
+    files=( {{pid_dir}}/${name}_*.log )
+    shopt -u nullglob
+
+    if [ ${#files[@]} -eq 1 ]; then
+        tail -f "${files[0]}"
+    elif [ ${#files[@]} -gt 1 ]; then
+        echo "检测到多个实例日志，请指定端口:"
+        for f in "${files[@]}"; do
+            instance=$(basename "$f" .log)
+            echo "  ${instance#${name}_}"
+        done
+        exit 1
+    elif [ -f "{{pid_dir}}/${name}.log" ]; then
+        tail -f "{{pid_dir}}/${name}.log"
     else
         echo "日志文件不存在"
+        exit 1
     fi
 
 # ============== 开发命令 ==============

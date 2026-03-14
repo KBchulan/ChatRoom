@@ -69,7 +69,7 @@ StatusServer/
 │   ├── core/
 │   │   └── server/                 # gRPC 服务实现
 │   └── utils/
-│       └── gen/                    # protobuf 生成代码
+│       └── grpc/                  # protobuf/gRPC 生成代码
 ├── include/
 │   ├── global/                     # 全局配置与无锁队列
 │   ├── tools/                      # 工具组件 (日志/ID生成/Defer)

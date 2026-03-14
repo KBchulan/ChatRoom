@@ -60,6 +60,8 @@ signals:
   void sig_send_data(ReqID reqId, QString data);
   void sig_switch_chat_dialog();
   void sig_login_failed(int);
+  void sig_exit_login_success();
+  void sig_exit_login_failed(int);
 };
 
 #endif  // TCPMANAGER_HPP

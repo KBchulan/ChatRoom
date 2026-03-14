@@ -21,8 +21,8 @@
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wconversion"
-#include <utils/gen/status_server.grpc.pb.h>
-#include <utils/gen/status_server.pb.h>
+#include <utils/grpc/status_server/status_server.grpc.pb.h>
+#include <utils/grpc/status_server/status_server.pb.h>
 #pragma GCC diagnostic pop
 
 namespace core
@@ -61,6 +61,7 @@ public:
 private:
   std::mutex _mutex;
   std::vector<TcpServerInfo> _tcp_servers;
+  // 存储 uuid -> {token, server_index} 的映射
   std::unordered_map<std::string, UserConnectionInfo> _pending_connections;
 };
 

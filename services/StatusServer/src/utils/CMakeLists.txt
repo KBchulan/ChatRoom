@@ -3,39 +3,66 @@ include(GenerateExportHeader)
 
 # Proto 代码生成
 set(PROTO_DIR ${PROJECT_SOURCE_DIR}/../../proto)
-set(PROTO_OUT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/gen)
 
-# 确保输出目录存在
-file(MAKE_DIRECTORY ${PROTO_OUT_DIR})
+# ========== status_server.proto ==========
+set(STATUS_SERVER_OUT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/grpc/status_server)
+file(MAKE_DIRECTORY ${STATUS_SERVER_OUT_DIR})
 
-# 定义生成的文件
-set(PROTO_SRCS
-  ${PROTO_OUT_DIR}/status_server.pb.cc
-  ${PROTO_OUT_DIR}/status_server.grpc.pb.cc
+set(STATUS_SERVER_SRCS
+  ${STATUS_SERVER_OUT_DIR}/status_server.pb.cc
+  ${STATUS_SERVER_OUT_DIR}/status_server.grpc.pb.cc
 )
-set(PROTO_HDRS
-  ${PROTO_OUT_DIR}/status_server.pb.h
-  ${PROTO_OUT_DIR}/status_server.grpc.pb.h
+set(STATUS_SERVER_HDRS
+  ${STATUS_SERVER_OUT_DIR}/status_server.pb.h
+  ${STATUS_SERVER_OUT_DIR}/status_server.grpc.pb.h
 )
 
-# 添加自定义命令生成 protobuf/grpc 代码
 add_custom_command(
-  OUTPUT ${PROTO_SRCS} ${PROTO_HDRS}
+  OUTPUT ${STATUS_SERVER_SRCS} ${STATUS_SERVER_HDRS}
   COMMAND ${PROTOC}
     --proto_path=${PROTO_DIR}
-    --cpp_out=${PROTO_OUT_DIR}
-    --grpc_out=${PROTO_OUT_DIR}
+    --cpp_out=${STATUS_SERVER_OUT_DIR}
+    --grpc_out=${STATUS_SERVER_OUT_DIR}
     --plugin=protoc-gen-grpc=${GRPC_CPP_PLUGIN}
     ${PROTO_DIR}/status_server.proto
   DEPENDS ${PROTO_DIR}/status_server.proto
   COMMENT "Generating protobuf/grpc code for status_server.proto"
 )
 
+# ========== chat_server.proto ==========
+set(CHAT_SERVER_OUT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/grpc/chat_server)
+file(MAKE_DIRECTORY ${CHAT_SERVER_OUT_DIR})
+
+set(CHAT_SERVER_SRCS
+  ${CHAT_SERVER_OUT_DIR}/chat_server.pb.cc
+  ${CHAT_SERVER_OUT_DIR}/chat_server.grpc.pb.cc
+)
+set(CHAT_SERVER_HDRS
+  ${CHAT_SERVER_OUT_DIR}/chat_server.pb.h
+  ${CHAT_SERVER_OUT_DIR}/chat_server.grpc.pb.h
+)
+
+add_custom_command(
+  OUTPUT ${CHAT_SERVER_SRCS} ${CHAT_SERVER_HDRS}
+  COMMAND ${PROTOC}
+    --proto_path=${PROTO_DIR}
+    --cpp_out=${CHAT_SERVER_OUT_DIR}
+    --grpc_out=${CHAT_SERVER_OUT_DIR}
+    --plugin=protoc-gen-grpc=${GRPC_CPP_PLUGIN}
+    ${PROTO_DIR}/chat_server.proto
+  DEPENDS ${PROTO_DIR}/chat_server.proto
+  COMMENT "Generating protobuf/grpc code for chat_server.proto"
+)
+
+# ========== 汇总所有 Proto 源文件 ==========
+set(PROTO_SRCS ${STATUS_SERVER_SRCS} ${CHAT_SERVER_SRCS})
+set(PROTO_HDRS ${STATUS_SERVER_HDRS} ${CHAT_SERVER_HDRS})
+
 # 为生成的 proto 文件禁用警告
 set_source_files_properties(
   ${PROTO_SRCS}
   PROPERTIES
-  COMPILE_OPTIONS "-Wno-conversion;-Wno-shadow"
+  COMPILE_OPTIONS "-Wno-conversion;-Wno-shadow;-Wno-unused-parameter"
 )
 
 # 获取所有utils文件

@@ -11,22 +11,22 @@ message GetTcpServerRequest
 // 获取tcp服务器的响应
 message GetTcpServerResponse
 {
-  int32 code = 1;
-  string message = 2;
-  map<string, string> data = 3;
+  int32               code    = 1;
+  string              message = 2;
+  map<string, string> data    = 3;
 }
 
 // 实际登录的校验接口
 message LoginVerifyRequest
 {
-  string uuid = 1;
+  string uuid  = 1;
   string token = 2;
 }
 
 // 实际登录的校验响应
 message LoginVerifyResponse
 {
-  int32 code = 1;
+  int32  code    = 1;
   string message = 2;
 }
 

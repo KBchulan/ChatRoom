@@ -1,0 +1,78 @@
+syntax = "proto3";
+
+package KBchulan.ChatRoom.ChatServer;
+
+// 添加好友的请求
+// message AddFrinedRequest {
+//   int32  from_user_uid = 1;
+//   int32  to_user_uid   = 2;
+//   string name          = 3;
+//   string description   = 4;
+// }
+
+// 添加好友的响应
+// message AddFriendResponse {
+//   int32  code          = 1;
+//   string message       = 2;
+//   int32  from_user_uid = 3;
+//   int32  to_user_uid   = 4;
+// }
+
+// 被添加好友人对添加好友的请求
+// message ReplyFriendRequest {
+//   int32 from_user_uid = 1;
+//   int32 to_user_uid   = 2;
+//   bool  is_agree      = 3;
+// }
+
+// 被添加好友人对添加好友的响应
+// message ReplyFriendResponse {
+//   int32  code          = 1;
+//   string message       = 2;
+//   int32  from_user_uid = 3;
+//   int32  to_user_uid   = 4;
+// }
+
+// // 发送聊天消息的请求
+// message SendMessageRequest {
+//   int32  from_user_uid = 1;
+//   int32  to_user_uid   = 2;
+//   string content       = 3;
+// }
+
+// 发送聊天消息的响应
+// message SendMessageResponse {
+//   int32  code          = 1;
+//   string message       = 2;
+//   int32  from_user_uid = 3;
+//   int32  to_user_uid   = 4;
+// }
+
+// 认证好友的请求
+// message AuthFriendRequest {
+//   int32 from_user_uid = 1;
+//   int32 to_user_uid   = 2;
+// }
+
+// 认证好友的响应
+// message AuthFriendResponse {
+//   int32  code          = 1;
+//   string message       = 2;
+//   int32  from_user_uid = 3;
+//   int32  to_user_uid   = 4;
+// }
+
+// 定义聊天服务器的 RPC 服务
+service ChatService {
+  // 添加好友的 RPC 方法
+  // rpc AddFriend(AddFrinedRequest) returns (AddFriendResponse);
+
+  // 被添加好友人对添加好友的 RPC 方法
+  // rpc ReplyFriend(ReplyFriendRequest) returns (ReplyFriendResponse);
+
+  // 发送聊天消息的 RPC 方法
+  // rpc SendMessage(SendMessageRequest) returns (SendMessageResponse);
+
+  // 认证好友的 RPC 方法
+  // rpc AuthFriend(AuthFriendRequest) returns (AuthFriendResponse);
+}

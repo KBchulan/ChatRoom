@@ -1,6 +1,8 @@
 #include "mainwindow.hpp"
 
+#include <QApplication>
 #include <QKeySequence>
+#include <QMessageBox>
 
 #include "chatdialog.hpp"
 #include "global.hpp"
@@ -29,6 +31,7 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::MainWi
   // 设置中心窗口及大小
   setCentralWidget(_stacked_widget);
   setMinimumSize(UIConstants::WindowLoginWidth, UIConstants::WindowLoginHeight);
+  setMaximumSize(UIConstants::WindowLoginWidth, UIConstants::WindowLoginHeight);
   resize(UIConstants::WindowLoginWidth, UIConstants::WindowLoginHeight);
   _stacked_widget->setCurrentWidget(_login_dialog);
 
@@ -38,6 +41,8 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::MainWi
   connect(_login_dialog, &LoginDialog::SigForgetPassword, this, &MainWindow::SlotSwitchResetPassword);
   connect(_reset_password_dialog, &ResetPasswordDialog::SigSwitchToLogin, this, &MainWindow::SlotSwitchLogin);
   connect(&TcpManager::GetInstance(), &TcpManager::sig_switch_chat_dialog, this, &MainWindow::SlotSwitchChat);
+  connect(&TcpManager::GetInstance(), &TcpManager::sig_exit_login_success, this, &MainWindow::SlotExitLoginSuccess);
+  connect(&TcpManager::GetInstance(), &TcpManager::sig_exit_login_failed, this, &MainWindow::SlotExitLoginFailed);
 
   // 绑定快捷键
   _action = new QAction(this);
@@ -62,6 +67,7 @@ MainWindow::~MainWindow()
 void MainWindow::SlotSwitchRegister()
 {
   setMinimumSize(UIConstants::WindowLoginWidth, UIConstants::WindowLoginHeight);
+  setMaximumSize(UIConstants::WindowLoginWidth, UIConstants::WindowLoginHeight);
   resize(UIConstants::WindowLoginWidth, UIConstants::WindowLoginHeight);
   _stacked_widget->setCurrentWidget(_register_dialog);
   _login_dialog->Reset();
@@ -70,6 +76,7 @@ void MainWindow::SlotSwitchRegister()
 void MainWindow::SlotSwitchLogin()
 {
   setMinimumSize(UIConstants::WindowLoginWidth, UIConstants::WindowLoginHeight);
+  setMaximumSize(UIConstants::WindowLoginWidth, UIConstants::WindowLoginHeight);
   resize(UIConstants::WindowLoginWidth, UIConstants::WindowLoginHeight);
   _stacked_widget->setCurrentWidget(_login_dialog);
   _register_dialog->Reset();
@@ -79,6 +86,7 @@ void MainWindow::SlotSwitchLogin()
 void MainWindow::SlotSwitchResetPassword()
 {
   setMinimumSize(UIConstants::WindowLoginWidth, UIConstants::WindowLoginHeight);
+  setMaximumSize(UIConstants::WindowLoginWidth, UIConstants::WindowLoginHeight);
   resize(UIConstants::WindowLoginWidth, UIConstants::WindowLoginHeight);
   _stacked_widget->setCurrentWidget(_reset_password_dialog);
   _login_dialog->Reset();
@@ -87,7 +95,21 @@ void MainWindow::SlotSwitchResetPassword()
 void MainWindow::SlotSwitchChat()
 {
   setMinimumSize(UIConstants::WindowChatWidth, UIConstants::WindowChatHeight);
+  setMaximumSize(UIConstants::WindowChatWidth, UIConstants::WindowChatHeight);
   resize(UIConstants::WindowChatWidth, UIConstants::WindowChatHeight);
   _stacked_widget->setCurrentWidget(_chat_dialog);
   _login_dialog->Reset();
+}
+
+// NOLINTNEXTLINE(readability-convert-member-functions-to-static)
+void MainWindow::SlotExitLoginSuccess()
+{
+  // 退出登录成功，退出整个应用
+  QApplication::quit();
+}
+
+// NOLINTNEXTLINE(readability-convert-member-functions-to-static)
+void MainWindow::SlotExitLoginFailed(int code)
+{
+  QMessageBox::warning(this, "退出登录失败", QString("退出登录失败，错误码：%1").arg(code));
 }

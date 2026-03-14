@@ -6,6 +6,7 @@
 #include <QJsonObject>
 #include <QtEndian>
 
+#include "global.hpp"
 #include "userinfo.hpp"
 
 TcpManager& TcpManager::GetInstance()
@@ -136,6 +137,35 @@ void TcpManager::init_handlers()
                        UserInfo::GetInstance().SetEmail(data["email"].toString());
                      }
                      emit sig_switch_chat_dialog();
+                   });
+
+  _handlers.insert(ReqID::ID_EXIT_LOGIN_RESPONSE,
+                   [this](ReqID rid, int len, const QByteArray& data) -> void
+                   {
+                     // 解析数据
+                     QJsonDocument jsonDoc = QJsonDocument::fromJson(data);
+
+                     if (jsonDoc.isNull())
+                     {
+                       qDebug() << "Receive from id: " << static_cast<int>(rid) << ", len: " << len
+                                << ", data: " << data << '\n';
+                       return;
+                     }
+
+                     QJsonObject jsonObj = jsonDoc.object();
+
+                     // 解析响应数据并存下
+                     auto code = jsonObj["code"].toInt();
+                     auto message = jsonObj["message"].toString();
+
+                     if (code != 0)
+                     {
+                       qDebug() << "exit login failed, msg is: " << message << '\n';
+                       emit sig_exit_login_failed(code);
+                       return;
+                     }
+
+                     emit sig_exit_login_success();
                    });
 }
 

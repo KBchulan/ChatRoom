@@ -234,3 +234,16 @@
   - 新增 FriendApplyPage、FriendApplyList、FriendApplyItem 样式
   - 新增 ContactItem、ContactGroupItem 样式
 - 新增资源文件：new_friend.png 图标
+
+### [2026-03-14] 退出登录功能与窗口管理
+
+- 新增退出登录全链路功能：
+  - `SettingDialog`：新增「退出登录」按钮，点击后向服务器发送退出请求（携带 UUID）
+  - `TcpManager`：新增 `ID_EXIT_LOGIN_RESPONSE` handler，解析服务端响应并分发成功/失败信号
+  - `TcpManager`：新增 `sig_exit_login_success` 和 `sig_exit_login_failed` 信号
+  - `MainWindow`：新增 `SlotExitLoginSuccess`（退出应用）和 `SlotExitLoginFailed`（打印错误日志）槽函数
+- 新增 `ReqID` 枚举值：`ID_EXIT_LOGIN`（1007）、`ID_EXIT_LOGIN_RESPONSE`（1008）
+- 移除 `LoginDialog` 中的登录模拟代码（之前用于跳过登录直接进入聊天页面的临时 hack）
+- 完善窗口大小管理：
+  - 移除 `mainwindow.ui` 中硬编码的 geometry/size 属性，改为代码控制
+  - 所有页面切换槽函数统一设置 `setMinimumSize` + `setMaximumSize`，确保窗口为固定大小

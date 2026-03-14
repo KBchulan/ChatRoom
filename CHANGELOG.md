@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [2026-03-14]
+
+### ✨ Features
+- **[core]** 完成退出登录链路并支持服务多端口实例管理，同时重构 proto 生成目录与 db_params 路径
+
 ## [2026-02-02]
 
 ### ✨ Features
