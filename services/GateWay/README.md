@@ -169,7 +169,7 @@ GateWay/
 | 组件                   | 描述          | 吞吐量     |
 | ---------------------- | ------------- | ---------- |
 | **SuperQueue**   | MPMC 无锁队列 | 100M+/s    |
-| **Logger**       | 异步日志系统  | 260M+/s    |
+| **Logger**       | 异步日志系统  | 600M+/s    |
 | **ID Generator** | 雪花算法/UUID | 40M/23M+/s |
 
 #### 2. 多 Acceptor + SO_REUSEPORT
